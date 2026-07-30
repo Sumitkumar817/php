@@ -1,0 +1,102 @@
+const API_BASE_URL = 'http://localhost:5000/api';
+
+// Fetch all users
+export const fetchUsers = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/users`);
+    if (!res.ok) {
+      const errText = await res.text();
+      return { success: false, message: `Server error (${res.status}): ${errText}` };
+    }
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.warn('API Error fetchUsers:', error);
+    return { success: false, message: 'Backend server is offline or unreachable' };
+  }
+};
+
+// Create / Register new user
+export const createUser = async (userData) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/users`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData)
+    });
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error createUser:', error);
+    return { success: false, message: 'Backend server is offline or unreachable' };
+  }
+};
+
+// Auth: Register User
+export const registerUser = async (userData) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData)
+    });
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error registerUser:', error);
+    return { success: false, message: 'Backend server is offline or unreachable' };
+  }
+};
+
+// Auth: Login User
+export const loginUser = async (credentials) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(credentials)
+    });
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error loginUser:', error);
+    return { success: false, message: 'Backend server is offline or unreachable' };
+  }
+};
+
+// Auth: Logout User
+export const logoutUser = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/logout`, {
+      method: 'POST'
+    });
+    return await res.json();
+  } catch (error) {
+    return { success: true };
+  }
+};
+
+// Update user details (Edit User)
+export const updateUserDetails = async (id, updatedData) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/users/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedData)
+    });
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error updateUserDetails:', error);
+    return { success: false, message: 'Backend server is offline or unreachable' };
+  }
+};
+
+// Delete user
+export const deleteUserById = async (id) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/users/${id}`, {
+      method: 'DELETE'
+    });
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error deleteUserById:', error);
+    return { success: false, message: 'Backend server is offline or unreachable' };
+  }
+};
