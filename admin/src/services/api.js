@@ -1,5 +1,44 @@
 const API_BASE_URL = 'http://localhost:5000/api';
 
+// Fetch Header Config (GET)
+export const fetchHeaderConfig = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/header`);
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error fetchHeaderConfig:', error);
+    return { success: false, message: 'Backend server is offline or unreachable' };
+  }
+};
+
+// Update Header Config (PUT)
+export const updateHeaderConfig = async (headerData) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/header`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(headerData)
+    });
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error updateHeaderConfig:', error);
+    return { success: false, message: 'Backend server is offline or unreachable' };
+  }
+};
+
+// Reset / Delete Header Config (DELETE)
+export const deleteHeaderConfig = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/header`, {
+      method: 'DELETE'
+    });
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error deleteHeaderConfig:', error);
+    return { success: false, message: 'Backend server is offline or unreachable' };
+  }
+};
+
 // Fetch all users
 export const fetchUsers = async () => {
   try {

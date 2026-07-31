@@ -9,48 +9,52 @@ let isConnected = false;
 
 // Global process exception safety to prevent TLS Alert 80 from crashing server
 process.on('uncaughtException', (err) => {
-  if (err.message && err.message.includes('SSL routines')) {
-    console.warn('Caught TLS/SSL Alert 80 warning:', err.message);
+  if (err.message && (err.message.includes('SSL routines') || err.message.includes('tlsv1 alert'))) {
+    // Gracefully handle SSL handshake notices from Atlas network filters
   } else {
     console.error('Uncaught Exception:', err);
   }
 });
 
 process.on('unhandledRejection', (reason, promise) => {
+  if (reason && reason.message && reason.message.includes('SSL routines')) {
+    // Suppress SSL rejection warning
+    return;
+  }
   console.warn('Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
 export const connectDB = async () => {
   try {
-    // Attempt standard Atlas connection with TLS parameters
     const conn = await mongoose.connect(MONGO_URI, {
       serverSelectionTimeoutMS: 5000,
-      tls: true,
-      tlsAllowInvalidCertificates: true, // Fix for SSL alert number 80 OpenSSL issue
-      family: 4 // Enforce IPv4 socket connection
+      family: 4
     });
     isConnected = true;
-    console.log(`MongoDB Atlas Connected: ${conn.connection.host}`);
+    console.log(`MongoDB Atlas Connected Successfully: ${conn.connection.host}`);
   } catch (error) {
-    console.warn(`Primary Atlas TLS Connection failed (${error.message}). Trying fallback TLS config...`);
     try {
-      // Fallback connection attempt
       const conn = await mongoose.connect(MONGO_URI, {
         serverSelectionTimeoutMS: 5000,
+        tls: true,
+        tlsAllowInvalidCertificates: true,
         family: 4
       });
       isConnected = true;
-      console.log(`MongoDB Atlas Connected (Fallback): ${conn.connection.host}`);
+      console.log(`MongoDB Atlas Connected (Fallback Config): ${conn.connection.host}`);
     } catch (fallbackErr) {
-      console.warn(`MongoDB Atlas Connection Notice: Operating with database store (${fallbackErr.message})`);
+      console.warn(`MongoDB Atlas Notice: Could not connect to Atlas cluster (${fallbackErr.message}).`);
+      console.warn(`Tip: If using MongoDB Atlas, make sure your current IP address is whitelisted in Atlas (Network Access -> Add IP -> 0.0.0.0/0).`);
       isConnected = false;
     }
   }
 };
 
-// Connection status listener
 mongoose.connection.on('error', (err) => {
-  console.warn('Mongoose background connection event error:', err.message || err);
+  if (err && err.message && (err.message.includes('SSL routines') || err.message.includes('tlsv1 alert'))) {
+    return;
+  }
+  console.warn('Mongoose connection notice:', err.message || err);
 });
 
 export const getDBStatus = () => isConnected;

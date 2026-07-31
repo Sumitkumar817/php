@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar';
 import Toast from './components/Toast';
 import LoginPage from './views/LoginPage';
 import HeroSectionEditor from './views/HeroSectionEditor';
+import HeaderEditor from './views/HeaderEditor';
 import DashboardView from './views/DashboardView';
 import UserManagementView from './views/UserManagementView';
 import GenericSectionEditor from './views/GenericSectionEditor';
@@ -17,6 +18,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [toastMessage, setToastMessage] = useState('');
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   // Check initial authentication session from localStorage
   useEffect(() => {
@@ -60,18 +62,20 @@ export default function App() {
         return ['Dashboard', 'Overview'];
       case 'website-home':
         return ['Home', 'Hero Section'];
+      case 'website-header':
+        return ['Website', 'Header Config'];
       case 'website-about':
         return ['Website', 'About Section'];
       case 'website-solution':
-        return ['Website', 'Solution Section'];
+        return ['Website', 'Solutions Section'];
       case 'website-industry':
-        return ['Website', 'Industry Section'];
+        return ['Website', 'Industries Section'];
       case 'website-users':
         return ['Website', 'Users Management'];
       case 'website-footer':
         return ['Website', 'Footer Config'];
       case 'media':
-        return ['Media', 'Library'];
+        return ['Media Library', 'Assets'];
       case 'analytics':
         return ['Analytics', 'Performance'];
       case 'settings':
@@ -106,6 +110,8 @@ export default function App() {
         onShowToast={showToast}
         currentUser={currentUser}
         onOpenAuthModal={() => setIsAuthenticated(false)}
+        onToggleMobileSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
+        isMobileOpen={isMobileSidebarOpen}
       />
 
       {/* Main Body: Sidebar + Content */}
@@ -114,6 +120,8 @@ export default function App() {
           activeSection={activeSection}
           setActiveSection={setActiveSection}
           onLogout={() => setShowLogoutModal(true)}
+          isMobileOpen={isMobileSidebarOpen}
+          onCloseMobile={() => setIsMobileSidebarOpen(false)}
         />
 
         <main className="admin-main">
@@ -129,6 +137,10 @@ export default function App() {
             <HeroSectionEditor onShowToast={showToast} />
           )}
 
+          {activeSection === 'website-header' && (
+            <HeaderEditor onShowToast={showToast} />
+          )}
+
           {activeSection === 'website-users' && (
             <UserManagementView onShowToast={showToast} />
           )}
@@ -137,7 +149,7 @@ export default function App() {
             <DashboardView onSelectSection={(sec) => setActiveSection(sec)} />
           )}
 
-          {activeSection !== 'website-home' && activeSection !== 'website-users' && activeSection !== 'dashboard' && (
+          {activeSection !== 'website-home' && activeSection !== 'website-header' && activeSection !== 'website-users' && activeSection !== 'dashboard' && (
             <GenericSectionEditor
               sectionKey={activeSection}
               title={breadcrumbs[1]}
@@ -161,7 +173,7 @@ export default function App() {
           justifyContent: 'center',
           zIndex: 1000
         }}>
-          <div className="content-card" style={{ width: '360px', padding: '1.5rem' }}>
+          <div className="content-card" style={{ width: '360px', maxWidth: '90vw', padding: '1.5rem' }}>
             <h3 style={{ marginBottom: '0.75rem', fontWeight: 600 }}>Confirm Logout</h3>
             <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
               Are you sure you want to end your current session?

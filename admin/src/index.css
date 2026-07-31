@@ -66,6 +66,35 @@
   padding: 0;
 }
 
+/* ==========================================================================
+   CUSTOM MODERN SCROLLBAR STYLES
+   ========================================================================== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-app);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--bg-app);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* Firefox Scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-light) var(--bg-app);
+}
+
 body {
   font-family: var(--font-family);
   background-color: var(--bg-app);
@@ -112,7 +141,7 @@ input, textarea, select {
 .header-left {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1.25rem;
 }
 
 .brand-logo {
@@ -140,10 +169,23 @@ input, textarea, select {
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
 }
 
+/* Mobile Toggle Hamburger */
+.mobile-menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+}
+
 /* Search Bar */
 .search-container {
   position: relative;
-  width: 320px;
+  width: 300px;
 }
 
 .search-input {
@@ -175,13 +217,13 @@ input, textarea, select {
 .header-right {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 .header-icon-btn {
   position: relative;
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   border-radius: var(--radius-full);
   display: flex;
   align-items: center;
@@ -213,8 +255,8 @@ input, textarea, select {
 .user-profile {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.35rem 0.75rem 0.35rem 0.35rem;
+  gap: 0.6rem;
+  padding: 0.3rem 0.65rem 0.3rem 0.3rem;
   background-color: var(--bg-input);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-full);
@@ -228,8 +270,8 @@ input, textarea, select {
 }
 
 .avatar {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: var(--radius-full);
   background: linear-gradient(135deg, #f43f5e, #fb7185);
   color: white;
@@ -237,11 +279,11 @@ input, textarea, select {
   align-items: center;
   justify-content: center;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
 }
 
 .user-name {
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--text-main);
   white-space: nowrap;
@@ -252,6 +294,7 @@ input, textarea, select {
   display: flex;
   flex: 1;
   overflow: hidden;
+  position: relative;
 }
 
 /* Sidebar */
@@ -265,6 +308,17 @@ input, textarea, select {
   padding: 1.25rem 0.75rem;
   gap: 0.5rem;
   user-select: none;
+  transition: transform 0.3s ease;
+  z-index: 100;
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  z-index: 95;
 }
 
 .sidebar-group {
@@ -337,15 +391,17 @@ input, textarea, select {
   background-color: var(--primary-light);
 }
 
-/* Main Content Area */
+/* Main Content Area - WITH EXPLICIT SMOOTH SCROLLBAR */
 .admin-main {
   flex: 1;
   background-color: var(--bg-app);
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 1.75rem 2rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  scroll-behavior: smooth;
 }
 
 /* Breadcrumbs */
@@ -368,13 +424,15 @@ input, textarea, select {
   font-weight: 600;
 }
 
-/* Main Content Card Panel */
+/* Main Content Card Panel - WITH INNER SCROLLBAR SUPPORT IF CONSTRAINED */
 .content-card {
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .content-card-header {
@@ -384,6 +442,11 @@ input, textarea, select {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .card-title {
@@ -400,6 +463,7 @@ input, textarea, select {
   display: flex;
   flex-direction: column;
   gap: 1.75rem;
+  overflow-y: auto;
 }
 
 /* Form Styles */
@@ -414,13 +478,6 @@ input, textarea, select {
   grid-template-columns: 200px 1fr;
   align-items: center;
   gap: 1.5rem;
-}
-
-@media (max-width: 768px) {
-  .form-row {
-    grid-template-columns: 1fr;
-    gap: 0.5rem;
-  }
 }
 
 .form-label {
@@ -451,6 +508,7 @@ input, textarea, select {
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .file-upload-btn {
@@ -477,6 +535,7 @@ input, textarea, select {
 .file-name {
   font-size: 0.85rem;
   color: var(--text-muted);
+  word-break: break-all;
 }
 
 /* Video & Image Preview Container */
@@ -484,6 +543,7 @@ input, textarea, select {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  width: 100%;
 }
 
 .video-preview-box {
@@ -546,9 +606,10 @@ input, textarea, select {
 /* Toast Message */
 .toast-container {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: 1.5rem;
+  right: 1.5rem;
   z-index: 999;
+  max-width: calc(100vw - 3rem);
 }
 
 .toast {
@@ -618,4 +679,134 @@ input, textarea, select {
 .stat-label {
   font-size: 0.85rem;
   color: var(--text-muted);
+}
+
+/* Responsive Table Wrapper */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ==========================================================================
+   MEDIA QUERIES FOR FULL TABLET & MOBILE RESPONSIVENESS
+   ========================================================================== */
+
+/* Tablets & Mobile Screens (<= 900px) */
+@media (max-width: 900px) {
+  .mobile-menu-toggle {
+    display: flex;
+  }
+
+  .admin-header {
+    padding: 0 1rem;
+  }
+
+  .header-left {
+    gap: 0.75rem;
+  }
+
+  .search-container {
+    width: 180px;
+  }
+
+  .admin-sidebar {
+    position: fixed;
+    top: 65px;
+    left: 0;
+    bottom: 0;
+    z-index: 100;
+    transform: translateX(-100%);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .admin-sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay.mobile-open {
+    display: block;
+  }
+
+  .admin-main {
+    padding: 1.25rem 1rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .content-card-body {
+    padding: 1.25rem;
+    gap: 1.25rem;
+  }
+
+  .video-preview-box {
+    height: 240px;
+  }
+}
+
+/* Mobile Smartphones (<= 640px) */
+@media (max-width: 640px) {
+  .brand-logo span {
+    display: none;
+  }
+
+  .search-container {
+    width: 130px;
+  }
+
+  .search-input {
+    padding-left: 2.2rem;
+    font-size: 0.8rem;
+  }
+
+  .user-name {
+    display: none;
+  }
+
+  .header-right {
+    gap: 0.5rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .stat-card {
+    padding: 0.85rem;
+    gap: 0.6rem;
+  }
+
+  .stat-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .stat-value {
+    font-size: 1.1rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
+
+  .content-card-header {
+    padding: 1rem;
+  }
+
+  .card-title {
+    font-size: 1.05rem;
+  }
+
+  .btn-primary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .video-preview-box {
+    height: 200px;
+  }
 }

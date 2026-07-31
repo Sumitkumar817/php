@@ -3,6 +3,7 @@ import {
   LayoutDashboard,
   Folder,
   Home,
+  Layout,
   Info,
   Lightbulb,
   Building,
@@ -16,131 +17,167 @@ import {
   ChevronRight
 } from 'lucide-react';
 
-export default function Sidebar({ activeSection, setActiveSection, onLogout }) {
+export default function Sidebar({ activeSection, setActiveSection, onLogout, isMobileOpen, onCloseMobile }) {
   const [websiteExpanded, setWebsiteExpanded] = useState(true);
 
   const isWebsiteSubActive = (sub) => activeSection === `website-${sub}`;
 
-  return (
-    <aside className="admin-sidebar">
-      <div className="sidebar-group">
-        {/* Dashboard */}
-        <button
-          className={`sidebar-item ${activeSection === 'dashboard' ? 'active' : ''}`}
-          onClick={() => setActiveSection('dashboard')}
-        >
-          <div className="sidebar-item-content">
-            <LayoutDashboard size={18} />
-            <span>Dashboard</span>
-          </div>
-        </button>
+  const handleSelectSection = (sec) => {
+    setActiveSection(sec);
+    if (onCloseMobile) onCloseMobile();
+  };
 
-        {/* Website Folder */}
-        <div>
+  return (
+    <>
+      {/* Mobile Dark Backdrop Overlay */}
+      <div
+        className={`sidebar-overlay ${isMobileOpen ? 'mobile-open' : ''}`}
+        onClick={onCloseMobile}
+      />
+
+      <aside className={`admin-sidebar ${isMobileOpen ? 'mobile-open' : ''}`}>
+        <div className="sidebar-group">
+          {/* Dashboard */}
           <button
-            className={`sidebar-item ${activeSection.startsWith('website') ? 'active' : ''}`}
-            onClick={() => setWebsiteExpanded(!websiteExpanded)}
+            className={`sidebar-item ${activeSection === 'dashboard' ? 'active' : ''}`}
+            onClick={() => handleSelectSection('dashboard')}
           >
             <div className="sidebar-item-content">
-              <Folder size={18} />
-              <span>Website</span>
+              <LayoutDashboard size={18} />
+              <span>Dashboard</span>
             </div>
-            {websiteExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </button>
 
-          {websiteExpanded && (
-            <div className="sidebar-sub-menu">
-              <button
-                className={`sidebar-sub-item ${isWebsiteSubActive('home') ? 'active' : ''}`}
-                onClick={() => setActiveSection('website-home')}
-              >
-                <Home size={14} />
-                <span>Home</span>
-              </button>
-              <button
-                className={`sidebar-sub-item ${isWebsiteSubActive('about') ? 'active' : ''}`}
-                onClick={() => setActiveSection('website-about')}
-              >
-                <Info size={14} />
-                <span>About</span>
-              </button>
-              <button
-                className={`sidebar-sub-item ${isWebsiteSubActive('solution') ? 'active' : ''}`}
-                onClick={() => setActiveSection('website-solution')}
-              >
-                <Lightbulb size={14} />
-                <span>Solution</span>
-              </button>
-              <button
-                className={`sidebar-sub-item ${isWebsiteSubActive('industry') ? 'active' : ''}`}
-                onClick={() => setActiveSection('website-industry')}
-              >
-                <Building size={14} />
-                <span>Industry</span>
-              </button>
-              <button
-                className={`sidebar-sub-item ${isWebsiteSubActive('users') ? 'active' : ''}`}
-                onClick={() => setActiveSection('website-users')}
-              >
-                <Users size={14} />
-                <span>Users</span>
-              </button>
-              <button
-                className={`sidebar-sub-item ${isWebsiteSubActive('footer') ? 'active' : ''}`}
-                onClick={() => setActiveSection('website-footer')}
-              >
-                <LayoutGrid size={14} />
-                <span>Footer</span>
-              </button>
+          {/* Website Folder */}
+          <div>
+            <button
+              className={`sidebar-item ${activeSection.startsWith('website') ? 'active' : ''}`}
+              onClick={() => setWebsiteExpanded(!websiteExpanded)}
+            >
+              <div className="sidebar-item-content">
+                <Folder size={18} />
+                <span>Website</span>
+              </div>
+              {websiteExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+            </button>
+
+            {websiteExpanded && (
+              <div className="sidebar-sub-menu">
+                {/* Home */}
+                <button
+                  className={`sidebar-sub-item ${isWebsiteSubActive('home') ? 'active' : ''}`}
+                  onClick={() => handleSelectSection('website-home')}
+                >
+                  <Home size={14} />
+                  <span>Home</span>
+                </button>
+
+                {/* Header */}
+                <button
+                  className={`sidebar-sub-item ${isWebsiteSubActive('header') ? 'active' : ''}`}
+                  onClick={() => handleSelectSection('website-header')}
+                >
+                  <Layout size={14} />
+                  <span>Header</span>
+                </button>
+
+                {/* About */}
+                <button
+                  className={`sidebar-sub-item ${isWebsiteSubActive('about') ? 'active' : ''}`}
+                  onClick={() => handleSelectSection('website-about')}
+                >
+                  <Info size={14} />
+                  <span>About</span>
+                </button>
+
+                {/* Solutions */}
+                <button
+                  className={`sidebar-sub-item ${isWebsiteSubActive('solution') ? 'active' : ''}`}
+                  onClick={() => handleSelectSection('website-solution')}
+                >
+                  <Lightbulb size={14} />
+                  <span>Solutions</span>
+                </button>
+
+                {/* Industries */}
+                <button
+                  className={`sidebar-sub-item ${isWebsiteSubActive('industry') ? 'active' : ''}`}
+                  onClick={() => handleSelectSection('website-industry')}
+                >
+                  <Building size={14} />
+                  <span>Industries</span>
+                </button>
+
+                {/* Users */}
+                <button
+                  className={`sidebar-sub-item ${isWebsiteSubActive('users') ? 'active' : ''}`}
+                  onClick={() => handleSelectSection('website-users')}
+                >
+                  <Users size={14} />
+                  <span>Users</span>
+                </button>
+
+                {/* Footer */}
+                <button
+                  className={`sidebar-sub-item ${isWebsiteSubActive('footer') ? 'active' : ''}`}
+                  onClick={() => handleSelectSection('website-footer')}
+                >
+                  <LayoutGrid size={14} />
+                  <span>Footer</span>
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Media Library */}
+          <button
+            className={`sidebar-item ${activeSection === 'media' ? 'active' : ''}`}
+            onClick={() => handleSelectSection('media')}
+          >
+            <div className="sidebar-item-content">
+              <Image size={18} />
+              <span>Media Library</span>
             </div>
-          )}
+          </button>
+
+          {/* Analytics */}
+          <button
+            className={`sidebar-item ${activeSection === 'analytics' ? 'active' : ''}`}
+            onClick={() => handleSelectSection('analytics')}
+          >
+            <div className="sidebar-item-content">
+              <BarChart3 size={18} />
+              <span>Analytics</span>
+            </div>
+          </button>
+
+          {/* Settings */}
+          <button
+            className={`sidebar-item ${activeSection === 'settings' ? 'active' : ''}`}
+            onClick={() => handleSelectSection('settings')}
+          >
+            <div className="sidebar-item-content">
+              <Settings size={18} />
+              <span>Settings</span>
+            </div>
+          </button>
+
+          {/* Logout */}
+          <button
+            className="sidebar-item"
+            style={{ marginTop: '1.5rem', color: 'var(--danger)' }}
+            onClick={() => {
+              if (onCloseMobile) onCloseMobile();
+              onLogout();
+            }}
+          >
+            <div className="sidebar-item-content">
+              <LogOut size={18} />
+              <span>Logout</span>
+            </div>
+          </button>
         </div>
-
-        {/* Media */}
-        <button
-          className={`sidebar-item ${activeSection === 'media' ? 'active' : ''}`}
-          onClick={() => setActiveSection('media')}
-        >
-          <div className="sidebar-item-content">
-            <Image size={18} />
-            <span>Media</span>
-          </div>
-        </button>
-
-        {/* Analytics */}
-        <button
-          className={`sidebar-item ${activeSection === 'analytics' ? 'active' : ''}`}
-          onClick={() => setActiveSection('analytics')}
-        >
-          <div className="sidebar-item-content">
-            <BarChart3 size={18} />
-            <span>Analytics</span>
-          </div>
-        </button>
-
-        {/* Settings */}
-        <button
-          className={`sidebar-item ${activeSection === 'settings' ? 'active' : ''}`}
-          onClick={() => setActiveSection('settings')}
-        >
-          <div className="sidebar-item-content">
-            <Settings size={18} />
-            <span>Settings</span>
-          </div>
-        </button>
-
-        {/* Logout */}
-        <button
-          className="sidebar-item"
-          style={{ marginTop: '1.5rem', color: 'var(--danger)' }}
-          onClick={onLogout}
-        >
-          <div className="sidebar-item-content">
-            <LogOut size={18} />
-            <span>Logout</span>
-          </div>
-        </button>
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 }
