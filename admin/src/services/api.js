@@ -1,5 +1,57 @@
 const API_BASE_URL = 'http://localhost:5000/api';
 
+// Fetch Section 2 Config (GET /api/section2)
+export const fetchSection2Config = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/section2`);
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error fetchSection2Config:', error);
+    return { success: false, message: 'Backend server is offline or unreachable' };
+  }
+};
+
+// Update Section 2 Config (PUT /api/section2)
+export const updateSection2Config = async (sec2Data) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/section2`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(sec2Data)
+    });
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error updateSection2Config:', error);
+    return { success: false, message: 'Backend server is offline or unreachable' };
+  }
+};
+
+// Fetch Hero Config (GET /api/hero)
+export const fetchHeroConfig = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/hero`);
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error fetchHeroConfig:', error);
+    return { success: false, message: 'Backend server is offline or unreachable' };
+  }
+};
+
+// Update Hero Config (PUT /api/hero)
+export const updateHeroConfig = async (heroData) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/hero`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(heroData)
+    });
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error updateHeroConfig:', error);
+    return { success: false, message: 'Backend server is offline or unreachable' };
+  }
+};
+
 // Fetch Header Config (GET)
 export const fetchHeaderConfig = async () => {
   try {

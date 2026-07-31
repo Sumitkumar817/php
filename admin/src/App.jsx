@@ -3,7 +3,7 @@ import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import Toast from './components/Toast';
 import LoginPage from './views/LoginPage';
-import HeroSectionEditor from './views/HeroSectionEditor';
+import Home from './views/Home';
 import HeaderEditor from './views/HeaderEditor';
 import DashboardView from './views/DashboardView';
 import UserManagementView from './views/UserManagementView';
@@ -134,7 +134,7 @@ export default function App() {
 
           {/* View Content */}
           {activeSection === 'website-home' && (
-            <HeroSectionEditor onShowToast={showToast} />
+            <Home onShowToast={showToast} />
           )}
 
           {activeSection === 'website-header' && (
