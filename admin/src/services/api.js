@@ -1,5 +1,57 @@
 const API_BASE_URL = 'http://localhost:5000/api';
 
+// Fetch Section 5 Config (GET /api/section5)
+export const fetchSection5Config = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/section5`);
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error fetchSection5Config:', error);
+    return { success: false, message: 'Backend server is offline or unreachable' };
+  }
+};
+
+// Update Section 5 Config (PUT /api/section5)
+export const updateSection5Config = async (sec5Data) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/section5`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(sec5Data)
+    });
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error updateSection5Config:', error);
+    return { success: false, message: 'Backend server is offline or unreachable' };
+  }
+};
+
+// Fetch Section 4 Config (GET /api/section4)
+export const fetchSection4Config = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/section4`);
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error fetchSection4Config:', error);
+    return { success: false, message: 'Backend server is offline or unreachable' };
+  }
+};
+
+// Update Section 4 Config (PUT /api/section4)
+export const updateSection4Config = async (sec4Data) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/section4`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(sec4Data)
+    });
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error updateSection4Config:', error);
+    return { success: false, message: 'Backend server is offline or unreachable' };
+  }
+};
+
 // Fetch Section 3 Config (GET /api/section3)
 export const fetchSection3Config = async () => {
   try {

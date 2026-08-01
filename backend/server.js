@@ -8,6 +8,8 @@ import headerRoutes from './routes/headerRoutes.js';
 import heroRoutes from './routes/heroRoutes.js';
 import section2Routes from './routes/section2Routes.js';
 import section3Routes from './routes/section3Routes.js';
+import section4Routes from './routes/section4Routes.js';
+import section5Routes from './routes/section5Routes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -27,6 +29,8 @@ app.use('/api/header', headerRoutes);
 app.use('/api/hero', heroRoutes);
 app.use('/api/section2', section2Routes);
 app.use('/api/section3', section3Routes);
+app.use('/api/section4', section4Routes);
+app.use('/api/section5', section5Routes);
 
 // Root route
 app.get('/', (req, res) => {

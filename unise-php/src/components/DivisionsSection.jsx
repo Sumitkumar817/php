@@ -1,7 +1,64 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function DivisionsSection({ onOpenEnquiry }) {
+  const [sec4Config, setSec4Config] = useState({
+    title: 'Our Two Divisions',
+    heading: 'One Partner. Two Specialist Divisions.',
+    cards: [
+      {
+        id: 'div-1',
+        title: 'Installation & Maintenance',
+        description: 'Professional design, supply, installation, commissioning, and AMC/PMC services across all physical security systems. SLA-governed, UAE-wide coverage.',
+        icon: 'fa-screwdriver-wrench',
+        buttonText: 'Explore Installation Services',
+        buttonLink: '/solutions'
+      },
+      {
+        id: 'div-2',
+        title: 'Security Equipment Trading',
+        description: 'Supply of globally-recognised security hardware — cameras, recorders, access control, alarm panels, biometric devices, cabling — with UAE stock for fast delivery.',
+        icon: 'fa-truck-ramp-box',
+        buttonText: 'Request a Survey',
+        buttonLink: '/contact-us'
+      }
+    ]
+  });
+
+  const loadSection4FromBackend = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/section4');
+      const data = await res.json();
+      if (data.success && data.data) {
+        setSec4Config({
+          title: data.data.title || 'Our Two Divisions',
+          heading: data.data.heading || 'One Partner. Two Specialist Divisions.',
+          cards: Array.isArray(data.data.cards) && data.data.cards.length > 0
+            ? data.data.cards
+            : sec4Config.cards
+        });
+      }
+    } catch (err) {
+      console.warn('unise-php DivisionsSection: Error fetching section4 config from backend:', err);
+    }
+  };
+
+  useEffect(() => {
+    loadSection4FromBackend();
+
+    const handleFocus = () => loadSection4FromBackend();
+    window.addEventListener('focus', handleFocus);
+
+    const interval = setInterval(() => {
+      loadSection4FromBackend();
+    }, 5000);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      clearInterval(interval);
+    };
+  }, []);
+
   return (
     <section className="relative py-20 bg-[#021827] text-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
@@ -10,66 +67,55 @@ export default function DivisionsSection({ onOpenEnquiry }) {
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-white text-xs font-semibold uppercase tracking-wider">
             <i className="fa-solid fa-screwdriver-wrench text-xs"></i>
-            <span>Our Two Divisions</span>
+            <span>{sec4Config.title}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-            One Partner. <br />
-            <span className="text-cyan-300">Two Specialist Divisions.</span>
+            {sec4Config.heading.split('. ').map((part, index, arr) => (
+              <React.Fragment key={index}>
+                {index === arr.length - 1 ? <span className="text-cyan-300">{part}</span> : <>{part}. <br /></>}
+              </React.Fragment>
+            ))}
           </h2>
         </div>
 
         {/* Division Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           
-          {/* Division 1 */}
-          <div className="p-8 rounded-2xl bg-[#032338] border border-white/10 hover:border-cyan-400/50 transition duration-300 flex flex-col justify-between shadow-xl group">
-            <div className="space-y-4">
-              <div className="w-14 h-14 rounded-2xl bg-cyan-400/10 text-cyan-300 flex items-center justify-center">
-                <i className="fa-solid fa-screwdriver-wrench text-xl"></i>
+          {sec4Config.cards.map((card) => (
+            <div key={card.id || card._id} className="p-8 rounded-2xl bg-[#032338] border border-white/10 hover:border-cyan-400/50 transition duration-300 flex flex-col justify-between shadow-xl group">
+              <div className="space-y-4">
+                <div className="w-14 h-14 rounded-2xl bg-cyan-400/10 text-cyan-300 flex items-center justify-center">
+                  <i className={`fa-solid ${card.icon || 'fa-screwdriver-wrench'} text-xl`}></i>
+                </div>
+                <h3 className="text-2xl font-bold text-white group-hover:text-cyan-300 transition">
+                  {card.title}
+                </h3>
+                <p className="text-sm text-slate-300 leading-relaxed font-light">
+                  {card.description}
+                </p>
               </div>
-              <h3 className="text-2xl font-bold text-white group-hover:text-cyan-300 transition">
-                Installation & Maintenance
-              </h3>
-              <p className="text-sm text-slate-300 leading-relaxed font-light">
-                Professional design, supply, installation, commissioning, and AMC/PMC services across all physical security systems. SLA-governed, UAE-wide coverage.
-              </p>
-            </div>
 
-            <div className="pt-8">
-              <Link
-                to="/solutions"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#0073b7] hover:bg-[#005a96] text-white font-bold text-xs uppercase tracking-wider shadow-md transition"
-              >
-                <span>Explore Installation Services</span>
-                <i className="fa-solid fa-arrow-right text-xs"></i>
-              </Link>
-            </div>
-          </div>
-
-          {/* Division 2 */}
-          <div className="p-8 rounded-2xl bg-[#032338] border border-white/10 hover:border-cyan-400/50 transition duration-300 flex flex-col justify-between shadow-xl group">
-            <div className="space-y-4">
-              <div className="w-14 h-14 rounded-2xl bg-cyan-400/10 text-cyan-300 flex items-center justify-center">
-                <i className="fa-solid fa-truck-ramp-box text-xl"></i>
+              <div className="pt-8">
+                {card.buttonLink?.startsWith('/') ? (
+                  <Link
+                    to={card.buttonLink}
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-white/30 hover:border-white bg-white/5 text-white font-bold text-xs uppercase tracking-wider transition"
+                  >
+                    <span>{card.buttonText || 'Explore'}</span>
+                    <i className="fa-solid fa-arrow-right text-xs"></i>
+                  </Link>
+                ) : (
+                  <a
+                    href={card.buttonLink}
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-white/30 hover:border-white bg-white/5 text-white font-bold text-xs uppercase tracking-wider transition"
+                  >
+                    <span>{card.buttonText || 'Explore'}</span>
+                    <i className="fa-solid fa-arrow-right text-xs"></i>
+                  </a>
+                )}
               </div>
-              <h3 className="text-2xl font-bold text-white group-hover:text-cyan-300 transition">
-                Security Equipment Trading
-              </h3>
-              <p className="text-sm text-slate-300 leading-relaxed font-light">
-                Supply of globally-recognised security hardware — cameras, recorders, access control, alarm panels, biometric devices, cabling — with UAE stock for fast delivery.
-              </p>
             </div>
-
-            <div className="pt-8">
-              <Link
-                to="/contact-us"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-white/30 hover:border-white bg-white/5 text-white font-bold text-xs uppercase tracking-wider transition"
-              >
-                <span>Request a Survey</span>
-                <i className="fa-solid fa-arrow-right text-xs"></i>
-              </Link>
-            </div>
-          </div>
+          ))}
 
         </div>
 
