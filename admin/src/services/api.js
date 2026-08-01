@@ -1,5 +1,120 @@
 const API_BASE_URL = 'http://localhost:5000/api';
 
+// Fetch Contact Config (GET /api/contact)
+export const fetchContactConfig = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/contact`);
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error fetchContactConfig:', error);
+    return { success: false, message: 'Backend server is offline' };
+  }
+};
+
+// Update Contact Config (PUT /api/contact)
+export const updateContactConfig = async (contactData) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/contact`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(contactData)
+    });
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error updateContactConfig:', error);
+    return { success: false, message: 'Backend server is offline' };
+  }
+};
+
+// Fetch Enquiries (GET /api/contact/message)
+export const fetchEnquiries = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/contact/message`);
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error fetchEnquiries:', error);
+    return { success: false, message: 'Backend server is offline' };
+  }
+};
+
+// Mark Enquiry as Read (PUT /api/contact/message/:id/read)
+export const markEnquiryRead = async (id) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/contact/message/${id}/read`, {
+      method: 'PUT'
+    });
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error markEnquiryRead:', error);
+    return { success: false, message: 'Backend server is offline' };
+  }
+};
+
+// Delete Enquiry (DELETE /api/contact/message/:id)
+export const deleteEnquiry = async (id) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/contact/message/${id}`, {
+      method: 'DELETE'
+    });
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error deleteEnquiry:', error);
+    return { success: false, message: 'Backend server is offline' };
+  }
+};
+
+// Fetch About Config (GET /api/about)
+export const fetchAboutConfig = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/about`);
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error fetchAboutConfig:', error);
+    return { success: false, message: 'Backend server is offline' };
+  }
+};
+
+// Update About Config (PUT /api/about)
+export const updateAboutConfig = async (aboutData) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/about`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(aboutData)
+    });
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error updateAboutConfig:', error);
+    return { success: false, message: 'Backend server is offline' };
+  }
+};
+
+// Fetch Section 6 Config (GET /api/section6)
+export const fetchSection6Config = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/section6`);
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error fetchSection6Config:', error);
+    return { success: false, message: 'Backend server is offline or unreachable' };
+  }
+};
+
+// Update Section 6 Config (PUT /api/section6)
+export const updateSection6Config = async (sec6Data) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/section6`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(sec6Data)
+    });
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error updateSection6Config:', error);
+    return { success: false, message: 'Backend server is offline or unreachable' };
+  }
+};
+
 // Fetch Section 5 Config (GET /api/section5)
 export const fetchSection5Config = async () => {
   try {

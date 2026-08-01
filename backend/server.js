@@ -10,6 +10,9 @@ import section2Routes from './routes/section2Routes.js';
 import section3Routes from './routes/section3Routes.js';
 import section4Routes from './routes/section4Routes.js';
 import section5Routes from './routes/section5Routes.js';
+import section6Routes from './routes/section6Routes.js';
+import aboutRoutes from './about/aboutRoutes.js';
+import contactRoutes from './contact/contactRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -31,6 +34,9 @@ app.use('/api/section2', section2Routes);
 app.use('/api/section3', section3Routes);
 app.use('/api/section4', section4Routes);
 app.use('/api/section5', section5Routes);
+app.use('/api/section6', section6Routes);
+app.use('/api/about', aboutRoutes);
+app.use('/api/contact', contactRoutes);
 
 // Root route
 app.get('/', (req, res) => {

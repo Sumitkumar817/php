@@ -5,9 +5,10 @@ import Toast from './components/Toast';
 import LoginPage from './views/LoginPage';
 import Home from './views/Home';
 import HeaderEditor from './views/HeaderEditor';
-import DashboardView from './views/DashboardView';
-import UserManagementView from './views/UserManagementView';
 import GenericSectionEditor from './views/GenericSectionEditor';
+import About from './views/About';
+import ContactEditor from './views/ContactEditor';
+import ContactMessages from './views/ContactMessages';
 import { ChevronRight } from 'lucide-react';
 import { logoutUser } from './services/api';
 
@@ -72,7 +73,12 @@ export default function App() {
         return ['Website', 'Industries Section'];
       case 'website-users':
         return ['Website', 'Users Management'];
+      case 'website-contact':
+        return ['Website', 'Contact Section'];
       case 'website-footer':
+        return ['Website', 'Footer Config'];
+      case 'enquiries':
+        return ['Enquiries', 'Form Submissions'];
         return ['Website', 'Footer Config'];
       case 'media':
         return ['Media Library', 'Assets'];
@@ -145,11 +151,23 @@ export default function App() {
             <UserManagementView onShowToast={showToast} />
           )}
 
+          {activeSection === 'website-about' && (
+            <About onShowToast={showToast} />
+          )}
+
+          {activeSection === 'website-contact' && (
+            <ContactEditor onShowToast={showToast} />
+          )}
+
+          {activeSection === 'enquiries' && (
+            <ContactMessages onShowToast={showToast} />
+          )}
+
           {activeSection === 'dashboard' && (
             <DashboardView onSelectSection={(sec) => setActiveSection(sec)} />
           )}
 
-          {activeSection !== 'website-home' && activeSection !== 'website-header' && activeSection !== 'website-users' && activeSection !== 'dashboard' && (
+          {activeSection !== 'website-home' && activeSection !== 'website-header' && activeSection !== 'website-users' && activeSection !== 'website-about' && activeSection !== 'website-contact' && activeSection !== 'enquiries' && activeSection !== 'dashboard' && (
             <GenericSectionEditor
               sectionKey={activeSection}
               title={breadcrumbs[1]}

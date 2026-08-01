@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function ContactPage() {
@@ -14,10 +14,66 @@ export default function ContactPage() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const [config, setConfig] = useState({
+    bannerTitle: "Get in Touch — We're Ready to Help",
+    bannerDesc: "Whether you need a site survey, a product quotation, or information about our annual maintenance contracts — our team is ready to respond quickly and professionally. Contact us by phone, email, or complete the enquiry form below.",
+    phone: "+971 50 288 5874",
+    whatsapp: "971502885874",
+    email: "info@unisparkinnovation.com",
+    address: "Dubai, United Arab Emirates",
+    coverage: "Dubai · Abu Dhabi · Sharjah · UAE Nationwide",
+    workingHours: "Sunday – Thursday, 8:00 AM – 6:00 PM (UAE)",
+    mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28884.867909334753!2d55.2707828!3d25.2048493!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f43348a6d0883%3A0x2f57581dbf302924!2sDubai!5e0!3m2!1sen!2sae!4v1625000000000!5m2!1sen!2sae",
+    partnerLinks: [
+      { title: "Looking for IT Services?", label: "Visit Horizon Hive Technology L.L.C", url: "https://horizonhivetechnology.com/" },
+      { title: "Looking for HR Solutions?", label: "Visit UniSpark Innovations Human Resource Consultants L.L.C", url: "https://usihr.com/" }
+    ]
+  });
+
+  const loadConfig = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/contact');
+      const data = await res.json();
+      if (data.success && data.data) {
+        setConfig(prev => ({ ...prev, ...data.data }));
+      }
+    } catch (err) {
+      console.warn("Error fetching contact config:", err);
+    }
+  };
+
+  useEffect(() => {
+    loadConfig();
+    const handleFocus = () => loadConfig();
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsSubmitting(true);
+    try {
+      const res = await fetch('http://localhost:5000/api/contact/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSubmitted(true);
+        setFormData({
+          fullName: '', companyName: '', email: '', phone: '', location: '', enquiryType: '', service: '', message: ''
+        });
+      } else {
+        alert("Failed to submit enquiry. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("Network error. Please try again later.");
+    }
+    setIsSubmitting(false);
   };
 
   return (
@@ -35,11 +91,11 @@ export default function ContactPage() {
           </nav>
 
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white">
-            Get in Touch — We're Ready to Help
+            {config.bannerTitle}
           </h1>
 
           <p className="text-sm sm:text-base text-slate-200 max-w-3xl leading-relaxed font-light">
-            Whether you need a site survey, a product quotation, or information about our annual maintenance contracts — our team is ready to respond quickly and professionally. Contact us by phone, email, or complete the enquiry form below.
+            {config.bannerDesc}
           </p>
         </div>
       </section>
@@ -211,9 +267,10 @@ export default function ContactPage() {
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="px-8 py-3.5 bg-[#0073b7] hover:bg-[#005a96] text-white font-bold text-sm rounded-xl shadow-md transition duration-300"
+                  disabled={isSubmitting}
+                  className="px-8 py-3.5 bg-[#0073b7] hover:bg-[#005a96] text-white font-bold text-sm rounded-xl shadow-md transition duration-300 disabled:opacity-50"
                 >
-                  Submit Enquiry
+                  {isSubmitting ? 'Submitting...' : 'Submit Enquiry'}
                 </button>
               </div>
 
@@ -236,9 +293,9 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-slate-900 mb-1">Call us</h4>
-                  <a href="tel:+971502885874" className="text-[#0073b7] font-bold text-sm block hover:underline">+971 50 288 5874</a>
-                  <a href="https://wa.me/971502885874" target="_blank" rel="noreferrer" className="text-emerald-600 font-bold text-xs block mt-1 hover:underline">
-                    <i className="fa-brands fa-whatsapp me-1"></i> +971 50 288 5874 — WhatsApp Business
+                  <a href={`tel:${config.phone.replace(/\s+/g, '')}`} className="text-[#0073b7] font-bold text-sm block hover:underline">{config.phone}</a>
+                  <a href={`https://wa.me/${config.whatsapp}`} target="_blank" rel="noreferrer" className="text-emerald-600 font-bold text-xs block mt-1 hover:underline">
+                    <i className="fa-brands fa-whatsapp me-1"></i> +{config.whatsapp} — WhatsApp Business
                   </a>
                 </div>
               </div>
@@ -249,8 +306,8 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-slate-900 mb-1">Email us</h4>
-                  <a href="mailto:info@unisparkinnovation.com" className="text-[#0073b7] font-bold text-sm block hover:underline">
-                    <span className="text-slate-900 font-bold">Sales:</span> info@unisparkinnovation.com
+                  <a href={`mailto:${config.email}`} className="text-[#0073b7] font-bold text-sm block hover:underline">
+                    <span className="text-slate-900 font-bold">Sales:</span> {config.email}
                   </a>
                 </div>
               </div>
@@ -261,9 +318,9 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-slate-900 mb-1">Company Address & Coverage</h4>
-                  <span className="text-slate-900 font-bold text-sm block">Dubai, United Arab Emirates</span>
+                  <span className="text-slate-900 font-bold text-sm block">{config.address}</span>
                   <span className="text-slate-500 text-xs block mt-1">
-                    <strong>Coverage:</strong> Dubai · Abu Dhabi · Sharjah · UAE Nationwide
+                    <strong>Coverage:</strong> {config.coverage}
                   </span>
                 </div>
               </div>
@@ -274,7 +331,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-slate-900 mb-1">Working Hours</h4>
-                  <span className="text-slate-500 text-xs">Sunday – Thursday, 8:00 AM – 6:00 PM (UAE)</span>
+                  <span className="text-slate-500 text-xs">{config.workingHours}</span>
                 </div>
               </div>
 
@@ -284,8 +341,8 @@ export default function ContactPage() {
             <div className="lg:col-span-6">
               <div className="h-full min-h-[350px] rounded-2xl border border-slate-200 overflow-hidden shadow-sm bg-white">
                 <iframe
-                  title="Dubai Location Map"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28884.867909334753!2d55.2707828!3d25.2048493!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f43348a6d0883%3A0x2f57581dbf302924!2sDubai!5e0!3m2!1sen!2sae!4v1625000000000!5m2!1sen!2sae"
+                  title="Location Map"
+                  src={config.mapEmbedUrl}
                   width="100%"
                   height="100%"
                   style={{ border: 0, minHeight: '350px' }}
@@ -300,31 +357,24 @@ export default function ContactPage() {
       </section>
 
       {/* Group Entity Links Banner */}
-      <section className="py-12 bg-white border-t border-slate-200 text-center">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
-            <div className="p-4 rounded-xl border border-slate-200 bg-white shadow-sm">
-              <p className="text-sm font-medium text-slate-800">
-                Looking for IT Services?<br />
-                <a href="https://horizonhivetechnology.com/" target="_blank" rel="noreferrer" className="text-[#0073b7] font-bold hover:underline">
-                  Visit Horizon Hive Technology L.L.C
-                </a>
-              </p>
+      {config.partnerLinks && config.partnerLinks.length > 0 && (
+        <section className="py-12 bg-white border-t border-slate-200 text-center">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-center">
+              {config.partnerLinks.map((link, idx) => (
+                <div key={idx} className="p-4 rounded-xl border border-slate-200 bg-white shadow-sm">
+                  <p className="text-sm font-medium text-slate-800">
+                    {link.title}<br />
+                    <a href={link.url} target="_blank" rel="noreferrer" className="text-[#0073b7] font-bold hover:underline">
+                      {link.label}
+                    </a>
+                  </p>
+                </div>
+              ))}
             </div>
-
-            <div className="p-4 rounded-xl border border-slate-200 bg-white shadow-sm">
-              <p className="text-sm font-medium text-slate-800">
-                Looking for HR Solutions?<br />
-                <a href="https://usihr.com/" target="_blank" rel="noreferrer" className="text-[#0073b7] font-bold hover:underline">
-                  Visit UniSpark Innovations Human Resource Consultants L.L.C
-                </a>
-              </p>
-            </div>
-
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
     </div>
   );

@@ -14,7 +14,9 @@ import {
   Settings,
   LogOut,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  Phone,
+  MessageSquare
 } from 'lucide-react';
 
 export default function Sidebar({ activeSection, setActiveSection, onLogout, isMobileOpen, onCloseMobile }) {
@@ -117,6 +119,15 @@ export default function Sidebar({ activeSection, setActiveSection, onLogout, isM
                   <span>Users</span>
                 </button>
 
+                {/* Contact */}
+                <button
+                  className={`sidebar-sub-item ${isWebsiteSubActive('contact') ? 'active' : ''}`}
+                  onClick={() => handleSelectSection('website-contact')}
+                >
+                  <Phone size={14} />
+                  <span>Contact</span>
+                </button>
+
                 {/* Footer */}
                 <button
                   className={`sidebar-sub-item ${isWebsiteSubActive('footer') ? 'active' : ''}`}
@@ -128,6 +139,17 @@ export default function Sidebar({ activeSection, setActiveSection, onLogout, isM
               </div>
             )}
           </div>
+
+          {/* Enquiries / Form Submissions */}
+          <button
+            className={`sidebar-item ${activeSection === 'enquiries' ? 'active' : ''}`}
+            onClick={() => handleSelectSection('enquiries')}
+          >
+            <div className="sidebar-item-content">
+              <MessageSquare size={18} />
+              <span>Enquiries</span>
+            </div>
+          </button>
 
           {/* Media Library */}
           <button

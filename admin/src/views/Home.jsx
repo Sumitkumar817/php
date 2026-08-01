@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Save, UploadCloud, Film, CheckCircle2, Link2, Type, FileText, Plus, X, Image as ImageIcon, Layers, Edit, Trash2, Shield, Check, Star } from 'lucide-react';
-import { fetchHeroConfig, updateHeroConfig, fetchSection2Config, updateSection2Config, fetchSection3Config, updateSection3Config, fetchSection4Config, updateSection4Config, fetchSection5Config, updateSection5Config } from '../services/api';
+import { fetchHeroConfig, updateHeroConfig, fetchSection2Config, updateSection2Config, fetchSection3Config, updateSection3Config, fetchSection4Config, updateSection4Config, fetchSection5Config, updateSection5Config, fetchSection6Config, updateSection6Config } from '../services/api';
 
 export default function Home({ onShowToast }) {
   // ==========================================
@@ -185,6 +185,35 @@ export default function Home({ onShowToast }) {
   const [sec5ModalImageBase64, setSec5ModalImageBase64] = useState('');
   const [sec5ModalBtnLink, setSec5ModalBtnLink] = useState('');
 
+  // ==========================================
+  // SECTION 6: WHY US SECTION STATE
+  // ==========================================
+  const [sec6Title, setSec6Title] = useState('WHY CHOOSE UNISPARK');
+  const [sec6Heading, setSec6Heading] = useState('Technical Authority. Trusted Delivery.');
+  const [sec6Description, setSec6Description] = useState('We combine regulatory expertise, multi-vendor technology integration, and lifecycle ownership to keep your critical assets protected.');
+  const [sec6ButtonText, setSec6ButtonText] = useState('View All Services');
+  const [sec6ButtonLink, setSec6ButtonLink] = useState('/solutions');
+  const [sec6Cards, setSec6Cards] = useState([
+    {
+      id: 'why-1',
+      title: 'UAE Regulatory Compliance',
+      description: 'All systems designed and installed in accordance with UAE Civil Defence, NESA, and DESC standards.',
+      icon: 'fa-building-shield'
+    }
+  ]);
+  const [loadingSec6, setLoadingSec6] = useState(true);
+  const [isSavingSec6, setIsSavingSec6] = useState(false);
+
+  // Section 6 Modal State
+  const [showSec6Modal, setShowSec6Modal] = useState(false);
+  const [editingSec6Id, setEditingSec6Id] = useState(null);
+  const [sec6ModalTitle, setSec6ModalTitle] = useState('');
+  const [sec6ModalDesc, setSec6ModalDesc] = useState('');
+  const [sec6ModalIcon, setSec6ModalIcon] = useState('');
+  const [sec6ModalImageFile, setSec6ModalImageFile] = useState(null);
+  const [sec6ModalImagePreviewUrl, setSec6ModalImagePreviewUrl] = useState('');
+  const [sec6ModalImageBase64, setSec6ModalImageBase64] = useState('');
+
   // Service Add / Edit Modal state
   const [showServiceModal, setShowServiceModal] = useState(false);
   const [editingServiceId, setEditingServiceId] = useState(null);
@@ -300,12 +329,30 @@ export default function Home({ onShowToast }) {
     setLoadingSec5(false);
   };
 
+  // Load Section 6 data
+  const loadSection6Data = async () => {
+    setLoadingSec6(true);
+    const res = await fetchSection6Config();
+    if (res.success && res.data) {
+      setSec6Title(res.data.title || 'WHY CHOOSE UNISPARK');
+      setSec6Heading(res.data.heading || 'Technical Authority. Trusted Delivery.');
+      setSec6Description(res.data.description || '');
+      setSec6ButtonText(res.data.button?.text || 'View All Services');
+      setSec6ButtonLink(res.data.button?.link || '/solutions');
+      if (Array.isArray(res.data.cards) && res.data.cards.length > 0) {
+        setSec6Cards(res.data.cards);
+      }
+    }
+    setLoadingSec6(false);
+  };
+
   useEffect(() => {
     loadHeroData();
     loadSection2Data();
     loadSection3Data();
     loadSection4Data();
     loadSection5Data();
+    loadSection6Data();
   }, []);
 
   // Section 1: Handle adding/removing word
@@ -525,6 +572,39 @@ export default function Home({ onShowToast }) {
     }
   };
 
+  // Section 6: Save Changes
+  const handleSaveSection6 = async (e) => {
+    if (e) e.preventDefault();
+    setIsSavingSec6(true);
+
+    const payload = {
+      title: sec6Title,
+      heading: sec6Heading,
+      description: sec6Description,
+      button: {
+        text: sec6ButtonText,
+        link: sec6ButtonLink
+      },
+      cards: sec6Cards
+    };
+
+    const res = await updateSection6Config(payload);
+    setIsSavingSec6(false);
+
+    if (res.success && res.data) {
+      if (Array.isArray(res.data.cards)) {
+        setSec6Cards(res.data.cards);
+      }
+      if (onShowToast) {
+        onShowToast('Section 6 saved successfully to MongoDB Atlas!');
+      }
+    } else {
+      if (onShowToast) {
+        onShowToast(`Error saving Section 6: ${res.message || 'Failed to save to backend'}`);
+      }
+    }
+  };
+
   // Open Add Service Modal
   const handleOpenAddServiceModal = () => {
     setEditingServiceId(null);
@@ -725,6 +805,80 @@ export default function Home({ onShowToast }) {
 
   const handleDeleteSec5Card = (idToDelete) => {
     setSec5Cards(prev => prev.filter(c => (c._id !== idToDelete && c.id !== idToDelete)));
+    if (onShowToast) onShowToast('Card removed. Click Save Changes to update database.');
+  };
+
+  // Section 6: Modals and Handlers
+  const handleOpenAddSec6Modal = () => {
+    setEditingSec6Id(null);
+    setSec6ModalTitle('');
+    setSec6ModalDesc('');
+    setSec6ModalIcon('');
+    setSec6ModalImageFile(null);
+    setSec6ModalImagePreviewUrl('');
+    setSec6ModalImageBase64('');
+    setShowSec6Modal(true);
+  };
+
+  const handleOpenEditSec6Modal = (card) => {
+    setEditingSec6Id(card._id || card.id);
+    setSec6ModalTitle(card.title);
+    setSec6ModalDesc(card.description || '');
+    if (card.icon && (card.icon.startsWith('data:image/') || card.icon.startsWith('http'))) {
+      setSec6ModalImagePreviewUrl(card.icon);
+      setSec6ModalIcon('');
+    } else {
+      setSec6ModalIcon(card.icon || '');
+      setSec6ModalImagePreviewUrl('');
+    }
+    setSec6ModalImageFile(null);
+    setSec6ModalImageBase64('');
+    setShowSec6Modal(true);
+  };
+
+  const handleSec6ImageSelect = (file) => {
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        if (onShowToast) onShowToast('Please upload a valid image file (PNG, SVG, JPG).');
+        return;
+      }
+      setSec6ModalImageFile(file);
+      setSec6ModalImagePreviewUrl(URL.createObjectURL(file));
+      setSec6ModalIcon('');
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSec6ModalImageBase64(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSaveModalSec6 = () => {
+    if (!sec6ModalTitle.trim()) {
+      if (onShowToast) onShowToast('Card Title is required.');
+      return;
+    }
+
+    const newCardObj = {
+      id: editingSec6Id || `sec6-${Date.now()}`,
+      _id: editingSec6Id || undefined,
+      title: sec6ModalTitle.trim(),
+      description: sec6ModalDesc.trim(),
+      icon: sec6ModalImageBase64 || sec6ModalImagePreviewUrl || sec6ModalIcon.trim() || 'fa-award'
+    };
+
+    if (editingSec6Id) {
+      setSec6Cards(prev => prev.map(c => (c._id === editingSec6Id || c.id === editingSec6Id) ? newCardObj : c));
+      if (onShowToast) onShowToast('Card updated locally! Click Save to publish.');
+    } else {
+      setSec6Cards(prev => [...prev, newCardObj]);
+      if (onShowToast) onShowToast('New Card added! Click Save to publish.');
+    }
+    setShowSec6Modal(false);
+  };
+
+  const handleDeleteSec6Card = (idToDelete) => {
+    setSec6Cards(prev => prev.filter(c => (c._id !== idToDelete && c.id !== idToDelete)));
     if (onShowToast) onShowToast('Card removed. Click Save Changes to update database.');
   };
 
@@ -2189,6 +2343,284 @@ export default function Home({ onShowToast }) {
               <button type="button" onClick={() => setShowSec5Modal(false)} className="file-upload-btn" style={{ padding: '0.5rem 1.25rem' }}>Cancel</button>
               <button type="button" onClick={handleSaveModalSec5} className="btn-primary" style={{ padding: '0.5rem 1.5rem', fontSize: '0.875rem' }}>
                 {editingSec5Id ? 'Update Card' : 'Add Card'}
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* SECTION 6: WHY US SECTION CARD                                            */}
+      {/* ========================================================================= */}
+      <div className="content-card" style={{ width: '100%' }}>
+        
+        {/* Section 6 Header Bar */}
+        <div 
+          className="content-card-header" 
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between',
+            padding: '1.25rem 1.75rem',
+            borderBottom: '1px solid var(--border-color)'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <h2 className="card-title" style={{ fontSize: '1.1rem', fontWeight: 600 }}>
+              Home &gt; Website &gt; Home &gt; Section 6 (Why Choose Us)
+            </h2>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleSaveSection6}
+            className="btn-primary"
+            style={{ margin: 0, padding: '0.5rem 1.25rem', fontSize: '0.875rem' }}
+            disabled={isSavingSec6}
+          >
+            <Save size={16} />
+            <span>{isSavingSec6 ? 'Saving...' : 'Save Changes'} 💾</span>
+          </button>
+        </div>
+
+        {/* Section 6 Card Body */}
+        <div className="content-card-body" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+          
+          <form onSubmit={handleSaveSection6} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>
+              Why Us Section Settings
+            </h3>
+
+            {/* Title */}
+            <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <label className="form-label" style={{ fontWeight: 600, color: 'var(--text-main)' }}>
+                Title
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                value={sec6Title}
+                onChange={(e) => setSec6Title(e.target.value)}
+                placeholder="WHY CHOOSE UNISPARK"
+              />
+            </div>
+
+            {/* Heading */}
+            <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <label className="form-label" style={{ fontWeight: 600, color: 'var(--text-main)' }}>
+                Heading
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                value={sec6Heading}
+                onChange={(e) => setSec6Heading(e.target.value)}
+                placeholder="Technical Authority. Trusted Delivery."
+              />
+            </div>
+
+            {/* Description */}
+            <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <label className="form-label" style={{ fontWeight: 600, color: 'var(--text-main)' }}>
+                Description
+              </label>
+              <textarea
+                className="form-control"
+                rows={3}
+                value={sec6Description}
+                onChange={(e) => setSec6Description(e.target.value)}
+                placeholder="We combine regulatory expertise..."
+              />
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <label className="form-label" style={{ fontWeight: 600, color: 'var(--text-main)' }}>
+                  Button Text
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={sec6ButtonText}
+                  onChange={(e) => setSec6ButtonText(e.target.value)}
+                  placeholder="View All Services"
+                />
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <label className="form-label" style={{ fontWeight: 600, color: 'var(--text-main)' }}>
+                  Button Link
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={sec6ButtonLink}
+                  onChange={(e) => setSec6ButtonLink(e.target.value)}
+                  placeholder="/solutions"
+                />
+              </div>
+            </div>
+
+            {/* Cards Grid Header */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-main)', margin: 0 }}>
+                Pillar Cards
+              </h3>
+              
+              <button
+                type="button"
+                onClick={handleOpenAddSec6Modal}
+                className="btn-primary"
+                style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', margin: 0 }}
+              >
+                <Plus size={14} />
+                <span>Add Card</span>
+              </button>
+            </div>
+
+            {/* Cards List Grid */}
+            {sec6Cards.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '3rem', border: '2px dashed var(--border-light)', borderRadius: 'var(--radius-lg)' }}>
+                <p style={{ color: 'var(--text-muted)' }}>No cards found. Click "Add Card" to create one.</p>
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
+                {sec6Cards.map((card) => (
+                  <div key={card.id || card._id} style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', overflow: 'hidden', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                    
+                    <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1 }}>
+                      {card.icon && (card.icon.startsWith('http') || card.icon.startsWith('data:image/')) ? (
+                        <div style={{ width: '48px', height: '48px', borderRadius: '8px', overflow: 'hidden' }}>
+                          <img src={card.icon} alt={card.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        </div>
+                      ) : (
+                        <div style={{ width: '48px', height: '48px', borderRadius: '8px', backgroundColor: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <i className={`fa-solid ${card.icon || 'fa-award'} text-xl`}></i>
+                        </div>
+                      )}
+                      
+                      <h4 style={{ fontSize: '1.05rem', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>
+                        {card.title}
+                      </h4>
+                      
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5, flex: 1 }}>
+                        {card.description}
+                      </p>
+                    </div>
+
+                    {/* Actions */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', borderTop: '1px solid var(--border-color)', padding: '0.75rem 1.25rem', gap: '0.5rem' }}>
+                      <button
+                        type="button"
+                        onClick={() => handleOpenEditSec6Modal(card)}
+                        className="file-upload-btn"
+                        style={{ padding: '0.35rem 0.75rem', fontSize: '0.75rem' }}
+                      >
+                        <Edit size={13} />
+                        <span>Edit</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteSec6Card(card.id || card._id)}
+                        style={{
+                          padding: '0.35rem 0.6rem',
+                          fontSize: '0.75rem',
+                          backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                          color: 'var(--danger)',
+                          border: '1px solid rgba(239, 68, 68, 0.2)',
+                          borderRadius: 'var(--radius-md)',
+                          cursor: 'pointer'
+                        }}
+                        title="Delete Card"
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
+
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '1rem' }}>
+              <button type="submit" className="btn-primary" style={{ padding: '0.8rem 2.5rem', fontSize: '1rem' }} disabled={isSavingSec6}>
+                <Save size={18} />
+                <span>{isSavingSec6 ? 'Saving...' : 'Save Changes'}</span>
+              </button>
+            </div>
+            
+          </form>
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* SECTION 6: CARD MODAL                                                     */}
+      {/* ========================================================================= */}
+      {showSec6Modal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(4px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+          
+          <div style={{ backgroundColor: 'var(--bg-card)', width: '100%', maxWidth: '500px', borderRadius: 'var(--radius-lg)', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.2)', display: 'flex', flexDirection: 'column', maxHeight: '90vh' }}>
+            
+            {/* Modal Header */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border-color)' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>
+                {editingSec6Id ? 'Edit Pillar Card' : 'Add Pillar Card'}
+              </h3>
+              <button onClick={() => setShowSec6Modal(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.25rem' }}>
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', overflowY: 'auto' }}>
+              
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label" style={{ fontWeight: 600 }}>Title *</label>
+                <input type="text" className="form-control" value={sec6ModalTitle} onChange={(e) => setSec6ModalTitle(e.target.value)} placeholder="e.g. UAE Regulatory Compliance" />
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label" style={{ fontWeight: 600 }}>Description</label>
+                <textarea className="form-control" rows={3} value={sec6ModalDesc} onChange={(e) => setSec6ModalDesc(e.target.value)} placeholder="e.g. All systems designed and installed..." />
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label" style={{ fontWeight: 600 }}>FontAwesome Icon Class</label>
+                <input type="text" className="form-control" value={sec6ModalIcon} onChange={(e) => {
+                  setSec6ModalIcon(e.target.value);
+                  setSec6ModalImageFile(null);
+                  setSec6ModalImagePreviewUrl('');
+                  setSec6ModalImageBase64('');
+                }} placeholder="e.g. fa-building-shield" />
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>OR upload an image below</span>
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label" style={{ fontWeight: 600 }}>Card Image Upload</label>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleSec6ImageSelect(e.target.files[0])}
+                    className="form-control"
+                    style={{ flex: 1 }}
+                  />
+                  {sec6ModalImagePreviewUrl && (
+                    <img src={sec6ModalImagePreviewUrl} alt="Preview" style={{ width: '48px', height: '48px', borderRadius: '4px', objectFit: 'cover' }} />
+                  )}
+                </div>
+              </div>
+
+            </div>
+
+            {/* Modal Footer */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', padding: '1rem 1.5rem', borderTop: '1px solid var(--border-color)', backgroundColor: 'var(--bg-input)' }}>
+              <button type="button" onClick={() => setShowSec6Modal(false)} className="file-upload-btn" style={{ padding: '0.5rem 1.25rem' }}>Cancel</button>
+              <button type="button" onClick={handleSaveModalSec6} className="btn-primary" style={{ padding: '0.5rem 1.5rem', fontSize: '0.875rem' }}>
+                {editingSec6Id ? 'Update Card' : 'Add Card'}
               </button>
             </div>
 
