@@ -63,6 +63,58 @@ export const deleteEnquiry = async (id) => {
   }
 };
 
+// Fetch Partner Config (GET /api/partners)
+export const fetchPartnerConfig = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/partners`);
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error fetchPartnerConfig:', error);
+    return { success: false, message: 'Backend server is offline' };
+  }
+};
+
+// Update Partner Config (PUT /api/partners)
+export const updatePartnerConfig = async (partnerData) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/partners`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(partnerData)
+    });
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error updatePartnerConfig:', error);
+    return { success: false, message: 'Backend server is offline' };
+  }
+};
+
+// Fetch Stats Config (GET /api/stats)
+export const fetchStatsConfig = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/stats`);
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error fetchStatsConfig:', error);
+    return { success: false, message: 'Backend server is offline' };
+  }
+};
+
+// Update Stats Config (PUT /api/stats)
+export const updateStatsConfig = async (statsData) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/stats`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(statsData)
+    });
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error updateStatsConfig:', error);
+    return { success: false, message: 'Backend server is offline' };
+  }
+};
+
 // Fetch About Config (GET /api/about)
 export const fetchAboutConfig = async () => {
   try {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Save, UploadCloud, Film, CheckCircle2, Link2, Type, FileText, Plus, X, Image as ImageIcon, Layers, Edit, Trash2, Shield, Check, Star } from 'lucide-react';
-import { fetchHeroConfig, updateHeroConfig, fetchSection2Config, updateSection2Config, fetchSection3Config, updateSection3Config, fetchSection4Config, updateSection4Config, fetchSection5Config, updateSection5Config, fetchSection6Config, updateSection6Config } from '../services/api';
+import { fetchHeroConfig, updateHeroConfig, fetchSection2Config, updateSection2Config, fetchSection3Config, updateSection3Config, fetchSection4Config, updateSection4Config, fetchSection5Config, updateSection5Config, fetchSection6Config, updateSection6Config, fetchPartnerConfig, updatePartnerConfig, fetchStatsConfig, updateStatsConfig, fetchAboutConfig, updateAboutConfig } from '../services/api';
 
 export default function Home({ onShowToast }) {
   // ==========================================
@@ -214,6 +214,73 @@ export default function Home({ onShowToast }) {
   const [sec6ModalImagePreviewUrl, setSec6ModalImagePreviewUrl] = useState('');
   const [sec6ModalImageBase64, setSec6ModalImageBase64] = useState('');
 
+  // ==========================================
+  // SECTION 7: PARTNERS SECTION STATE
+  // ==========================================
+  const [sec7Badge, setSec7Badge] = useState('GLOBAL ALLIANCE');
+  const [sec7Heading, setSec7Heading] = useState("Powered by the World's Leading Security Brands");
+  const [partnersList, setPartnersList] = useState([]);
+  const [loadingSec7, setLoadingSec7] = useState(true);
+  const [isSavingSec7, setIsSavingSec7] = useState(false);
+
+  // Section 7 Modal State
+  const [showPartnerModal, setShowPartnerModal] = useState(false);
+  const [editingPartnerId, setEditingPartnerId] = useState(null);
+  const [partnerModalName, setPartnerModalName] = useState('');
+  const [partnerModalLogoPreviewUrl, setPartnerModalLogoPreviewUrl] = useState('');
+  const [partnerModalLogoBase64, setPartnerModalLogoBase64] = useState('');
+  const [partnerModalLink, setPartnerModalLink] = useState('');
+
+  // ==========================================
+  // SECTION 8: STATS SECTION STATE
+  // ==========================================
+  const [statsList, setStatsList] = useState([]);
+  const [loadingSec8, setLoadingSec8] = useState(true);
+  const [isSavingSec8, setIsSavingSec8] = useState(false);
+
+  // Section 8 Modal State
+  const [showStatsModal, setShowStatsModal] = useState(false);
+  const [editingStatsId, setEditingStatsId] = useState(null);
+  const [statsModalTitle, setStatsModalTitle] = useState('');
+  const [statsModalSubtitle, setStatsModalSubtitle] = useState('');
+  const [statsModalCaption, setStatsModalCaption] = useState('');
+  const [statsModalIcon, setStatsModalIcon] = useState('MapPin');
+
+  // ==========================================
+  // SECTION 9: OUR GROUP STRUCTURE STATE
+  // ==========================================
+  const [fullAboutDoc, setFullAboutDoc] = useState(null);
+  const [sec9GroupBadge, setSec9GroupBadge] = useState('CORPORATE ARCHITECTURE');
+  const [sec9GroupTitle, setSec9GroupTitle] = useState('OUR GROUP STRUCTURE');
+  const [sec9GroupDesc, setSec9GroupDesc] = useState('');
+  const [sec9GroupCards, setSec9GroupCards] = useState([]);
+  const [isSavingSec9, setIsSavingSec9] = useState(false);
+
+  // Section 9 Modal State
+  const [showGroupModal, setShowGroupModal] = useState(false);
+  const [editingGroupId, setEditingGroupId] = useState(null);
+  const [groupModalTag, setGroupModalTag] = useState('');
+  const [groupModalTitle, setGroupModalTitle] = useState('');
+  const [groupModalSubtitle, setGroupModalSubtitle] = useState('Core Business:');
+  const [groupModalTagsInput, setGroupModalTagsInput] = useState('');
+  const [groupModalIcon, setGroupModalIcon] = useState('Building2');
+  const [groupModalLink, setGroupModalLink] = useState('');
+  const [groupModalDisclaimer, setGroupModalDisclaimer] = useState('');
+
+  // ==========================================
+  // SECTION 10: FUTURISTIC CTA STATE
+  // ==========================================
+  const [sec10CtaBadge, setSec10CtaBadge] = useState('NEXT-GEN INTEGRATION');
+  const [sec10CtaTitle, setSec10CtaTitle] = useState("Let's Discuss Your Security Requirements");
+  const [sec10CtaDesc, setSec10CtaDesc] = useState('');
+  const [sec10PrimaryBtnText, setSec10PrimaryBtnText] = useState('Request a Free Site Survey');
+  const [sec10PrimaryBtnLink, setSec10PrimaryBtnLink] = useState('/contact-us');
+  const [sec10SecondaryBtnText, setSec10SecondaryBtnText] = useState('Download Company Profile');
+  const [sec10SecondaryBtnLink, setSec10SecondaryBtnLink] = useState('/company-profile.pdf');
+  const [sec10CtaBgPreviewUrl, setSec10CtaBgPreviewUrl] = useState('');
+  const [sec10CtaBgBase64, setSec10CtaBgBase64] = useState('');
+  const [isSavingSec10, setIsSavingSec10] = useState(false);
+
   // Service Add / Edit Modal state
   const [showServiceModal, setShowServiceModal] = useState(false);
   const [editingServiceId, setEditingServiceId] = useState(null);
@@ -346,6 +413,56 @@ export default function Home({ onShowToast }) {
     setLoadingSec6(false);
   };
 
+  // Load Partner Section 7 data
+  const loadPartnerData = async () => {
+    setLoadingSec7(true);
+    const res = await fetchPartnerConfig();
+    if (res.success && res.data) {
+      setSec7Badge(res.data.badgeText || 'GLOBAL ALLIANCE');
+      setSec7Heading(res.data.headingText || "Powered by the World's Leading Security Brands");
+      if (Array.isArray(res.data.partnersList)) {
+        setPartnersList(res.data.partnersList);
+      }
+    }
+    setLoadingSec7(false);
+  };
+
+  // Load Stats Section 8 data
+  const loadStatsData = async () => {
+    setLoadingSec8(true);
+    const res = await fetchStatsConfig();
+    if (res.success && res.data) {
+      if (Array.isArray(res.data.statsList)) {
+        setStatsList(res.data.statsList);
+      }
+    }
+    setLoadingSec8(false);
+  };
+
+  // Load Group Section 9 & CTA Section 10 data
+  const loadGroupAndCtaData = async () => {
+    const res = await fetchAboutConfig();
+    if (res.success && res.data) {
+      setFullAboutDoc(res.data);
+      setSec9GroupBadge(res.data.groupBadge || 'CORPORATE ARCHITECTURE');
+      setSec9GroupTitle(res.data.groupTitle || 'OUR GROUP STRUCTURE');
+      setSec9GroupDesc(res.data.groupDesc || '');
+      if (Array.isArray(res.data.groupCards)) {
+        setSec9GroupCards(res.data.groupCards);
+      }
+      setSec10CtaBadge(res.data.ctaBadge || 'NEXT-GEN INTEGRATION');
+      setSec10CtaTitle(res.data.ctaTitle || "Let's Discuss Your Security Requirements");
+      setSec10CtaDesc(res.data.ctaDesc || '');
+      setSec10PrimaryBtnText(res.data.ctaPrimaryBtnText || 'Request a Free Site Survey');
+      setSec10PrimaryBtnLink(res.data.ctaPrimaryBtnLink || '/contact-us');
+      setSec10SecondaryBtnText(res.data.ctaSecondaryBtnText || 'Download Company Profile');
+      setSec10SecondaryBtnLink(res.data.ctaSecondaryBtnLink || '/company-profile.pdf');
+      if (res.data.ctaBgImage) {
+        setSec10CtaBgPreviewUrl(res.data.ctaBgImage);
+      }
+    }
+  };
+
   useEffect(() => {
     loadHeroData();
     loadSection2Data();
@@ -353,7 +470,260 @@ export default function Home({ onShowToast }) {
     loadSection4Data();
     loadSection5Data();
     loadSection6Data();
+    loadPartnerData();
+    loadStatsData();
+    loadGroupAndCtaData();
   }, []);
+
+  // Save Section 9: Our Group Structure
+  const handleSaveSec9 = async (e) => {
+    if (e) e.preventDefault();
+    setIsSavingSec9(true);
+    const updatedPayload = {
+      ...(fullAboutDoc || {}),
+      groupBadge: sec9GroupBadge,
+      groupTitle: sec9GroupTitle,
+      groupDesc: sec9GroupDesc,
+      groupCards: sec9GroupCards
+    };
+    const res = await updateAboutConfig(updatedPayload);
+    setIsSavingSec9(false);
+    if (res.success) {
+      if (res.data) setFullAboutDoc(res.data);
+      if (onShowToast) onShowToast('Group Structure Section saved successfully!');
+    } else {
+      if (onShowToast) onShowToast(res.message || 'Error saving Group Structure section.');
+    }
+  };
+
+  // Save Section 10: Futuristic CTA
+  const handleSaveSec10 = async (e) => {
+    if (e) e.preventDefault();
+    setIsSavingSec10(true);
+    const updatedPayload = {
+      ...(fullAboutDoc || {}),
+      ctaBadge: sec10CtaBadge,
+      ctaTitle: sec10CtaTitle,
+      ctaDesc: sec10CtaDesc,
+      ctaPrimaryBtnText: sec10PrimaryBtnText,
+      ctaPrimaryBtnLink: sec10PrimaryBtnLink,
+      ctaSecondaryBtnText: sec10SecondaryBtnText,
+      ctaSecondaryBtnLink: sec10SecondaryBtnLink,
+      ctaBgImage: sec10CtaBgBase64 || sec10CtaBgPreviewUrl
+    };
+    const res = await updateAboutConfig(updatedPayload);
+    setIsSavingSec10(false);
+    if (res.success) {
+      if (res.data) {
+        setFullAboutDoc(res.data);
+        if (res.data.ctaBgImage) setSec10CtaBgPreviewUrl(res.data.ctaBgImage);
+      }
+      if (onShowToast) onShowToast('CTA Section saved successfully!');
+    } else {
+      if (onShowToast) onShowToast(res.message || 'Error saving CTA section.');
+    }
+  };
+
+  // Section 9 Group Card Modal Handlers
+  const handleOpenAddGroupCard = () => {
+    setEditingGroupId(null);
+    setGroupModalTag('');
+    setGroupModalTitle('');
+    setGroupModalSubtitle('Core Business:');
+    setGroupModalTagsInput('');
+    setGroupModalIcon('Building2');
+    setGroupModalLink('');
+    setGroupModalDisclaimer('');
+    setShowGroupModal(true);
+  };
+
+  const handleOpenEditGroupCard = (card, idx) => {
+    setEditingGroupId(idx);
+    setGroupModalTag(card.tag || '');
+    setGroupModalTitle(card.title || '');
+    setGroupModalSubtitle(card.subtitle || 'Core Business:');
+    setGroupModalTagsInput(Array.isArray(card.tags) ? card.tags.join(', ') : '');
+    setGroupModalIcon(card.icon || 'Building2');
+    setGroupModalLink(card.link || '');
+    setGroupModalDisclaimer(card.disclaimer || '');
+    setShowGroupModal(true);
+  };
+
+  const handleDeleteGroupCard = (idx) => {
+    setSec9GroupCards(prev => prev.filter((_, i) => i !== idx));
+    if (onShowToast) onShowToast('Group entity removed.');
+  };
+
+  const handleSaveModalGroupCard = () => {
+    if (!groupModalTitle.trim()) {
+      if (onShowToast) onShowToast('Entity Title is required.');
+      return;
+    }
+    const parsedTags = groupModalTagsInput
+      .split(',')
+      .map(t => t.trim())
+      .filter(t => t.length > 0);
+
+    const newCard = {
+      tag: groupModalTag.trim(),
+      title: groupModalTitle.trim(),
+      subtitle: groupModalSubtitle.trim(),
+      tags: parsedTags,
+      icon: groupModalIcon,
+      link: groupModalLink.trim(),
+      disclaimer: groupModalDisclaimer.trim()
+    };
+
+    if (editingGroupId !== null) {
+      setSec9GroupCards(prev => prev.map((item, i) => i === editingGroupId ? newCard : item));
+    } else {
+      setSec9GroupCards(prev => [...prev, newCard]);
+    }
+
+    setShowGroupModal(false);
+    if (onShowToast) onShowToast(editingGroupId !== null ? 'Group entity updated.' : 'Group entity added.');
+  };
+
+  // Section 10 CTA BG Image File Select Handler
+  const handleCtaBgFileSelect = (file) => {
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        if (onShowToast) onShowToast('Please select a valid image file.');
+        return;
+      }
+      setSec10CtaBgPreviewUrl(URL.createObjectURL(file));
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSec10CtaBgBase64(reader.result);
+      };
+      reader.readAsDataURL(file);
+      if (onShowToast) onShowToast(`Selected background image: ${file.name}`);
+    }
+  };
+
+  // Save Section 7: Partners
+  const handleSaveSec7 = async (e) => {
+    e.preventDefault();
+    setIsSavingSec7(true);
+    const res = await updatePartnerConfig({
+      badgeText: sec7Badge,
+      headingText: sec7Heading,
+      partnersList
+    });
+    setIsSavingSec7(false);
+    if (res.success) {
+      if (onShowToast) onShowToast('Partners Section saved successfully!');
+    } else {
+      if (onShowToast) onShowToast(res.message || 'Error saving Partners section.');
+    }
+  };
+
+  // Save Section 8: Stats
+  const handleSaveSec8 = async (e) => {
+    e.preventDefault();
+    setIsSavingSec8(true);
+    const res = await updateStatsConfig({
+      statsList
+    });
+    setIsSavingSec8(false);
+    if (res.success) {
+      if (onShowToast) onShowToast('Stats Section saved successfully!');
+    } else {
+      if (onShowToast) onShowToast(res.message || 'Error saving Stats section.');
+    }
+  };
+
+  // Section 7 Modal Handlers
+  const handleOpenAddPartner = () => {
+    setEditingPartnerId(null);
+    setPartnerModalName('');
+    setPartnerModalLogoPreviewUrl('');
+    setPartnerModalLogoBase64('');
+    setPartnerModalLink('');
+    setShowPartnerModal(true);
+  };
+
+  const handleOpenEditPartner = (partner, idx) => {
+    setEditingPartnerId(idx);
+    setPartnerModalName(partner.name || '');
+    setPartnerModalLogoPreviewUrl(partner.logoUrl || '');
+    setPartnerModalLogoBase64('');
+    setPartnerModalLink(partner.link || '');
+    setShowPartnerModal(true);
+  };
+
+  const handleDeletePartner = (idx) => {
+    setPartnersList(prev => prev.filter((_, i) => i !== idx));
+    if (onShowToast) onShowToast('Partner logo removed.');
+  };
+
+  const handleSaveModalPartner = () => {
+    if (!partnerModalName.trim()) {
+      if (onShowToast) onShowToast('Partner name is required.');
+      return;
+    }
+    const logoToUse = partnerModalLogoBase64 || partnerModalLogoPreviewUrl || '/images/pt1.jpg';
+    const newPartner = {
+      name: partnerModalName.trim(),
+      logoUrl: logoToUse,
+      link: partnerModalLink.trim()
+    };
+
+    if (editingPartnerId !== null) {
+      setPartnersList(prev => prev.map((item, i) => i === editingPartnerId ? newPartner : item));
+    } else {
+      setPartnersList(prev => [...prev, newPartner]);
+    }
+
+    setShowPartnerModal(false);
+    if (onShowToast) onShowToast(editingPartnerId !== null ? 'Partner updated.' : 'Partner added.');
+  };
+
+  // Section 8 Modal Handlers
+  const handleOpenAddStats = () => {
+    setEditingStatsId(null);
+    setStatsModalTitle('');
+    setStatsModalSubtitle('');
+    setStatsModalCaption('');
+    setStatsModalIcon('MapPin');
+    setShowStatsModal(true);
+  };
+
+  const handleOpenEditStats = (stat, idx) => {
+    setEditingStatsId(idx);
+    setStatsModalTitle(stat.title || '');
+    setStatsModalSubtitle(stat.subtitle || '');
+    setStatsModalCaption(stat.caption || '');
+    setStatsModalIcon(stat.icon || 'MapPin');
+    setShowStatsModal(true);
+  };
+
+  const handleDeleteStats = (idx) => {
+    setStatsList(prev => prev.filter((_, i) => i !== idx));
+    if (onShowToast) onShowToast('Stat item removed.');
+  };
+
+  const handleSaveModalStats = () => {
+    if (!statsModalTitle.trim() || !statsModalSubtitle.trim()) {
+      if (onShowToast) onShowToast('Title and Subtitle are required.');
+      return;
+    }
+    const newStat = {
+      title: statsModalTitle.trim(),
+      subtitle: statsModalSubtitle.trim(),
+      caption: statsModalCaption.trim(),
+      icon: statsModalIcon
+    };
+
+    if (editingStatsId !== null) {
+      setStatsList(prev => prev.map((item, i) => i === editingStatsId ? newStat : item));
+    } else {
+      setStatsList(prev => [...prev, newStat]);
+    }
+
+    setShowStatsModal(false);
+    if (onShowToast) onShowToast(editingStatsId !== null ? 'Stat updated.' : 'Stat added.');
+  };
 
   // Section 1: Handle adding/removing word
   const handleAddWord = () => {
@@ -409,6 +779,23 @@ export default function Home({ onShowToast }) {
       reader.readAsDataURL(file);
 
       if (onShowToast) onShowToast(`Selected image: ${file.name}`);
+    }
+  };
+
+  // Section 7: Partner Logo select
+  const handlePartnerLogoSelect = (file) => {
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        if (onShowToast) onShowToast('Please select a valid logo image.');
+        return;
+      }
+      setPartnerModalLogoPreviewUrl(URL.createObjectURL(file));
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPartnerModalLogoBase64(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -2551,7 +2938,353 @@ export default function Home({ onShowToast }) {
                 <span>{isSavingSec6 ? 'Saving...' : 'Save Changes'}</span>
               </button>
             </div>
+          </form>
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* SECTION 7: GLOBAL PARTNERS CMS                                            */}
+      {/* ========================================================================= */}
+      <div className="card" style={{ marginBottom: '2.5rem' }}>
+        <div className="card-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Layers className="text-primary" size={20} />
+              <span>Section 7: Global Alliance & Brand Logos CMS</span>
+            </h3>
+            <p className="card-subtitle">Manage partner security brand logos displayed on the home page.</p>
+          </div>
+          <button type="button" onClick={handleOpenAddPartner} className="btn-primary" style={{ padding: '0.45rem 1rem', fontSize: '0.825rem' }}>
+            <Plus size={16} />
+            <span>Add Partner Logo</span>
+          </button>
+        </div>
+
+        <div className="card-body">
+          <form onSubmit={handleSaveSec7} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Badge Text</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={sec7Badge}
+                  onChange={(e) => setSec7Badge(e.target.value)}
+                  placeholder="e.g. GLOBAL ALLIANCE"
+                />
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Heading Text</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={sec7Heading}
+                  onChange={(e) => setSec7Heading(e.target.value)}
+                  placeholder="e.g. Powered by the World's Leading Security Brands"
+                />
+              </div>
+            </div>
+
+            {/* Partner Logos Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+              {partnersList.map((partner, idx) => (
+                <div key={idx} style={{ border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', backgroundColor: 'var(--bg-card)' }}>
+                  <img src={partner.logoUrl} alt={partner.name} style={{ maxHeight: '48px', objectFit: 'contain' }} />
+                  <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>{partner.name}</span>
+                  <div style={{ display: 'flex', gap: '0.5rem', width: '100%', justifyContent: 'center' }}>
+                    <button type="button" onClick={() => handleOpenEditPartner(partner, idx)} className="file-upload-btn" style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}>
+                      <Edit size={12} />
+                    </button>
+                    <button type="button" onClick={() => handleDeletePartner(idx)} style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem', backgroundColor: 'rgba(239,68,68,0.1)', color: 'var(--danger)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 'var(--radius-md)' }}>
+                      <Trash2 size={12} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '1rem' }}>
+              <button type="submit" className="btn-primary" style={{ padding: '0.8rem 2.5rem', fontSize: '1rem' }} disabled={isSavingSec7}>
+                <Save size={18} />
+                <span>{isSavingSec7 ? 'Saving...' : 'Save Changes'}</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* SECTION 8: STATS METRICS CMS                                              */}
+      {/* ========================================================================= */}
+      <div className="card" style={{ marginBottom: '2.5rem' }}>
+        <div className="card-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Layers className="text-primary" size={20} />
+              <span>Section 8: Key Performance & Stats Metrics CMS</span>
+            </h3>
+            <p className="card-subtitle">Manage performance counter cards displayed on the home page.</p>
+          </div>
+          <button type="button" onClick={handleOpenAddStats} className="btn-primary" style={{ padding: '0.45rem 1rem', fontSize: '0.825rem' }}>
+            <Plus size={16} />
+            <span>Add Stat Metric</span>
+          </button>
+        </div>
+
+        <div className="card-body">
+          <form onSubmit={handleSaveSec8} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1rem' }}>
+              {statsList.map((stat, idx) => (
+                <div key={idx} style={{ border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '1.25rem', backgroundColor: 'var(--bg-card)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <div style={{ fontWeight: 700, fontSize: '1.25rem', color: 'var(--primary)' }}>{stat.title}</div>
+                  <div style={{ fontWeight: 600, fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--text-main)' }}>{stat.subtitle}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{stat.caption}</div>
+                  <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+                    <button type="button" onClick={() => handleOpenEditStats(stat, idx)} className="file-upload-btn" style={{ padding: '0.3rem 0.6rem', fontSize: '0.75rem' }}>
+                      <Edit size={12} /> Edit
+                    </button>
+                    <button type="button" onClick={() => handleDeleteStats(idx)} style={{ padding: '0.3rem 0.6rem', fontSize: '0.75rem', backgroundColor: 'rgba(239,68,68,0.1)', color: 'var(--danger)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 'var(--radius-md)' }}>
+                      <Trash2 size={12} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '1rem' }}>
+              <button type="submit" className="btn-primary" style={{ padding: '0.8rem 2.5rem', fontSize: '1rem' }} disabled={isSavingSec8}>
+                <Save size={18} />
+                <span>{isSavingSec8 ? 'Saving...' : 'Save Changes'}</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* SECTION 9: OUR GROUP STRUCTURE CMS                                       */}
+      {/* ========================================================================= */}
+      <div className="card" style={{ marginBottom: '2.5rem' }}>
+        <div className="card-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Layers className="text-primary" size={20} />
+              <span>Section 9: Corporate Group Architecture CMS</span>
+            </h3>
+            <p className="card-subtitle">Manage Group Structure section, entity cards, tags, links, and disclaimers.</p>
+          </div>
+          <button type="button" onClick={handleOpenAddGroupCard} className="btn-primary" style={{ padding: '0.45rem 1rem', fontSize: '0.825rem' }}>
+            <Plus size={16} />
+            <span>Add Group Entity</span>
+          </button>
+        </div>
+
+        <div className="card-body">
+          <form onSubmit={handleSaveSec9} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Section Badge</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={sec9GroupBadge}
+                  onChange={(e) => setSec9GroupBadge(e.target.value)}
+                  placeholder="e.g. CORPORATE ARCHITECTURE"
+                />
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Section Title</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={sec9GroupTitle}
+                  onChange={(e) => setSec9GroupTitle(e.target.value)}
+                  placeholder="e.g. OUR GROUP STRUCTURE"
+                />
+              </div>
+            </div>
+
+            <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+              <label className="form-label">Section Description</label>
+              <textarea
+                className="form-control"
+                rows={2}
+                value={sec9GroupDesc}
+                onChange={(e) => setSec9GroupDesc(e.target.value)}
+                placeholder="e.g. UniSpark Security is part of the UniSpark Innovations Group..."
+              />
+            </div>
+
+            {/* Group Cards Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem', marginTop: '0.5rem' }}>
+              {sec9GroupCards.map((card, idx) => (
+                <div key={idx} style={{ border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '1.25rem', backgroundColor: 'var(--bg-card)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '1rem' }}>
+                  <div>
+                    {card.tag && (
+                      <span style={{ fontSize: '0.65rem', fontWeight: 700, padding: '0.2rem 0.5rem', borderRadius: '4px', backgroundColor: 'var(--primary-light)', color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '0.5rem', display: 'inline-block' }}>
+                        {card.tag}
+                      </span>
+                    )}
+                    <h4 style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-main)', margin: '0.25rem 0' }}>{card.title}</h4>
+                    {Array.isArray(card.tags) && card.tags.length > 0 && (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem', marginTop: '0.5rem' }}>
+                        {card.tags.map((t, tIdx) => (
+                          <span key={tIdx} style={{ fontSize: '0.7rem', padding: '0.15rem 0.4rem', borderRadius: '4px', backgroundColor: 'var(--bg-input)', color: 'var(--text-muted)' }}>
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '0.5rem', borderTop: '1px solid var(--border-color)', paddingTop: '0.75rem' }}>
+                    <button type="button" onClick={() => handleOpenEditGroupCard(card, idx)} className="file-upload-btn" style={{ padding: '0.3rem 0.6rem', fontSize: '0.75rem' }}>
+                      <Edit size={12} /> Edit
+                    </button>
+                    <button type="button" onClick={() => handleDeleteGroupCard(idx)} style={{ padding: '0.3rem 0.6rem', fontSize: '0.75rem', backgroundColor: 'rgba(239,68,68,0.1)', color: 'var(--danger)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 'var(--radius-md)' }}>
+                      <Trash2 size={12} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '1rem' }}>
+              <button type="submit" className="btn-primary" style={{ padding: '0.8rem 2.5rem', fontSize: '1rem' }} disabled={isSavingSec9}>
+                <Save size={18} />
+                <span>{isSavingSec9 ? 'Saving...' : 'Save Changes'}</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* SECTION 10: FUTURISTIC CTA CMS                                           */}
+      {/* ========================================================================= */}
+      <div className="card" style={{ marginBottom: '2.5rem' }}>
+        <div className="card-header">
+          <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Layers className="text-primary" size={20} />
+            <span>Section 10: Futuristic CTA Banner & Background CMS</span>
+          </h3>
+          <p className="card-subtitle">Manage call-to-action text, buttons, and background image (Cloudinary connected).</p>
+        </div>
+
+        <div className="card-body">
+          <form onSubmit={handleSaveSec10} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">CTA Badge</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={sec10CtaBadge}
+                  onChange={(e) => setSec10CtaBadge(e.target.value)}
+                  placeholder="e.g. NEXT-GEN INTEGRATION"
+                />
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">CTA Main Title</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={sec10CtaTitle}
+                  onChange={(e) => setSec10CtaTitle(e.target.value)}
+                  placeholder="e.g. Let's Discuss Your Security Requirements"
+                />
+              </div>
+            </div>
+
+            <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+              <label className="form-label">CTA Description</label>
+              <textarea
+                className="form-control"
+                rows={2}
+                value={sec10CtaDesc}
+                onChange={(e) => setSec10CtaDesc(e.target.value)}
+                placeholder="e.g. Whether you need a single CCTV installation..."
+              />
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem' }}>
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Primary Button Text</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={sec10PrimaryBtnText}
+                  onChange={(e) => setSec10PrimaryBtnText(e.target.value)}
+                  placeholder="e.g. Request a Free Site Survey"
+                />
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Primary Button Link</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={sec10PrimaryBtnLink}
+                  onChange={(e) => setSec10PrimaryBtnLink(e.target.value)}
+                  placeholder="e.g. /contact-us"
+                />
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Secondary Button Text</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={sec10SecondaryBtnText}
+                  onChange={(e) => setSec10SecondaryBtnText(e.target.value)}
+                  placeholder="e.g. Download Company Profile"
+                />
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Secondary Button Link</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={sec10SecondaryBtnLink}
+                  onChange={(e) => setSec10SecondaryBtnLink(e.target.value)}
+                  placeholder="e.g. /company-profile.pdf"
+                />
+              </div>
+            </div>
+
+            {/* CTA Background Image File Picker */}
+            <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+              <label className="form-label">CTA Section Background Image (Cloudinary Sync)</label>
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleCtaBgFileSelect(e.target.files[0])}
+                  className="form-control"
+                  style={{ flex: 1 }}
+                />
+                {sec10CtaBgPreviewUrl && (
+                  <img
+                    src={sec10CtaBgPreviewUrl}
+                    alt="CTA BG Preview"
+                    style={{ width: '80px', height: '48px', borderRadius: '4px', objectFit: 'cover', border: '1px solid var(--border-color)' }}
+                  />
+                )}
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '1rem' }}>
+              <button type="submit" className="btn-primary" style={{ padding: '0.8rem 2.5rem', fontSize: '1rem' }} disabled={isSavingSec10}>
+                <Save size={18} />
+                <span>{isSavingSec10 ? 'Saving...' : 'Save Changes'}</span>
+              </button>
+            </div>
           </form>
         </div>
       </div>
@@ -2624,6 +3357,177 @@ export default function Home({ onShowToast }) {
               </button>
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* SECTION 7: PARTNER MODAL                                                  */}
+      {/* ========================================================================= */}
+      {showPartnerModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(4px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+          <div style={{ backgroundColor: 'var(--bg-card)', width: '100%', maxWidth: '480px', borderRadius: 'var(--radius-lg)', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.2)', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border-color)' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>
+                {editingPartnerId !== null ? 'Edit Partner Logo' : 'Add Partner Logo'}
+              </h3>
+              <button onClick={() => setShowPartnerModal(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
+                <X size={20} />
+              </button>
+            </div>
+
+            <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Brand Name *</label>
+                <input type="text" className="form-control" value={partnerModalName} onChange={(e) => setPartnerModalName(e.target.value)} placeholder="e.g. Genetec" />
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Logo Upload (Cloudinary Sync)</label>
+                <input type="file" accept="image/*" onChange={(e) => handlePartnerLogoSelect(e.target.files[0])} className="form-control" />
+                {partnerModalLogoPreviewUrl && (
+                  <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <img src={partnerModalLogoPreviewUrl} alt="Logo Preview" style={{ maxHeight: '40px', objectFit: 'contain' }} />
+                  </div>
+                )}
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Target Link (Optional)</label>
+                <input type="text" className="form-control" value={partnerModalLink} onChange={(e) => setPartnerModalLink(e.target.value)} placeholder="e.g. https://genetec.com" />
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', padding: '1rem 1.5rem', borderTop: '1px solid var(--border-color)', backgroundColor: 'var(--bg-input)' }}>
+              <button type="button" onClick={() => setShowPartnerModal(false)} className="file-upload-btn" style={{ padding: '0.5rem 1.25rem' }}>Cancel</button>
+              <button type="button" onClick={handleSaveModalPartner} className="btn-primary" style={{ padding: '0.5rem 1.5rem', fontSize: '0.875rem' }}>
+                {editingPartnerId !== null ? 'Update Partner' : 'Add Partner'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* SECTION 8: STATS MODAL                                                   */}
+      {/* ========================================================================= */}
+      {showStatsModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(4px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+          <div style={{ backgroundColor: 'var(--bg-card)', width: '100%', maxWidth: '480px', borderRadius: 'var(--radius-lg)', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.2)', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border-color)' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>
+                {editingStatsId !== null ? 'Edit Stat Metric' : 'Add Stat Metric'}
+              </h3>
+              <button onClick={() => setShowStatsModal(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
+                <X size={20} />
+              </button>
+            </div>
+
+            <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Value / Title *</label>
+                <input type="text" className="form-control" value={statsModalTitle} onChange={(e) => setStatsModalTitle(e.target.value)} placeholder="e.g. UAE-Wide" />
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Subtitle *</label>
+                <input type="text" className="form-control" value={statsModalSubtitle} onChange={(e) => setStatsModalSubtitle(e.target.value)} placeholder="e.g. SERVICE COVERAGE" />
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Caption / Description</label>
+                <input type="text" className="form-control" value={statsModalCaption} onChange={(e) => setStatsModalCaption(e.target.value)} placeholder="e.g. Dubai • Abu Dhabi • Sharjah & Beyond" />
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Icon Name</label>
+                <select className="form-control" value={statsModalIcon} onChange={(e) => setStatsModalIcon(e.target.value)}>
+                  <option value="MapPin">MapPin (Location)</option>
+                  <option value="Building2">Building2 (Industries)</option>
+                  <option value="Network">Network (Services)</option>
+                  <option value="FileText">FileText (Contracts)</option>
+                  <option value="ShieldCheck">ShieldCheck</option>
+                  <option value="Award">Award</option>
+                  <option value="CheckCircle2">CheckCircle2</option>
+                </select>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', padding: '1rem 1.5rem', borderTop: '1px solid var(--border-color)', backgroundColor: 'var(--bg-input)' }}>
+              <button type="button" onClick={() => setShowStatsModal(false)} className="file-upload-btn" style={{ padding: '0.5rem 1.25rem' }}>Cancel</button>
+              <button type="button" onClick={handleSaveModalStats} className="btn-primary" style={{ padding: '0.5rem 1.5rem', fontSize: '0.875rem' }}>
+                {editingStatsId !== null ? 'Update Stat' : 'Add Stat'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* SECTION 9: GROUP ENTITY MODAL                                            */}
+      {/* ========================================================================= */}
+      {showGroupModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(4px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+          <div style={{ backgroundColor: 'var(--bg-card)', width: '100%', maxWidth: '520px', borderRadius: 'var(--radius-lg)', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.2)', display: 'flex', flexDirection: 'column', maxHeight: '90vh' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border-color)' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>
+                {editingGroupId !== null ? 'Edit Group Entity' : 'Add Group Entity'}
+              </h3>
+              <button onClick={() => setShowGroupModal(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
+                <X size={20} />
+              </button>
+            </div>
+
+            <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', overflowY: 'auto' }}>
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Category Tag (e.g. GROUP LEAD TECHNOLOGY ENTITY)</label>
+                <input type="text" className="form-control" value={groupModalTag} onChange={(e) => setGroupModalTag(e.target.value)} placeholder="e.g. GROUP LEAD TECHNOLOGY ENTITY" />
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Entity Title *</label>
+                <input type="text" className="form-control" value={groupModalTitle} onChange={(e) => setGroupModalTitle(e.target.value)} placeholder="e.g. Horizon Hive Technology L.L.C" />
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Subtitle (e.g. Core Business:)</label>
+                <input type="text" className="form-control" value={groupModalSubtitle} onChange={(e) => setGroupModalSubtitle(e.target.value)} placeholder="Core Business:" />
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Core Business Tags (Comma separated)</label>
+                <input type="text" className="form-control" value={groupModalTagsInput} onChange={(e) => setGroupModalTagsInput(e.target.value)} placeholder="e.g. Managed IT, Cybersecurity, Aviation IT" />
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Icon Name</label>
+                <select className="form-control" value={groupModalIcon} onChange={(e) => setGroupModalIcon(e.target.value)}>
+                  <option value="Laptop">Laptop (IT / Technology)</option>
+                  <option value="Users">Users (HR / Consultancy)</option>
+                  <option value="ShieldCheck">ShieldCheck (Security / Equipment)</option>
+                  <option value="Building2">Building2</option>
+                  <option value="Network">Network</option>
+                  <option value="Cpu">Cpu</option>
+                </select>
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Redirect Link (Website URL or Internal Path)</label>
+                <input type="text" className="form-control" value={groupModalLink} onChange={(e) => setGroupModalLink(e.target.value)} placeholder="e.g. https://www.horizonhivetechnology.com/" />
+              </div>
+
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Redirect Disclaimer</label>
+                <textarea className="form-control" rows={2} value={groupModalDisclaimer} onChange={(e) => setGroupModalDisclaimer(e.target.value)} placeholder="e.g. You are being redirected to..." />
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', padding: '1rem 1.5rem', borderTop: '1px solid var(--border-color)', backgroundColor: 'var(--bg-input)' }}>
+              <button type="button" onClick={() => setShowGroupModal(false)} className="file-upload-btn" style={{ padding: '0.5rem 1.25rem' }}>Cancel</button>
+              <button type="button" onClick={handleSaveModalGroupCard} className="btn-primary" style={{ padding: '0.5rem 1.5rem', fontSize: '0.875rem' }}>
+                {editingGroupId !== null ? 'Update Entity' : 'Add Entity'}
+              </button>
+            </div>
           </div>
         </div>
       )}

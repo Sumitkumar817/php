@@ -1,40 +1,79 @@
-import React from 'react';
-import { MapPin, Building2, Network, FileText } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { MapPin, Building2, Network, FileText, CheckCircle2, ShieldCheck, Award } from 'lucide-react';
+
+const IconMap = {
+  MapPin,
+  Building2,
+  Network,
+  FileText,
+  CheckCircle2,
+  ShieldCheck,
+  Award
+};
 
 export default function StatsSection() {
-  const stats = [
-    {
-      icon: MapPin,
-      title: "UAE-Wide",
-      subtitle: "SERVICE COVERAGE",
-      caption: "Dubai • Abu Dhabi • Sharjah & Beyond"
-    },
-    {
-      icon: Building2,
-      title: "6 Industries",
-      subtitle: "SECTORS SERVED",
-      caption: "Aviation to Healthcare"
-    },
-    {
-      icon: Network,
-      title: "9 Categories",
-      subtitle: "SERVICE RANGE",
-      caption: "CCTV to System Integration"
-    },
-    {
-      icon: FileText,
-      title: "AMC/PMC",
-      subtitle: "OPERATIONAL READY",
-      caption: "Annual & Preventive Contracts Available"
+  const [statsConfig, setStatsConfig] = useState({
+    statsList: [
+      {
+        title: "UAE-Wide",
+        subtitle: "SERVICE COVERAGE",
+        caption: "Dubai • Abu Dhabi • Sharjah & Beyond",
+        icon: "MapPin"
+      },
+      {
+        title: "6 Industries",
+        subtitle: "SECTORS SERVED",
+        caption: "Aviation to Healthcare",
+        icon: "Building2"
+      },
+      {
+        title: "9 Categories",
+        subtitle: "SERVICE RANGE",
+        caption: "CCTV to System Integration",
+        icon: "Network"
+      },
+      {
+        title: "AMC/PMC",
+        subtitle: "OPERATIONAL READY",
+        caption: "Annual & Preventive Contracts Available",
+        icon: "FileText"
+      }
+    ]
+  });
+
+  const loadStatsFromBackend = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/stats');
+      const data = await res.json();
+      if (data.success && data.data) {
+        setStatsConfig({
+          statsList: Array.isArray(data.data.statsList) && data.data.statsList.length > 0 ? data.data.statsList : statsConfig.statsList
+        });
+      }
+    } catch (err) {
+      console.warn('Error fetching stats config:', err);
     }
-  ];
+  };
+
+  useEffect(() => {
+    loadStatsFromBackend();
+
+    const handleFocus = () => loadStatsFromBackend();
+    window.addEventListener('focus', handleFocus);
+    const interval = setInterval(loadStatsFromBackend, 5000);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      clearInterval(interval);
+    };
+  }, []);
 
   return (
     <section className="relative py-16 bg-[#0073b7] text-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((item, idx) => {
-            const IconComponent = item.icon;
+          {statsConfig.statsList.map((item, idx) => {
+            const IconComponent = IconMap[item.icon] || MapPin;
             return (
               <div
                 key={idx}

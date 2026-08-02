@@ -9,6 +9,8 @@ import GenericSectionEditor from './views/GenericSectionEditor';
 import About from './views/About';
 import ContactEditor from './views/ContactEditor';
 import ContactMessages from './views/ContactMessages';
+import DashboardView from './views/DashboardView';
+import UserManagementView from './views/UserManagementView';
 import { ChevronRight } from 'lucide-react';
 import { logoutUser } from './services/api';
 
