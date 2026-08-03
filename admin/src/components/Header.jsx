@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, User, CheckCircle, Moon, Sun, LogIn, Upload, Camera, Menu, X } from 'lucide-react';
+import { User, Moon, Sun, LogIn, Upload, Camera, Menu, X } from 'lucide-react';
 import { fetchHeaderConfig, updateHeaderConfig } from '../services/api';
 
 export default function Header({ onShowToast, currentUser, onOpenAuthModal, onToggleMobileSidebar, isMobileOpen }) {
-  const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [theme, setTheme] = useState('dark');
   const [headerLogoUrl, setHeaderLogoUrl] = useState('');
@@ -110,50 +109,6 @@ export default function Header({ onShowToast, currentUser, onOpenAuthModal, onTo
         <button className="header-icon-btn" title="Toggle Theme" onClick={toggleTheme}>
           {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
         </button>
-
-        {/* Notifications */}
-        <div style={{ position: 'relative' }}>
-          <button
-            className="header-icon-btn"
-            title="Notifications"
-            onClick={() => setShowNotifications(!showNotifications)}
-          >
-            <Bell size={18} />
-            <span className="notification-badge" />
-          </button>
-
-          {showNotifications && (
-            <div className="content-card" style={{
-              position: 'absolute',
-              right: 0,
-              top: '48px',
-              width: '280px',
-              zIndex: 100,
-              boxShadow: 'var(--shadow-lg)'
-            }}>
-              <div className="content-card-header" style={{ padding: '0.75rem 1rem' }}>
-                <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>Notifications</span>
-                <span style={{ fontSize: '0.75rem', color: 'var(--primary)' }}>Mark all as read</span>
-              </div>
-              <div style={{ padding: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.85rem' }}>
-                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                  <CheckCircle size={16} color="var(--success)" />
-                  <div>
-                    <p style={{ fontWeight: 500 }}>MongoDB Atlas Connected</p>
-                    <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Just now</p>
-                  </div>
-                </div>
-                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                  <CheckCircle size={16} color="var(--info)" />
-                  <div>
-                    <p style={{ fontWeight: 500 }}>Base64 Header Saving Active</p>
-                    <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>1 minute ago</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
 
         {/* Profile / Auth Button */}
         <div style={{ position: 'relative' }}>

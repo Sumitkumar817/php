@@ -65,20 +65,6 @@ export default function LoginPage({ onLoginSuccess, onShowToast }) {
     }
   };
 
-  // Demo Login Handler for testing
-  const handleQuickDemoLogin = () => {
-    const demoUser = {
-      _id: '1',
-      name: 'Sumit Kumar',
-      email: 'sumit.kumar@example.com',
-      role: 'Super Admin',
-      status: 'Active'
-    };
-    localStorage.setItem('admin_token', 'demo-jwt-token-xyz');
-    localStorage.setItem('admin_user', JSON.stringify(demoUser));
-    onShowToast('Logged in as Sumit Kumar (Demo)');
-    onLoginSuccess(demoUser);
-  };
 
   return (
     <div style={{
@@ -274,17 +260,6 @@ export default function LoginPage({ onLoginSuccess, onShowToast }) {
                 style={{ color: 'var(--primary)', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}
               >
                 {isRegisterMode ? 'Sign In' : 'Create One'}
-              </button>
-            </div>
-
-            {/* Demo Shortcut */}
-            <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1rem', textAlign: 'center' }}>
-              <button
-                type="button"
-                onClick={handleQuickDemoLogin}
-                style={{ fontSize: '0.8rem', color: 'var(--text-dim)', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}
-              >
-                Instant Demo Access (Sumit Kumar)
               </button>
             </div>
 
