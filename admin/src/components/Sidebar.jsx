@@ -10,7 +10,6 @@ import {
   Users,
   LayoutGrid,
   Image,
-  BarChart3,
   Settings,
   LogOut,
   ChevronDown,
@@ -159,17 +158,6 @@ export default function Sidebar({ activeSection, setActiveSection, onLogout, isM
             <div className="sidebar-item-content">
               <Image size={18} />
               <span>Media Library</span>
-            </div>
-          </button>
-
-          {/* Analytics */}
-          <button
-            className={`sidebar-item ${activeSection === 'analytics' ? 'active' : ''}`}
-            onClick={() => handleSelectSection('analytics')}
-          >
-            <div className="sidebar-item-content">
-              <BarChart3 size={18} />
-              <span>Analytics</span>
             </div>
           </button>
 

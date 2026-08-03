@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Bell, User, CheckCircle, Moon, Sun, LogIn, Upload, Camera, Menu, X } from 'lucide-react';
+import { Bell, User, CheckCircle, Moon, Sun, LogIn, Upload, Camera, Menu, X } from 'lucide-react';
 import { fetchHeaderConfig, updateHeaderConfig } from '../services/api';
 
-export default function Header({ searchQuery, setSearchQuery, onShowToast, currentUser, onOpenAuthModal, onToggleMobileSidebar, isMobileOpen }) {
+export default function Header({ onShowToast, currentUser, onOpenAuthModal, onToggleMobileSidebar, isMobileOpen }) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [theme, setTheme] = useState('dark');
@@ -45,8 +45,6 @@ export default function Header({ searchQuery, setSearchQuery, onShowToast, curre
         setHeaderLogoUrl(base64Data);
         localStorage.setItem('header_logo_url', base64Data);
         onShowToast(`Header logo updated: ${file.name}`);
-
-        // Sync with MongoDB backend
         await updateHeaderConfig({ logoUrl: base64Data });
       };
       reader.readAsDataURL(file);
@@ -66,7 +64,7 @@ export default function Header({ searchQuery, setSearchQuery, onShowToast, curre
         </button>
 
         {/* Brand Logo with Direct Upload Feature */}
-        <div style={{ display: 'flex', itemsCenter: 'center', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <label
             htmlFor="header-logo-upload-input"
             className="brand-logo"
@@ -95,18 +93,6 @@ export default function Header({ searchQuery, setSearchQuery, onShowToast, curre
             style={{ display: 'none' }}
           />
         </div>
-
-        {/* Search Bar */}
-        <div className="search-container">
-          <Search className="search-icon" size={16} />
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search sections..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
       </div>
 
       <div className="header-right">
@@ -133,7 +119,7 @@ export default function Header({ searchQuery, setSearchQuery, onShowToast, curre
             onClick={() => setShowNotifications(!showNotifications)}
           >
             <Bell size={18} />
-            <span className="notification-badge"></span>
+            <span className="notification-badge" />
           </button>
 
           {showNotifications && (

@@ -11,6 +11,9 @@ import ContactEditor from './views/ContactEditor';
 import ContactMessages from './views/ContactMessages';
 import DashboardView from './views/DashboardView';
 import UserManagementView from './views/UserManagementView';
+import SolutionsEditor from './views/SolutionsEditor';
+import IndustriesEditor from './views/IndustriesEditor';
+import FooterEditor from './views/FooterEditor';
 import { ChevronRight } from 'lucide-react';
 import { logoutUser } from './services/api';
 
@@ -18,7 +21,6 @@ export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [activeSection, setActiveSection] = useState('website-home');
-  const [searchQuery, setSearchQuery] = useState('');
   const [toastMessage, setToastMessage] = useState('');
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -81,7 +83,6 @@ export default function App() {
         return ['Website', 'Footer Config'];
       case 'enquiries':
         return ['Enquiries', 'Form Submissions'];
-        return ['Website', 'Footer Config'];
       case 'media':
         return ['Media Library', 'Assets'];
       case 'analytics':
@@ -113,8 +114,6 @@ export default function App() {
     <div className="admin-layout">
       {/* Top Header Bar */}
       <Header
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
         onShowToast={showToast}
         currentUser={currentUser}
         onOpenAuthModal={() => setIsAuthenticated(false)}
@@ -157,8 +156,20 @@ export default function App() {
             <About onShowToast={showToast} />
           )}
 
+          {activeSection === 'website-solution' && (
+            <SolutionsEditor onShowToast={showToast} />
+          )}
+
+          {activeSection === 'website-industry' && (
+            <IndustriesEditor onShowToast={showToast} />
+          )}
+
           {activeSection === 'website-contact' && (
             <ContactEditor onShowToast={showToast} />
+          )}
+
+          {activeSection === 'website-footer' && (
+            <FooterEditor onShowToast={showToast} />
           )}
 
           {activeSection === 'enquiries' && (
@@ -169,7 +180,7 @@ export default function App() {
             <DashboardView onSelectSection={(sec) => setActiveSection(sec)} />
           )}
 
-          {activeSection !== 'website-home' && activeSection !== 'website-header' && activeSection !== 'website-users' && activeSection !== 'website-about' && activeSection !== 'website-contact' && activeSection !== 'enquiries' && activeSection !== 'dashboard' && (
+          {activeSection !== 'website-home' && activeSection !== 'website-header' && activeSection !== 'website-users' && activeSection !== 'website-about' && activeSection !== 'website-solution' && activeSection !== 'website-industry' && activeSection !== 'website-contact' && activeSection !== 'website-footer' && activeSection !== 'enquiries' && activeSection !== 'dashboard' && (
             <GenericSectionEditor
               sectionKey={activeSection}
               title={breadcrumbs[1]}

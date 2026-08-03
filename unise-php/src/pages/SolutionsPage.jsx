@@ -1,9 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { solutionsData } from '../data/solutionsData';
+import { solutionsData as staticSolutionsData } from '../data/solutionsData';
 import CtaSection from '../components/CtaSection';
 
 export default function SolutionsPage({ onOpenEnquiry }) {
+  const [solutions, setSolutions] = useState(staticSolutionsData);
+
+  const loadSolutionsFromBackend = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/section3');
+      const data = await res.json();
+      if (data.success && data.data && Array.isArray(data.data.services) && data.data.services.length > 0) {
+        // Merge backend live data with static images fallback
+        const merged = data.data.services.map((item) => {
+          const staticMatch = staticSolutionsData.find(
+            (s) => s.id === item.id || (item.id === 'maintenance-contracts' && s.id.startsWith('maintenance-contracts'))
+          );
+          return {
+            ...staticMatch,
+            ...item,
+            title: item.title,
+            description: item.desc || item.description || staticMatch?.description || '',
+            secImage: item.secImage || staticMatch?.secImage || '/images/cctv-sec.jpg'
+          };
+        });
+        setSolutions(merged);
+      }
+    } catch (err) {
+      console.warn('Error loading solutions page data from backend:', err);
+    }
+  };
+
+  useEffect(() => {
+    loadSolutionsFromBackend();
+    const handleFocus = () => loadSolutionsFromBackend();
+    window.addEventListener('focus', handleFocus);
+    const interval = setInterval(loadSolutionsFromBackend, 5000);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      clearInterval(interval);
+    };
+  }, []);
+
   return (
     <div className="bg-[#f1f5f9] text-slate-900 min-h-screen font-sans">
       
@@ -39,13 +78,13 @@ export default function SolutionsPage({ onOpenEnquiry }) {
         </div>
       </section>
 
-      {/* Grid of All 9 Solutions */}
+      {/* Grid of All Solutions Connected to Backend */}
       <section className="py-16 bg-[#f8f9fa] border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-[#0073b7] text-xs font-bold uppercase tracking-wider">
               <i className="fa-solid fa-list-check text-xs"></i>
-              <span>Our Solutions</span>
+              <span>Our Solutions ({solutions.length})</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900">
               Technical Authority. <span className="text-[#0073b7]">Trusted Delivery.</span>
@@ -53,7 +92,7 @@ export default function SolutionsPage({ onOpenEnquiry }) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {solutionsData.map((item) => (
+            {solutions.map((item) => (
               <div
                 key={item.id}
                 className="group rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-xl hover:border-blue-400 overflow-hidden transition duration-300 flex flex-col justify-between"

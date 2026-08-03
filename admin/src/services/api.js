@@ -1,5 +1,31 @@
 const API_BASE_URL = 'http://localhost:5000/api';
 
+// Fetch Footer Config (GET /api/footer)
+export const fetchFooterConfig = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/footer`);
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error fetchFooterConfig:', error);
+    return { success: false, message: 'Backend server is offline' };
+  }
+};
+
+// Update Footer Config (PUT /api/footer)
+export const updateFooterConfig = async (footerData) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/footer`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(footerData)
+    });
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error updateFooterConfig:', error);
+    return { success: false, message: 'Backend server is offline' };
+  }
+};
+
 // Fetch Contact Config (GET /api/contact)
 export const fetchContactConfig = async () => {
   try {

@@ -15,6 +15,7 @@ import aboutRoutes from './about/aboutRoutes.js';
 import contactRoutes from './contact/contactRoutes.js';
 import partnerRoutes from './routes/partnerRoutes.js';
 import statsRoutes from './routes/statsRoutes.js';
+import footerRoutes from './routes/footerRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -41,6 +42,7 @@ app.use('/api/about', aboutRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/partners', partnerRoutes);
 app.use('/api/stats', statsRoutes);
+app.use('/api/footer', footerRoutes);
 
 // Root route
 app.get('/', (req, res) => {
