@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function CtaSection({ data: propData, onOpenEnquiry }) {
+  const { t, i18n } = useTranslation();
   const [internalData, setInternalData] = useState(null);
 
   useEffect(() => {
@@ -18,11 +20,11 @@ export default function CtaSection({ data: propData, onOpenEnquiry }) {
   const data = propData || internalData;
 
   const badge = data?.ctaBadge || '';
-  const title = data?.ctaTitle || "Let's Discuss Your Security Requirements";
-  const desc = data?.ctaDesc || 'Whether you need a single CCTV installation or a full-site security infrastructure project, our team is ready to assess, design, and deliver.';
-  const primaryBtnText = data?.ctaPrimaryBtnText || 'Request a Free Site Survey';
+  const title = i18n.language === 'hi' ? t('cta.title') : (data?.ctaTitle || "Let's Discuss Your Security Requirements");
+  const desc = i18n.language === 'hi' ? t('cta.subtitle') : (data?.ctaDesc || 'Whether you need a single CCTV installation or a full-site security infrastructure project, our team is ready to assess, design, and deliver.');
+  const primaryBtnText = i18n.language === 'hi' ? t('cta.buttonPrimary') : (data?.ctaPrimaryBtnText || 'Request a Free Site Survey');
   const primaryBtnLink = data?.ctaPrimaryBtnLink || '/contact-us';
-  const secondaryBtnText = data?.ctaSecondaryBtnText || 'Download Company Profile';
+  const secondaryBtnText = i18n.language === 'hi' ? t('cta.buttonSecondary') : (data?.ctaSecondaryBtnText || 'Download Company Profile');
   const secondaryBtnLink = data?.ctaSecondaryBtnLink || '/company-profile.pdf';
   const bgImage = data?.ctaBgImage || '/images/home-cta.jpg';
 

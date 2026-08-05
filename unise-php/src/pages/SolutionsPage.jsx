@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { solutionsData as staticSolutionsData } from '../data/solutionsData';
 import CtaSection from '../components/CtaSection';
 
 export default function SolutionsPage({ onOpenEnquiry }) {
+  const { t, i18n } = useTranslation();
   const [solutions, setSolutions] = useState(staticSolutionsData);
 
   const loadSolutionsFromBackend = async () => {
@@ -51,19 +53,18 @@ export default function SolutionsPage({ onOpenEnquiry }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 space-y-4">
           <nav aria-label="breadcrumb">
             <ol className="flex items-center gap-2 text-xs font-semibold text-white/80">
-              <li><Link to="/" className="hover:underline">Home</Link></li>
+              <li><Link to="/" className="hover:underline">{t('nav.home')}</Link></li>
               <li>/</li>
-              <li className="text-white font-bold">Solutions</li>
+              <li className="text-white font-bold">{t('nav.solutions')}</li>
             </ol>
           </nav>
 
           <h1 className="text-3xl sm:text-5xl font-extrabold text-white leading-tight">
-            End-to-End Security Infrastructure <br className="hidden sm:inline" />
-            For UAE Commercial & Industrial Sites.
+            {i18n.language === 'hi' ? t('pages.solutionsPage.title') : 'End-to-End Security Infrastructure For UAE Commercial & Industrial Sites.'}
           </h1>
 
           <p className="text-sm sm:text-base text-slate-200 max-w-3xl leading-relaxed font-light">
-            From initial site design and engineering to integration, compliance, and lifecycle maintenance.
+            {i18n.language === 'hi' ? t('pages.solutionsPage.subtitle') : 'From initial site design and engineering to integration, compliance, and lifecycle maintenance.'}
           </p>
 
           <div className="pt-2">

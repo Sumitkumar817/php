@@ -78,7 +78,7 @@ export default function AuthModal({ onAuthSuccess, onShowToast }) {
       padding: '1rem'
     }}>
       <div className="content-card" style={{ width: '420px', maxWidth: '100%', borderRadius: '16px', border: '1px solid var(--border-light)' }}>
-        
+
         {/* Modal Header Tabs */}
         <div style={{
           display: 'flex',
@@ -119,7 +119,7 @@ export default function AuthModal({ onAuthSuccess, onShowToast }) {
 
         {/* Modal Form Body */}
         <div className="content-card-body" style={{ padding: '1.75rem' }}>
-          
+
           <div style={{ textAlign: 'center', marginBottom: '1.25rem' }}>
             <div className="logo-badge" style={{ margin: '0 auto 0.75rem auto', width: '44px', height: '44px', fontSize: '1.3rem' }}>U</div>
             <h2 style={{ fontSize: '1.25rem', fontWeight: 700 }}>
@@ -149,7 +149,7 @@ export default function AuthModal({ onAuthSuccess, onShowToast }) {
           )}
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            
+
             {/* Name Input (Register only) */}
             {!isLoginTab && (
               <div className="form-group">
@@ -244,7 +244,7 @@ export default function AuthModal({ onAuthSuccess, onShowToast }) {
               )}
             </button>
 
-            {/* Quick Demo Option */}
+            {/* Quick Demo Option
             <div style={{ textAlign: 'center', marginTop: '0.5rem' }}>
               <button
                 type="button"
@@ -253,7 +253,7 @@ export default function AuthModal({ onAuthSuccess, onShowToast }) {
               >
                 Or Quick Login as Sumit Kumar
               </button>
-            </div>
+            </div> */}
 
           </form>
 

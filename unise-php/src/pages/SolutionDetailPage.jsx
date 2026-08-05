@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { solutionsData } from '../data/solutionsData';
 
 export default function SolutionDetailPage({ onOpenEnquiry }) {
+  const { t, i18n } = useTranslation();
   const { slug } = useParams();
 
   // Initial fallback solution from static data
@@ -114,9 +116,9 @@ export default function SolutionDetailPage({ onOpenEnquiry }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 space-y-4">
           <nav aria-label="breadcrumb">
             <ol className="flex items-center gap-2 text-xs font-semibold text-white/80">
-              <li><Link to="/" className="hover:underline">Home</Link></li>
+              <li><Link to="/" className="hover:underline">{t('nav.home')}</Link></li>
               <li>/</li>
-              <li><Link to="/solutions" className="hover:underline">Services</Link></li>
+              <li><Link to="/solutions" className="hover:underline">{t('nav.solutions')}</Link></li>
               <li>/</li>
               <li className="text-white font-bold">{solution.title}</li>
             </ol>

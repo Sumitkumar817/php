@@ -3,7 +3,7 @@ import { getDBStatus } from '../config/db.js';
 import cloudinary from '../config/cloudinary.js';
 
 const defaultHero = {
-  title: 'Welcome to Unise',
+  title: 'Welcome to Unispark',
   heading: "UAE's Trusted Security Systems Partner",
   words: ["Design.", "Supply.", "Installation.", "Maintenance."],
   description: 'Protecting businesses, assets, and people across Dubai, Abu Dhabi, Sharjah, and the UAE — with world-class physical security infrastructure, expert engineers, and zero-compromise service.',

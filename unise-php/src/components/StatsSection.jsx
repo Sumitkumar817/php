@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MapPin, Building2, Network, FileText, CheckCircle2, ShieldCheck, Award } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const IconMap = {
   MapPin,
@@ -12,31 +13,32 @@ const IconMap = {
 };
 
 export default function StatsSection() {
+  const { t, i18n } = useTranslation();
   const [statsConfig, setStatsConfig] = useState({
     statsList: [
       {
-        title: "UAE-Wide",
-        subtitle: "SERVICE COVERAGE",
-        caption: "Dubai • Abu Dhabi • Sharjah & Beyond",
-        icon: "MapPin"
-      },
-      {
-        title: "6 Industries",
-        subtitle: "SECTORS SERVED",
-        caption: "Aviation to Healthcare",
+        title: "500+",
+        subtitle: "PROJECTS DELIVERED",
+        caption: "Across UAE & India",
         icon: "Building2"
       },
       {
-        title: "9 Categories",
-        subtitle: "SERVICE RANGE",
-        caption: "CCTV to System Integration",
-        icon: "Network"
+        title: "50+",
+        subtitle: "CERTIFIED ENGINEERS",
+        caption: "OEM Certified Specialists",
+        icon: "Award"
       },
       {
-        title: "AMC/PMC",
-        subtitle: "OPERATIONAL READY",
-        caption: "Annual & Preventive Contracts Available",
-        icon: "FileText"
+        title: "99.4%",
+        subtitle: "CLIENT SATISFACTION",
+        caption: "SLA Retention Rate",
+        icon: "ShieldCheck"
+      },
+      {
+        title: "24/7",
+        subtitle: "SUPPORT SLA",
+        caption: "Guaranteed Emergency Response",
+        icon: "CheckCircle2"
       }
     ]
   });
@@ -84,10 +86,10 @@ export default function StatsSection() {
                 </div>
                 <div>
                   <h3 className="text-2xl font-extrabold text-[#0073b7] mb-1">
-                    {item.title}
+                    {i18n.language === 'hi' && idx < 4 ? t(`stats.stat${idx + 1}Val`) : item.title}
                   </h3>
                   <div className="text-xs font-bold text-slate-800 tracking-wide uppercase mb-1">
-                    {item.subtitle}
+                    {i18n.language === 'hi' && idx < 4 ? t(`stats.stat${idx + 1}Text`) : item.subtitle}
                   </div>
                   <p className="text-xs text-slate-500">
                     {item.caption}

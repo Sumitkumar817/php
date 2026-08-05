@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { industriesData } from '../data/industriesData'; // Fallback if API fails
 
 export default function IndustriesSection() {
+  const { t, i18n } = useTranslation();
   const [sec5Config, setSec5Config] = useState({
     title: 'INDUSTRIES WE SERVE',
     heading: 'Security Solutions Built for Your Sector',
@@ -54,21 +56,13 @@ export default function IndustriesSection() {
         {/* Title */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-[#0073b7] text-xs font-bold uppercase tracking-wider">
-            {sec5Config.title}
+            {i18n.language === 'hi' ? t('industries.badge') : sec5Config.title}
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900">
-            {sec5Config.heading.split('Sector').length > 1 ? (
-              <>
-                {sec5Config.heading.split('Sector')[0]} 
-                <span className="text-[#0073b7]">Sector</span>
-                {sec5Config.heading.split('Sector')[1]}
-              </>
-            ) : (
-              sec5Config.heading
-            )}
+            {i18n.language === 'hi' ? t('industries.title') : sec5Config.heading}
           </h2>
           <p className="text-sm text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            {sec5Config.description}
+            {i18n.language === 'hi' ? t('industries.subtitle') : sec5Config.description}
           </p>
         </div>
 
@@ -103,7 +97,7 @@ export default function IndustriesSection() {
                       to={ind.link || `/industries/${ind.id}`}
                       className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0073b7] hover:text-[#005a96] transition"
                     >
-                      <span>Explore</span>
+                      <span>{i18n.language === 'hi' ? t('industries.viewIndustry') : 'Explore'}</span>
                       <i className="fa-solid fa-arrow-right text-[10px] transition-transform group-hover:translate-x-1"></i>
                     </Link>
                   ) : (
@@ -111,7 +105,7 @@ export default function IndustriesSection() {
                       href={ind.link || '#'}
                       className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0073b7] hover:text-[#005a96] transition"
                     >
-                      <span>Explore</span>
+                      <span>{i18n.language === 'hi' ? t('industries.viewIndustry') : 'Explore'}</span>
                       <i className="fa-solid fa-arrow-right text-[10px] transition-transform group-hover:translate-x-1"></i>
                     </a>
                   )}

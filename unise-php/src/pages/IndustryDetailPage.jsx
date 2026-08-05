@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Building, ArrowLeft, CheckCircle, ShieldAlert, ShieldCheck, Star } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { industriesData } from '../data/industriesData';
 import CtaSection from '../components/CtaSection';
 
 const API_BASE = 'http://localhost:5000/api';
 
 export default function IndustryDetailPage({ onOpenEnquiry }) {
+  const { t, i18n } = useTranslation();
   const { slug } = useParams();
   const [industry, setIndustry] = useState(null);
   const [allIndustries, setAllIndustries] = useState(industriesData);
@@ -89,7 +91,7 @@ export default function IndustryDetailPage({ onOpenEnquiry }) {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 space-y-6">
           <Link to="/industries" className="inline-flex items-center gap-2 text-xs font-semibold text-cyan-400 hover:text-white transition">
-            <ArrowLeft className="w-4 h-4" /> Back to All Industry Sectors
+            <ArrowLeft className="w-4 h-4" /> {t('nav.allIndustries')}
           </Link>
 
           <div className="flex items-center gap-3">

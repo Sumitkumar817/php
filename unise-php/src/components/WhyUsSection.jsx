@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function WhyUsSection() {
+  const { t, i18n } = useTranslation();
   const [sec6Config, setSec6Config] = useState({
     title: 'WHY CHOOSE UNISPARK',
     heading: 'Technical Authority. Trusted Delivery.',
@@ -90,17 +92,13 @@ export default function WhyUsSection() {
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-[#0073b7] text-xs font-bold uppercase tracking-wider">
             <i className="fa-solid fa-award text-xs"></i>
-            <span>{sec6Config.title}</span>
+            <span>{i18n.language === 'hi' ? t('whyUs.badge') : sec6Config.title}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900">
-            {sec6Config.heading.split('. ').map((part, index, arr) => (
-              <React.Fragment key={index}>
-                {index === arr.length - 1 ? <span className="text-[#0073b7]">{part}</span> : <>{part}. </>}
-              </React.Fragment>
-            ))}
+            {i18n.language === 'hi' ? t('whyUs.title') : sec6Config.heading}
           </h2>
           <p className="text-sm text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            {sec6Config.description}
+            {i18n.language === 'hi' ? t('whyUs.subtitle') : sec6Config.description}
           </p>
         </div>
 
@@ -123,10 +121,10 @@ export default function WhyUsSection() {
                 )}
                 
                 <h3 className="text-lg font-bold text-slate-900 leading-snug">
-                  {p.title}
+                  {i18n.language === 'hi' && idx < 4 ? t(`whyUs.point${idx + 1}Title`) : p.title}
                 </h3>
                 <p className="text-xs text-slate-500 leading-relaxed">
-                  {p.desc}
+                  {i18n.language === 'hi' && idx < 4 ? t(`whyUs.point${idx + 1}Desc`) : p.desc}
                 </p>
               </div>
             </div>

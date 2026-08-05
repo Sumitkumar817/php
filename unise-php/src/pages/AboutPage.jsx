@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ShieldCheck, Target, Eye, Building2, Wrench, Globe, CheckCircle2, Award } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import OurGroupSection from '../components/OurGroupSection';
 import KeyDifferentiatorsSection from '../components/KeyDifferentiatorsSection';
 import CtaSection from '../components/CtaSection';
@@ -17,6 +18,7 @@ const IconMap = {
 };
 
 export default function AboutPage({ onOpenEnquiry }) {
+  const { t, i18n } = useTranslation();
   const [aboutData, setAboutData] = useState({
     bannerBadge: 'ABOUT UNISPARK SECURITY',
     bannerTitle: 'About UniSpark Security Systems',
@@ -89,19 +91,19 @@ export default function AboutPage({ onOpenEnquiry }) {
           <nav aria-label="breadcrumb">
             <ol className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 backdrop-blur border border-slate-200/80 shadow-sm text-xs font-semibold text-slate-600">
               <li>
-                <Link to="/" className="text-[#0073b7] hover:underline">Home</Link>
+                <Link to="/" className="text-[#0073b7] hover:underline">{t('nav.home')}</Link>
               </li>
               <li className="text-slate-400">/</li>
-              <li className="text-slate-700 font-bold">About Us</li>
+              <li className="text-slate-700 font-bold">{t('nav.about')}</li>
             </ol>
           </nav>
 
           <h1 className="text-3xl sm:text-5xl font-extrabold text-[#0b192c] tracking-tight">
-            {aboutData.bannerTitle}
+            {i18n.language === 'hi' ? t('pages.about.title') : aboutData.bannerTitle}
           </h1>
 
           <p className="text-base sm:text-lg text-slate-800 max-w-4xl leading-relaxed font-semibold">
-            {aboutData.bannerDesc}
+            {i18n.language === 'hi' ? t('pages.about.subtitle') : aboutData.bannerDesc}
           </p>
         </div>
       </section>

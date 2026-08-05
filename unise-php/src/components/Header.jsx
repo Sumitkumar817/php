@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronDown, Menu, X, Mail, Shield, Building } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from './LanguageSwitcher';
 import { solutionsData } from '../data/solutionsData';
 import { industriesData } from '../data/industriesData';
 
 export default function Header({ onOpenEnquiry }) {
+  const { t } = useTranslation();
   const [isScrolled, setIsScrolled] = useState(false);
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [solutionsDropdownOpen, setSolutionsDropdownOpen] = useState(false);
   const [industriesDropdownOpen, setIndustriesDropdownOpen] = useState(false);
@@ -89,6 +93,7 @@ export default function Header({ onOpenEnquiry }) {
             </a>
           </div>
           <div className="flex items-center gap-4 text-white">
+            <LanguageSwitcher />
             {headerConfig.socialLinks.facebook && (
               <a href={headerConfig.socialLinks.facebook} target="_blank" rel="noreferrer" className="hover:text-sky-200 transition">
                 <i className="fa-brands fa-facebook-f"></i>
@@ -133,14 +138,14 @@ export default function Header({ onOpenEnquiry }) {
               to="/" 
               className={`transition hover:text-[#0a6eab] ${location.pathname === '/' ? 'text-[#0a6eab] font-bold' : 'text-slate-800'}`}
             >
-              Home
+              {t('nav.home')}
             </Link>
 
             <Link 
               to="/about-us" 
               className={`transition hover:text-[#0a6eab] ${location.pathname === '/about-us' ? 'text-[#0a6eab] font-bold' : 'text-slate-800'}`}
             >
-              About Us
+              {t('nav.about')}
             </Link>
 
             {/* Solutions Dropdown */}
@@ -153,7 +158,7 @@ export default function Header({ onOpenEnquiry }) {
                 to="/solutions"
                 className={`flex items-center gap-1.5 transition hover:text-[#0a6eab] ${location.pathname.startsWith('/solutions') ? 'text-[#0a6eab] font-bold' : 'text-slate-800'}`}
               >
-                <span>Solutions</span>
+                <span>{t('nav.solutions')}</span>
                 <ChevronDown className={`w-4 h-4 transition-transform ${solutionsDropdownOpen ? 'rotate-180 text-[#0a6eab]' : 'text-slate-500'}`} />
               </Link>
 
@@ -161,9 +166,9 @@ export default function Header({ onOpenEnquiry }) {
                 <div className="absolute top-full -left-20 w-[780px] bg-white border border-slate-200 rounded-2xl shadow-2xl p-6 grid grid-cols-3 gap-3 animate-fadeIn">
                   <div className="col-span-3 pb-3 border-b border-slate-100 flex justify-between items-center mb-1">
                     <span className="text-xs font-bold uppercase tracking-wider text-[#0a6eab] flex items-center gap-2">
-                      <Shield className="w-4 h-4" /> Physical Security Solutions
+                      <Shield className="w-4 h-4" /> {t('nav.solutions')}
                     </span>
-                    <Link to="/solutions" className="text-xs text-[#0a6eab] font-semibold hover:underline">View All Solutions &rarr;</Link>
+                    <Link to="/solutions" className="text-xs text-[#0a6eab] font-semibold hover:underline">{t('nav.allSolutions')} &rarr;</Link>
                   </div>
                   {solutionsData.map((item) => (
                     <Link
@@ -198,7 +203,7 @@ export default function Header({ onOpenEnquiry }) {
                 to="/industries"
                 className={`flex items-center gap-1.5 transition hover:text-[#0a6eab] ${location.pathname.startsWith('/industries') ? 'text-[#0a6eab] font-bold' : 'text-slate-800'}`}
               >
-                <span>Industries</span>
+                <span>{t('nav.industries')}</span>
                 <ChevronDown className={`w-4 h-4 transition-transform ${industriesDropdownOpen ? 'rotate-180 text-[#0a6eab]' : 'text-slate-500'}`} />
               </Link>
 
@@ -206,9 +211,9 @@ export default function Header({ onOpenEnquiry }) {
                 <div className="absolute top-full -left-20 w-[640px] bg-white border border-slate-200 rounded-2xl shadow-2xl p-6 grid grid-cols-2 gap-3 animate-fadeIn">
                   <div className="col-span-2 pb-3 border-b border-slate-100 flex justify-between items-center mb-1">
                     <span className="text-xs font-bold uppercase tracking-wider text-[#0a6eab] flex items-center gap-2">
-                      <Building className="w-4 h-4" /> Industries We Serve
+                      <Building className="w-4 h-4" /> {t('nav.industries')}
                     </span>
-                    <Link to="/industries" className="text-xs text-[#0a6eab] font-semibold hover:underline">View All Industries &rarr;</Link>
+                    <Link to="/industries" className="text-xs text-[#0a6eab] font-semibold hover:underline">{t('nav.allIndustries')} &rarr;</Link>
                   </div>
                   {industriesData.map((ind) => (
                     <Link
@@ -240,7 +245,7 @@ export default function Header({ onOpenEnquiry }) {
               to="/contact-us"
               className="px-7 py-2.5 rounded-full bg-[#0080c6] hover:bg-[#006ea8] text-white font-bold text-sm shadow-md transition transform hover:-translate-y-0.5"
             >
-              Contact Us
+              {t('nav.contact')}
             </Link>
           </div>
 
@@ -257,11 +262,14 @@ export default function Header({ onOpenEnquiry }) {
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="lg:hidden fixed inset-x-0 top-[110px] bg-white border-b border-slate-200 p-6 space-y-4 max-h-[80vh] overflow-y-auto z-50 shadow-xl text-slate-800">
-          <Link to="/" className="block py-2 text-base font-semibold border-b border-slate-100">Home</Link>
-          <Link to="/about-us" className="block py-2 text-base font-semibold border-b border-slate-100">About Us</Link>
-          <Link to="/solutions" className="block py-2 text-base font-semibold border-b border-slate-100">Solutions</Link>
-          <Link to="/industries" className="block py-2 text-base font-semibold border-b border-slate-100">Industries</Link>
-          <Link to="/contact-us" className="block py-3 mt-4 text-center rounded-full bg-[#0080c6] text-white font-bold">Contact Us</Link>
+          <div className="pb-3 border-b border-slate-100">
+            <LanguageSwitcher isMobile={true} />
+          </div>
+          <Link to="/" className="block py-2 text-base font-semibold border-b border-slate-100">{t('nav.home')}</Link>
+          <Link to="/about-us" className="block py-2 text-base font-semibold border-b border-slate-100">{t('nav.about')}</Link>
+          <Link to="/solutions" className="block py-2 text-base font-semibold border-b border-slate-100">{t('nav.solutions')}</Link>
+          <Link to="/industries" className="block py-2 text-base font-semibold border-b border-slate-100">{t('nav.industries')}</Link>
+          <Link to="/contact-us" className="block py-3 mt-4 text-center rounded-full bg-[#0080c6] text-white font-bold">{t('nav.contact')}</Link>
         </div>
       )}
     </header>

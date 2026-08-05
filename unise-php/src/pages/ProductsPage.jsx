@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Package, Search, Filter, ArrowRight, ShieldCheck } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { productsData } from '../data/productsData';
 import CtaSection from '../components/CtaSection';
 
 export default function ProductsPage({ onOpenEnquiry }) {
+  const { t, i18n } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
@@ -28,11 +30,11 @@ export default function ProductsPage({ onOpenEnquiry }) {
           </div>
 
           <h1 className="text-4xl sm:text-5xl font-extrabold text-white">
-            Our Premium <span className="text-gradient">Hardware Ecosystem</span>
+            {i18n.language === 'hi' ? t('pages.productsPage.title') : 'Our Premium Hardware Ecosystem'}
           </h1>
 
           <p className="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed">
-            Deploy industry-certified physical security equipment, surveillance units, and network components engineered for zero-latency operations and resilient enterprise workloads.
+            {i18n.language === 'hi' ? t('pages.productsPage.subtitle') : 'Deploy industry-certified physical security equipment, surveillance units, and network components engineered for zero-latency operations and resilient enterprise workloads.'}
           </p>
         </div>
       </section>
@@ -125,7 +127,7 @@ export default function ProductsPage({ onOpenEnquiry }) {
                     onClick={() => onOpenEnquiry(`Quotation for ${product.title}`)}
                     className="w-full py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition shadow-glow"
                   >
-                    <span>Enquire Now</span>
+                    <span>{t('nav.enquireNow')}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>

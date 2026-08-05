@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function AboutSection() {
+  const { t, i18n } = useTranslation();
   // Section 2 state synced live with Backend (Admin Panel -> MongoDB Atlas -> Cloudinary)
   const [sec2Config, setSec2Config] = useState({
     title: 'Pioneering the Future of Secured Intelligence',
@@ -86,15 +88,15 @@ export default function AboutSection() {
           <div className="lg:col-span-6 space-y-6">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-[#0073b7] text-xs font-bold uppercase tracking-wider">
               <i className="fa-solid fa-atom text-xs animate-spin-slow"></i>
-              <span>{sec2Config.heading}</span>
+              <span>{i18n.language === 'hi' ? t('about.badge') : sec2Config.heading}</span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 leading-tight">
-              {sec2Config.title}
+              {i18n.language === 'hi' ? t('about.title') : sec2Config.title}
             </h2>
 
             <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-              {sec2Config.description}
+              {i18n.language === 'hi' ? t('about.description') : sec2Config.description}
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
@@ -104,9 +106,11 @@ export default function AboutSection() {
                   <i className="fa-solid fa-brain text-sm"></i>
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-slate-900 mb-1">{sec2Config.card1.title}</h4>
+                  <h4 className="text-sm font-bold text-slate-900 mb-1">
+                    {i18n.language === 'hi' ? t('about.card1Title') : sec2Config.card1.title}
+                  </h4>
                   <p className="text-xs text-slate-500 leading-relaxed">
-                    {sec2Config.card1.description}
+                    {i18n.language === 'hi' ? t('about.card1Desc') : sec2Config.card1.description}
                   </p>
                 </div>
               </div>
@@ -117,9 +121,11 @@ export default function AboutSection() {
                   <i className="fa-solid fa-bolt text-sm"></i>
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-slate-900 mb-1">{sec2Config.card2.title}</h4>
+                  <h4 className="text-sm font-bold text-slate-900 mb-1">
+                    {i18n.language === 'hi' ? t('about.card2Title') : sec2Config.card2.title}
+                  </h4>
                   <p className="text-xs text-slate-500 leading-relaxed">
-                    {sec2Config.card2.description}
+                    {i18n.language === 'hi' ? t('about.card2Desc') : sec2Config.card2.description}
                   </p>
                 </div>
               </div>
@@ -131,14 +137,14 @@ export default function AboutSection() {
                   to={sec2Config.ecosystemButton.link}
                   className="inline-flex items-center gap-2 px-7 py-3 rounded-xl bg-[#0073b7] hover:bg-[#005a96] text-white font-bold text-sm shadow-md transition"
                 >
-                  <span>{sec2Config.ecosystemButton.text}</span>
+                  <span>{i18n.language === 'hi' ? t('about.ctaBtn') : sec2Config.ecosystemButton.text}</span>
                 </Link>
               ) : (
                 <a
                   href={sec2Config.ecosystemButton.link}
                   className="inline-flex items-center gap-2 px-7 py-3 rounded-xl bg-[#0073b7] hover:bg-[#005a96] text-white font-bold text-sm shadow-md transition"
                 >
-                  <span>{sec2Config.ecosystemButton.text}</span>
+                  <span>{i18n.language === 'hi' ? t('about.ctaBtn') : sec2Config.ecosystemButton.text}</span>
                 </a>
               )}
             </div>

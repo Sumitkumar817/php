@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function SolutionsSection() {
+  const { t, i18n } = useTranslation();
   const [sec3Config, setSec3Config] = useState({
     badgeText: 'WHAT WE DO',
     mainHeading: 'End-to-End Physical Security Solutions',
@@ -97,13 +99,13 @@ export default function SolutionsSection() {
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-[#0073b7] text-xs font-bold uppercase tracking-wider">
             <i className="fa-solid fa-shield-halved text-xs"></i>
-            <span>{sec3Config.badgeText}</span>
+            <span>{i18n.language === 'hi' ? t('solutions.badge') : sec3Config.badgeText}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900">
-            {sec3Config.mainHeading}
+            {i18n.language === 'hi' ? t('solutions.title') : sec3Config.mainHeading}
           </h2>
           <p className="text-sm text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            {sec3Config.description}
+            {i18n.language === 'hi' ? t('solutions.subtitle') : sec3Config.description}
           </p>
         </div>
 
@@ -142,7 +144,7 @@ export default function SolutionsSection() {
                 to={sec3Config.viewAllButton.link}
                 className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-[#0073b7] hover:bg-[#005a96] text-white font-bold text-sm shadow-md transition"
               >
-                <span>{sec3Config.viewAllButton.text}</span>
+                <span>{i18n.language === 'hi' ? t('solutions.exploreAll') : sec3Config.viewAllButton.text}</span>
                 <i className="fa-solid fa-arrow-right text-xs"></i>
               </Link>
             ) : (
@@ -150,7 +152,7 @@ export default function SolutionsSection() {
                 href={sec3Config.viewAllButton.link}
                 className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-[#0073b7] hover:bg-[#005a96] text-white font-bold text-sm shadow-md transition"
               >
-                <span>{sec3Config.viewAllButton.text}</span>
+                <span>{i18n.language === 'hi' ? t('solutions.exploreAll') : sec3Config.viewAllButton.text}</span>
                 <i className="fa-solid fa-arrow-right text-xs"></i>
               </a>
             )}

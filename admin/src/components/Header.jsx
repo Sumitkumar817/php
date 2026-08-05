@@ -12,6 +12,7 @@ export default function Header({ onShowToast, currentUser, onOpenAuthModal, onTo
     const loadHeaderLogo = async () => {
       const savedLogo = localStorage.getItem('header_logo_url');
       if (savedLogo) {
+        x
         setHeaderLogoUrl(savedLogo);
       }
       const res = await fetchHeaderConfig();

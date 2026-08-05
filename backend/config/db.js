@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://samofficialsamuel8_db_user:dfFlmTLNChmR9doK@cluster0.i30toji.mongodb.net/admin_panel_db?retryWrites=true&w=majority';
+const MONGO_URI = (process.env.MONGO_URI && process.env.MONGO_URI.trim()) || 'mongodb+srv://samofficialsamuel8_db_user:UoMmbAV8KDAfJ6SC@cluster0.i30toji.mongodb.net/admin_panel_db?retryWrites=true&w=majority';
 
 let isConnected = false;
 

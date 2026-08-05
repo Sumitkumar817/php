@@ -79,3 +79,50 @@ body {
 .whatsapp-pulse-front {
   animation: whatsappRadarPulse 2.5s cubic-bezier(0.16, 1, 0.3, 1) infinite 1.25s;
 }
+
+/* ==========================================================================
+   Google Translate Complete Hiding & Clean Integration Styles
+   Suppress top navbar, banners, popups, tooltips and frame shifts
+   ========================================================================== */
+.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+iframe.goog-te-banner-frame,
+.goog-te-balloon-frame,
+#goog-gt-tt,
+.goog-te-spinner-pos,
+.goog-te-menu-value,
+.goog-text-highlight,
+.goog-te-gadget-icon,
+.goog-te-gadget-simple,
+#goog-gt-vt,
+.goog-tooltip,
+.goog-tooltip:hover {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  width: 0 !important;
+}
+
+body {
+  top: 0px !important;
+  position: static !important;
+}
+
+.skiptranslate {
+  display: none !important;
+}
+
+body > .skiptranslate {
+  display: none !important;
+}
+
+#google_translate_element {
+  display: none !important;
+}
+
+font {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+

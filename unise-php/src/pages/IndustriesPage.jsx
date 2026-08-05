@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { industriesData } from '../data/industriesData';
 import CtaSection from '../components/CtaSection';
 
 const API_BASE = 'http://localhost:5000/api';
 
 export default function IndustriesPage({ onOpenEnquiry }) {
+  const { t, i18n } = useTranslation();
   const [sec5Data, setSec5Data] = useState({ title: 'INDUSTRIES WE SERVE', heading: 'Security Solutions Built for Your Sector', description: '', cards: [] });
   const [loading, setLoading] = useState(true);
 
@@ -51,19 +53,18 @@ export default function IndustriesPage({ onOpenEnquiry }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 space-y-4">
           <nav aria-label="breadcrumb">
             <ol className="flex items-center gap-2 text-xs font-semibold text-white/80">
-              <li><Link to="/" className="hover:underline">Home</Link></li>
+              <li><Link to="/" className="hover:underline">{t('nav.home')}</Link></li>
               <li>/</li>
-              <li className="text-white font-bold">Industries</li>
+              <li className="text-white font-bold">{t('nav.industries')}</li>
             </ol>
           </nav>
 
           <h1 className="text-3xl sm:text-5xl font-extrabold text-white leading-tight">
-            End-to-End Security Infrastructure <br className="hidden sm:inline" />
-            For UAE Commercial &amp; Industrial Sites.
+            {i18n.language === 'hi' ? t('pages.industriesPage.title') : 'End-to-End Security Infrastructure For UAE Commercial & Industrial Sites.'}
           </h1>
 
           <p className="text-sm sm:text-base text-slate-200 max-w-3xl leading-relaxed font-light">
-            {sec5Data.description || 'From initial site design and engineering to integration, compliance, and lifecycle maintenance.'}
+            {i18n.language === 'hi' ? t('pages.industriesPage.subtitle') : (sec5Data.description || 'From initial site design and engineering to integration, compliance, and lifecycle maintenance.')}
           </p>
 
           <div className="pt-2">

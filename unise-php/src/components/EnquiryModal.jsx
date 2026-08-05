@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { X, Send, CheckCircle2, Shield } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function EnquiryModal({ isOpen, onClose, initialSubject = '' }) {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -12,6 +14,7 @@ export default function EnquiryModal({ isOpen, onClose, initialSubject = '' }) {
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+
 
   if (!isOpen) return null;
 
@@ -40,8 +43,8 @@ export default function EnquiryModal({ isOpen, onClose, initialSubject = '' }) {
               <Shield className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-lg text-white">Request Quotation</h3>
-              <p className="text-xs text-slate-400">Speak directly with UniSpark Security Engineers</p>
+              <h3 className="font-bold text-lg text-white">{t('modal.title')}</h3>
+              <p className="text-xs text-slate-400">{t('modal.subtitle')}</p>
             </div>
           </div>
           <button
@@ -59,27 +62,27 @@ export default function EnquiryModal({ isOpen, onClose, initialSubject = '' }) {
               <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 rounded-full flex items-center justify-center mx-auto">
                 <CheckCircle2 className="w-10 h-10" />
               </div>
-              <h4 className="text-2xl font-bold text-white">Request Received!</h4>
+              <h4 className="text-2xl font-bold text-white">{t('modal.successTitle')}</h4>
               <p className="text-sm text-slate-300 max-w-md mx-auto">
-                Thank you for contacting UniSpark Innovation. One of our technical specialists will reach out to you within 2 business hours.
+                {t('modal.successMessage')}
               </p>
               <button
                 onClick={handleReset}
                 className="mt-4 px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-xl transition shadow-glow"
               >
-                Close Window
+                Close
               </button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
-                  Full Name *
+                  {t('modal.fullName')} *
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. John Doe"
+                  placeholder="John Doe"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-white focus:outline-none focus:border-blue-500 transition text-sm"
@@ -89,7 +92,7 @@ export default function EnquiryModal({ isOpen, onClose, initialSubject = '' }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
-                    Email Address *
+                    {t('modal.email')} *
                   </label>
                   <input
                     type="email"
@@ -102,7 +105,7 @@ export default function EnquiryModal({ isOpen, onClose, initialSubject = '' }) {
                 </div>
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
-                    Phone Number *
+                    {t('modal.phone')} *
                   </label>
                   <input
                     type="tel"
@@ -117,7 +120,7 @@ export default function EnquiryModal({ isOpen, onClose, initialSubject = '' }) {
 
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
-                  Company / Organization
+                  {t('modal.company')}
                 </label>
                 <input
                   type="text"
@@ -130,7 +133,7 @@ export default function EnquiryModal({ isOpen, onClose, initialSubject = '' }) {
 
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
-                  Solution / Product Area
+                  {t('modal.service')}
                 </label>
                 <input
                   type="text"
@@ -142,11 +145,11 @@ export default function EnquiryModal({ isOpen, onClose, initialSubject = '' }) {
 
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
-                  Project Details / Requirements
+                  {t('modal.message')}
                 </label>
                 <textarea
                   rows={3}
-                  placeholder="Tell us about your project scope, location, or equipment needs..."
+                  placeholder="Tell us about your project scope..."
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-white focus:outline-none focus:border-blue-500 transition text-sm resize-none"
@@ -160,10 +163,10 @@ export default function EnquiryModal({ isOpen, onClose, initialSubject = '' }) {
                   className="w-full py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-semibold rounded-xl transition shadow-glow flex items-center justify-center gap-2"
                 >
                   {loading ? (
-                    <span>Dispatching...</span>
+                    <span>{t('modal.submitting')}</span>
                   ) : (
                     <>
-                      <span>Submit Quotation Request</span>
+                      <span>{t('modal.submit')}</span>
                       <Send className="w-4 h-4" />
                     </>
                   )}

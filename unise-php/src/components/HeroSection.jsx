@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function HeroSection({ onOpenEnquiry }) {
+  const { t, i18n } = useTranslation();
   // Hero settings state synced live with Backend (Admin -> MongoDB Atlas -> Cloudinary)
   const [heroConfig, setHeroConfig] = useState({
-    title: 'Welcome to Unise',
+    title: 'Welcome to Unispark',
     heading: "UAE's Trusted Security Systems Partner",
     words: ["Design.", "Supply.", "Installation.", "Maintenance."],
     description: 'Protecting businesses, assets, and people across Dubai, Abu Dhabi, Sharjah, and the UAE — with world-class physical security infrastructure, expert engineers, and zero-compromise service.',
@@ -12,6 +14,7 @@ export default function HeroSection({ onOpenEnquiry }) {
     button2: { text: 'Call Us Now: +971 50 288 5874', link: 'tel:+971502885874' },
     videoUrl: ''
   });
+
 
   const [wordIndex, setWordIndex] = useState(0);
 
@@ -22,7 +25,7 @@ export default function HeroSection({ onOpenEnquiry }) {
       const data = await res.json();
       if (data.success && data.data) {
         setHeroConfig({
-          title: data.data.title || 'Welcome to Unise',
+          title: data.data.title || 'Welcome to Unispark',
           heading: data.data.heading || "UAE's Trusted Security Systems Partner",
           words: Array.isArray(data.data.words) && data.data.words.length > 0 ? data.data.words : ["Design.", "Supply.", "Installation.", "Maintenance."],
           description: data.data.description || 'Protecting businesses, assets, and people across Dubai, Abu Dhabi, Sharjah, and the UAE...',
@@ -107,18 +110,18 @@ export default function HeroSection({ onOpenEnquiry }) {
 
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white text-xs font-semibold uppercase tracking-wide">
             <i className="fa-solid fa-circle-check text-cyan-300"></i>
-            <span>{heroConfig.title}</span>
+            <span>{i18n.language === 'hi' ? t('hero.badge') : heroConfig.title}</span>
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-white">
-            {heroConfig.heading} <br />
+            {i18n.language === 'hi' ? t('hero.titlePrefix') : heroConfig.heading} <br />
             <span className="inline-block text-cyan-300 transition-all duration-500">
-              {currentWord}
+              {i18n.language === 'hi' ? t(`hero.rotatingWords.${wordIndex % 5}`) : currentWord}
             </span>
           </h1>
 
           <p className="text-base sm:text-lg text-slate-200 leading-relaxed max-w-2xl font-light">
-            {heroConfig.description}
+            {i18n.language === 'hi' ? t('hero.description') : heroConfig.description}
           </p>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-4">
@@ -127,14 +130,14 @@ export default function HeroSection({ onOpenEnquiry }) {
                 to={heroConfig.button1.link}
                 className="px-8 py-3.5 rounded-xl bg-[#0073b7] hover:bg-[#005a96] text-white font-bold text-sm shadow-lg flex items-center justify-center gap-2 transition"
               >
-                {heroConfig.button1.text}
+                {i18n.language === 'hi' ? t('hero.ctaPrimary') : heroConfig.button1.text}
               </Link>
             ) : (
               <a
                 href={heroConfig.button1.link}
                 className="px-8 py-3.5 rounded-xl bg-[#0073b7] hover:bg-[#005a96] text-white font-bold text-sm shadow-lg flex items-center justify-center gap-2 transition"
               >
-                {heroConfig.button1.text}
+                {i18n.language === 'hi' ? t('hero.ctaPrimary') : heroConfig.button1.text}
               </a>
             )}
 
@@ -143,7 +146,7 @@ export default function HeroSection({ onOpenEnquiry }) {
                 to={heroConfig.button2.link}
                 className="px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold text-sm flex items-center justify-center gap-2 transition"
               >
-                <span>{heroConfig.button2.text}</span>
+                <span>{i18n.language === 'hi' ? t('hero.ctaSecondary') : heroConfig.button2.text}</span>
               </Link>
             ) : (
               <a
@@ -151,7 +154,7 @@ export default function HeroSection({ onOpenEnquiry }) {
                 className="px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold text-sm flex items-center justify-center gap-2 transition"
               >
                 <i className="fa-solid fa-phone text-cyan-300"></i>
-                <span>{heroConfig.button2.text}</span>
+                <span>{i18n.language === 'hi' ? t('hero.ctaSecondary') : heroConfig.button2.text}</span>
               </a>
             )}
           </div>

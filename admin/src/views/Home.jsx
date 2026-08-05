@@ -14,7 +14,7 @@ export default function Home({ onShowToast }) {
 
   const [words, setWords] = useState(["Design.", "Supply.", "Installation.", "Maintenance."]);
   const [newWord, setNewWord] = useState('');
-  
+
   const [button1Text, setButton1Text] = useState('Request a Free Site Survey');
   const [button1Link, setButton1Link] = useState('/contact-us');
   const [button2Text, setButton2Text] = useState('Call Us Now: +971 50 288 5874');
@@ -1279,18 +1279,18 @@ export default function Home({ onShowToast }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem', width: '100%' }}>
-      
+
       {/* ========================================================================= */}
       {/* SECTION 1: HERO SECTION CARD                                              */}
       {/* ========================================================================= */}
       <div className="content-card" style={{ width: '100%' }}>
-        
+
         {/* Header Bar */}
-        <div 
-          className="content-card-header" 
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
+        <div
+          className="content-card-header"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
             justifyContent: 'space-between',
             padding: '1.25rem 1.75rem',
             borderBottom: '1px solid var(--border-color)'
@@ -1316,9 +1316,9 @@ export default function Home({ onShowToast }) {
 
         {/* Card Body */}
         <div className="content-card-body" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-          
+
           <form onSubmit={handleSaveHero} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            
+
             <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>
               Hero Section
             </h3>
@@ -1334,7 +1334,7 @@ export default function Home({ onShowToast }) {
                 className="form-control"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Welcome to Unise"
+                placeholder="Welcome to Unispark"
                 required
               />
             </div>
@@ -1369,7 +1369,7 @@ export default function Home({ onShowToast }) {
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', alignItems: 'center', marginTop: '0.5rem', marginBottom: '0.5rem' }}>
                 {words.map((word, index) => (
-                  <div 
+                  <div
                     key={index}
                     style={{
                       display: 'inline-flex',
@@ -1533,13 +1533,13 @@ export default function Home({ onShowToast }) {
       {/* SECTION 2: SECTION 2 SETTINGS CARD                                         */}
       {/* ========================================================================= */}
       <div className="content-card" style={{ width: '100%' }}>
-        
+
         {/* Section 2 Header Bar */}
-        <div 
-          className="content-card-header" 
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
+        <div
+          className="content-card-header"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
             justifyContent: 'space-between',
             padding: '1.25rem 1.75rem',
             borderBottom: '1px solid var(--border-color)'
@@ -1565,9 +1565,9 @@ export default function Home({ onShowToast }) {
 
         {/* Section 2 Card Body */}
         <div className="content-card-body" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-          
+
           <form onSubmit={handleSaveSection2} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            
+
             <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>
               Section 2 Settings
             </h3>
@@ -1620,7 +1620,7 @@ export default function Home({ onShowToast }) {
 
             {/* Feature Cards Grid (2 Boxes) */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
-              
+
               {/* Card 1 */}
               <div style={{ backgroundColor: 'var(--bg-input)', padding: '1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div className="form-group">
@@ -1762,7 +1762,7 @@ export default function Home({ onShowToast }) {
                 <p style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.25rem' }}>
                   Upload Image
                 </p>
-                
+
                 <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
                   Drag &amp; Drop or Click to Upload
                 </p>
@@ -1841,13 +1841,13 @@ export default function Home({ onShowToast }) {
       {/* SECTION 3: SERVICES SECTION CARD                                          */}
       {/* ========================================================================= */}
       <div className="content-card" style={{ width: '100%' }}>
-        
+
         {/* Section 3 Header Bar */}
-        <div 
-          className="content-card-header" 
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
+        <div
+          className="content-card-header"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
             justifyContent: 'space-between',
             padding: '1.25rem 1.75rem',
             borderBottom: '1px solid var(--border-color)'
@@ -1873,7 +1873,7 @@ export default function Home({ onShowToast }) {
 
         {/* Section 3 Card Body */}
         <div className="content-card-body" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
-          
+
           {/* SECTION SETTINGS BOX */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '2rem' }}>
             <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-main)', letterSpacing: '0.05em' }}>
@@ -1964,7 +1964,7 @@ export default function Home({ onShowToast }) {
 
           {/* SERVICES LIST BOX */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            
+
             {/* Services Header & Add Button */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-main)', letterSpacing: '0.05em' }}>
@@ -2001,17 +2001,17 @@ export default function Home({ onShowToast }) {
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-                    
+
                     {/* Icon Preview */}
-                    <div 
-                      style={{ 
-                        width: '48px', 
-                        height: '48px', 
-                        borderRadius: 'var(--radius-md)', 
-                        backgroundColor: 'var(--primary-light)', 
-                        color: 'var(--primary)', 
-                        display: 'flex', 
-                        alignItems: 'center', 
+                    <div
+                      style={{
+                        width: '48px',
+                        height: '48px',
+                        borderRadius: 'var(--radius-md)',
+                        backgroundColor: 'var(--primary-light)',
+                        color: 'var(--primary)',
+                        display: 'flex',
+                        alignItems: 'center',
                         justifyContent: 'center',
                         fontSize: '1.25rem',
                         shrink: 0,
@@ -2042,7 +2042,7 @@ export default function Home({ onShowToast }) {
 
                   {/* Actions & Status Bar */}
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid var(--border-color)', paddingTop: '0.75rem' }}>
-                    
+
                     {/* Featured Status Toggle */}
                     <button
                       type="button"
@@ -2129,7 +2129,7 @@ export default function Home({ onShowToast }) {
       {/* ADD / EDIT SERVICE MODAL DIALOG                                           */}
       {/* ========================================================================= */}
       {showServiceModal && (
-        <div 
+        <div
           style={{
             position: 'fixed',
             inset: 0,
@@ -2142,7 +2142,7 @@ export default function Home({ onShowToast }) {
             padding: '1.5rem'
           }}
         >
-          <div 
+          <div
             style={{
               backgroundColor: 'var(--bg-card)',
               border: '1px solid var(--border-color)',
@@ -2169,7 +2169,7 @@ export default function Home({ onShowToast }) {
 
             {/* Modal Body */}
             <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              
+
               {/* Service Title */}
               <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                 <label className="form-label" style={{ fontWeight: 600 }}>Service Title *</label>
@@ -2272,13 +2272,13 @@ export default function Home({ onShowToast }) {
       {/* SECTION 4: DIVISIONS SECTION CARD                                         */}
       {/* ========================================================================= */}
       <div className="content-card" style={{ width: '100%' }}>
-        
+
         {/* Section 4 Header Bar */}
-        <div 
-          className="content-card-header" 
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
+        <div
+          className="content-card-header"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
             justifyContent: 'space-between',
             padding: '1.25rem 1.75rem',
             borderBottom: '1px solid var(--border-color)'
@@ -2304,9 +2304,9 @@ export default function Home({ onShowToast }) {
 
         {/* Section 4 Card Body */}
         <div className="content-card-body" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-          
+
           <form onSubmit={handleSaveSection4} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            
+
             <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>
               Divisions Section Settings
             </h3>
@@ -2344,7 +2344,7 @@ export default function Home({ onShowToast }) {
               <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-main)', margin: 0 }}>
                 Cards
               </h3>
-              
+
               <button
                 type="button"
                 onClick={handleOpenAddSec4Modal}
@@ -2365,16 +2365,16 @@ export default function Home({ onShowToast }) {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
                 {sec4Cards.map((card) => (
                   <div key={card.id || card._id} style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', overflow: 'hidden', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                    
+
                     <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1 }}>
                       <div style={{ width: '40px', height: '40px', borderRadius: '8px', backgroundColor: 'var(--primary-light)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <i className={`fa-solid ${card.icon || 'fa-screwdriver-wrench'} text-lg`}></i>
                       </div>
-                      
+
                       <h4 style={{ fontSize: '1.05rem', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>
                         {card.title}
                       </h4>
-                      
+
                       <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5, flex: 1 }}>
                         {card.description}
                       </p>
@@ -2427,7 +2427,7 @@ export default function Home({ onShowToast }) {
                 <span>{isSavingSec4 ? 'Saving...' : 'Save Changes'}</span>
               </button>
             </div>
-            
+
           </form>
         </div>
       </div>
@@ -2437,9 +2437,9 @@ export default function Home({ onShowToast }) {
       {/* ========================================================================= */}
       {showSec4Modal && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(4px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-          
+
           <div style={{ backgroundColor: 'var(--bg-card)', width: '100%', maxWidth: '600px', borderRadius: 'var(--radius-lg)', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.2)', display: 'flex', flexDirection: 'column', maxHeight: '90vh' }}>
-            
+
             {/* Modal Header */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border-color)' }}>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>
@@ -2452,7 +2452,7 @@ export default function Home({ onShowToast }) {
 
             {/* Modal Body */}
             <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', overflowY: 'auto' }}>
-              
+
               <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                 <label className="form-label" style={{ fontWeight: 600 }}>Title *</label>
                 <input type="text" className="form-control" value={sec4ModalTitle} onChange={(e) => setSec4ModalTitle(e.target.value)} placeholder="e.g. Installation & Maintenance" />
@@ -2473,7 +2473,7 @@ export default function Home({ onShowToast }) {
                   <label className="form-label" style={{ fontWeight: 600 }}>Button Text</label>
                   <input type="text" className="form-control" value={sec4ModalBtnText} onChange={(e) => setSec4ModalBtnText(e.target.value)} placeholder="Explore Installation Services" />
                 </div>
-                
+
                 <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                   <label className="form-label" style={{ fontWeight: 600 }}>Button Link</label>
                   <input type="text" className="form-control" value={sec4ModalBtnLink} onChange={(e) => setSec4ModalBtnLink(e.target.value)} placeholder="/solutions" />
@@ -2498,13 +2498,13 @@ export default function Home({ onShowToast }) {
       {/* SECTION 5: INDUSTRIES SECTION CARD                                        */}
       {/* ========================================================================= */}
       <div className="content-card" style={{ width: '100%' }}>
-        
+
         {/* Section 5 Header Bar */}
-        <div 
-          className="content-card-header" 
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
+        <div
+          className="content-card-header"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
             justifyContent: 'space-between',
             padding: '1.25rem 1.75rem',
             borderBottom: '1px solid var(--border-color)'
@@ -2530,9 +2530,9 @@ export default function Home({ onShowToast }) {
 
         {/* Section 5 Card Body */}
         <div className="content-card-body" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-          
+
           <form onSubmit={handleSaveSection5} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            
+
             <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>
               Industries Section Settings
             </h3>
@@ -2584,7 +2584,7 @@ export default function Home({ onShowToast }) {
               <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-main)', margin: 0 }}>
                 Service Cards
               </h3>
-              
+
               <button
                 type="button"
                 onClick={handleOpenAddSec5Modal}
@@ -2605,7 +2605,7 @@ export default function Home({ onShowToast }) {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
                 {sec5Cards.map((card) => (
                   <div key={card.id || card._id} style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', overflow: 'hidden', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                    
+
                     <div style={{ width: '100%', height: '140px', backgroundColor: 'var(--bg-input)' }}>
                       <img src={card.image} alt={card.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
@@ -2614,7 +2614,7 @@ export default function Home({ onShowToast }) {
                       <h4 style={{ fontSize: '1.05rem', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>
                         {card.title}
                       </h4>
-                      
+
                       <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5, flex: 1 }}>
                         {card.subtitle}
                       </p>
@@ -2666,7 +2666,7 @@ export default function Home({ onShowToast }) {
                 <span>{isSavingSec5 ? 'Saving...' : 'Save Changes'}</span>
               </button>
             </div>
-            
+
           </form>
         </div>
       </div>
@@ -2676,9 +2676,9 @@ export default function Home({ onShowToast }) {
       {/* ========================================================================= */}
       {showSec5Modal && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(4px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-          
+
           <div style={{ backgroundColor: 'var(--bg-card)', width: '100%', maxWidth: '500px', borderRadius: 'var(--radius-lg)', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.2)', display: 'flex', flexDirection: 'column', maxHeight: '90vh' }}>
-            
+
             {/* Modal Header */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border-color)' }}>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>
@@ -2691,7 +2691,7 @@ export default function Home({ onShowToast }) {
 
             {/* Modal Body */}
             <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', overflowY: 'auto' }}>
-              
+
               <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                 <label className="form-label" style={{ fontWeight: 600 }}>Card Image Upload *</label>
                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
@@ -2741,13 +2741,13 @@ export default function Home({ onShowToast }) {
       {/* SECTION 6: WHY US SECTION CARD                                            */}
       {/* ========================================================================= */}
       <div className="content-card" style={{ width: '100%' }}>
-        
+
         {/* Section 6 Header Bar */}
-        <div 
-          className="content-card-header" 
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
+        <div
+          className="content-card-header"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
             justifyContent: 'space-between',
             padding: '1.25rem 1.75rem',
             borderBottom: '1px solid var(--border-color)'
@@ -2773,9 +2773,9 @@ export default function Home({ onShowToast }) {
 
         {/* Section 6 Card Body */}
         <div className="content-card-body" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-          
+
           <form onSubmit={handleSaveSection6} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            
+
             <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>
               Why Us Section Settings
             </h3>
@@ -2855,7 +2855,7 @@ export default function Home({ onShowToast }) {
               <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-main)', margin: 0 }}>
                 Pillar Cards
               </h3>
-              
+
               <button
                 type="button"
                 onClick={handleOpenAddSec6Modal}
@@ -2876,7 +2876,7 @@ export default function Home({ onShowToast }) {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
                 {sec6Cards.map((card) => (
                   <div key={card.id || card._id} style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', overflow: 'hidden', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                    
+
                     <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1 }}>
                       {card.icon && (card.icon.startsWith('http') || card.icon.startsWith('data:image/')) ? (
                         <div style={{ width: '48px', height: '48px', borderRadius: '8px', overflow: 'hidden' }}>
@@ -2887,11 +2887,11 @@ export default function Home({ onShowToast }) {
                           <i className={`fa-solid ${card.icon || 'fa-award'} text-xl`}></i>
                         </div>
                       )}
-                      
+
                       <h4 style={{ fontSize: '1.05rem', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>
                         {card.title}
                       </h4>
-                      
+
                       <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5, flex: 1 }}>
                         {card.description}
                       </p>
@@ -2962,7 +2962,7 @@ export default function Home({ onShowToast }) {
 
         <div className="card-body">
           <form onSubmit={handleSaveSec7} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            
+
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
               <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                 <label className="form-label">Badge Text</label>
@@ -3035,7 +3035,7 @@ export default function Home({ onShowToast }) {
 
         <div className="card-body">
           <form onSubmit={handleSaveSec8} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            
+
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1rem' }}>
               {statsList.map((stat, idx) => (
                 <div key={idx} style={{ border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '1.25rem', backgroundColor: 'var(--bg-card)', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -3294,9 +3294,9 @@ export default function Home({ onShowToast }) {
       {/* ========================================================================= */}
       {showSec6Modal && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(15, 23, 42, 0.6)', backdropFilter: 'blur(4px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-          
+
           <div style={{ backgroundColor: 'var(--bg-card)', width: '100%', maxWidth: '500px', borderRadius: 'var(--radius-lg)', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.2)', display: 'flex', flexDirection: 'column', maxHeight: '90vh' }}>
-            
+
             {/* Modal Header */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border-color)' }}>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>
@@ -3309,7 +3309,7 @@ export default function Home({ onShowToast }) {
 
             {/* Modal Body */}
             <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', overflowY: 'auto' }}>
-              
+
               <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                 <label className="form-label" style={{ fontWeight: 600 }}>Title *</label>
                 <input type="text" className="form-control" value={sec6ModalTitle} onChange={(e) => setSec6ModalTitle(e.target.value)} placeholder="e.g. UAE Regulatory Compliance" />

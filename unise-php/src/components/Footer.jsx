@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { solutionsData } from '../data/solutionsData';
 import { industriesData } from '../data/industriesData';
 
 const API_BASE = 'http://localhost:5000/api';
+
 
 const defaultFooter = {
   logoUrl: '/images/logo.png',
@@ -42,9 +44,11 @@ const defaultFooter = {
 };
 
 export default function Footer() {
+  const { t } = useTranslation();
   const [footer, setFooter] = useState(defaultFooter);
   const [solutions, setSolutions] = useState(solutionsData);
   const [industries, setIndustries] = useState(industriesData);
+
 
   const fetchAll = async () => {
     try {
@@ -268,11 +272,11 @@ export default function Footer() {
         {/* ===== Copyright Bar ===== */}
         <div className="flex flex-col sm:flex-row items-center justify-between pt-4 text-xs text-white/70 gap-4">
           <div>
-            © {new Date().getFullYear()} {footer.copyrightText}
+            {t('footer.copyright')}
           </div>
           <div className="flex items-center gap-6">
-            <Link to="/privacy-policy" className="hover:text-white transition">Privacy Policy</Link>
-            <Link to="/terms-and-conditions" className="hover:text-white transition">Terms &amp; Conditions</Link>
+            <Link to="/privacy-policy" className="hover:text-white transition">{t('footer.privacy')}</Link>
+            <Link to="/terms-and-conditions" className="hover:text-white transition">{t('footer.terms')}</Link>
           </div>
         </div>
 

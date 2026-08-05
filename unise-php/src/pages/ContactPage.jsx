@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function ContactPage() {
+  const { t, i18n } = useTranslation();
   const [formData, setFormData] = useState({
     fullName: '',
     companyName: '',
@@ -84,18 +86,18 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 space-y-4">
           <nav aria-label="breadcrumb">
             <ol className="flex items-center gap-2 text-xs font-semibold text-white/80">
-              <li><Link to="/" className="hover:underline">Home</Link></li>
+              <li><Link to="/" className="hover:underline">{t('nav.home')}</Link></li>
               <li>/</li>
-              <li className="text-white font-bold">Contact Us</li>
+              <li className="text-white font-bold">{t('nav.contact')}</li>
             </ol>
           </nav>
 
           <h1 className="text-3xl sm:text-4xl font-extrabold text-white">
-            {config.bannerTitle}
+            {i18n.language === 'hi' ? t('pages.contact.title') : config.bannerTitle}
           </h1>
 
           <p className="text-sm sm:text-base text-slate-200 max-w-3xl leading-relaxed font-light">
-            {config.bannerDesc}
+            {i18n.language === 'hi' ? t('pages.contact.subtitle') : config.bannerDesc}
           </p>
         </div>
       </section>
