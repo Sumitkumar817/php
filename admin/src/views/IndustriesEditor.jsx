@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Save, Plus, Edit, Trash2, X, Building, Check, Star, UploadCloud, Layers, FileText, ExternalLink, Image as ImageIcon, AlertTriangle, ShieldAlert } from 'lucide-react';
-import { fetchSection5Config, updateSection5Config } from '../services/api';
+import { fetchSection5Config, updateSection5Config, WEBSITE_BASE_URL } from '../services/api';
 
 const QUICK_ICONS = [
   { name: 'Plane (Aviation)', class: 'fa-plane' },
@@ -637,12 +637,12 @@ export default function IndustriesEditor({ onShowToast }) {
                   <span>Inside Page CMS — {activeInsideIndustry.title}</span>
                 </h3>
                 <span style={{ fontSize: '0.8rem', color: '#0073b7', fontWeight: 600 }}>
-                  Route: http://localhost:3001/industries/{activeInsideIndustry.id}
+                  Route: {WEBSITE_BASE_URL}/industries/{activeInsideIndustry.id}
                 </span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <a
-                  href={`http://localhost:3001/industries/${activeInsideIndustry.id}`}
+                  href={`${WEBSITE_BASE_URL}/industries/${activeInsideIndustry.id}`}
                   target="_blank"
                   rel="noreferrer"
                   style={{ padding: '0.45rem 1rem', fontSize: '0.8rem', backgroundColor: '#0073b7', color: '#fff', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', gap: '0.4rem', textDecoration: 'none', fontWeight: 600 }}

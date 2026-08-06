@@ -16,7 +16,7 @@ export default function OurGroupSection({ data: propData }) {
 
   useEffect(() => {
     if (!propData) {
-      const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+      const apiBase = import.meta.env.VITE_API_BASE_URL || 'https://unispark-backend-api.onrender.com/api';
       fetch(`${apiBase}/about`)
         .then(res => res.json())
         .then(d => {

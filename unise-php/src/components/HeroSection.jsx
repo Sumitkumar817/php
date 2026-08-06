@@ -21,7 +21,7 @@ export default function HeroSection({ onOpenEnquiry }) {
   // Fetch Hero Configuration from Backend API
   const loadHeroConfigFromBackend = async () => {
     try {
-      const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+      const apiBase = import.meta.env.VITE_API_BASE_URL || 'https://unispark-backend-api.onrender.com/api';
       const res = await fetch(`${apiBase}/hero`);
       const data = await res.json();
       if (data.success && data.data) {

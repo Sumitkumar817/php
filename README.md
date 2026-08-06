@@ -254,25 +254,41 @@ cd ..
 
 ---
 
-## 4. Environment Variables Configuration
+## 4. Environment Variables Configuration & Live Deployments
 
-### Backend `.env` File
-Create or verify the `.env` file located inside `backend/.env`:
+### 🌐 Live Production Deployments
+- **Backend API (Render)**: `https://unispark-backend-api.onrender.com/`
+- **Public Website (Vercel)**: `https://unispark-website-kappa.vercel.app/`
+- **CMS Admin Panel (Vercel)**: `https://unispark-admin-eight.vercel.app/`
 
+---
+
+### Backend `.env` File (`backend/.env`)
 ```env
 # Server Port
 PORT=5000
 
-# MongoDB Atlas Connection String (replace with your cluster URI if using custom DB)
+# MongoDB Atlas Connection String
 MONGO_URI="mongodb+srv://samofficialsamuel8_db_user:UoMmbAV8KDAfJ6SC@cluster0.i30toji.mongodb.net/?appName=Cluster0"
 
 # JWT Secret for Admin Authentication
 JWT_SECRET=unispark-admin-super-secret-jwt-key-2026
 
-# Cloudinary CDN Configuration (Optional for cloud media uploads)
+# Cloudinary CDN Configuration
 CLOUDINARY_CLOUD_NAME=xon36kkb
 CLOUDINARY_API_KEY=597535137581924
 CLOUDINARY_API_SECRET=gWijXbJts35W5LwFfrlg7NzD36g
+```
+
+### Admin Panel `.env` File (`admin/.env` & `admin/.env.production`)
+```env
+VITE_API_BASE_URL=https://unispark-backend-api.onrender.com/api
+VITE_WEBSITE_URL=https://unispark-website-kappa.vercel.app
+```
+
+### Public Website `.env` File (`unise-php/.env` & `unise-php/.env.production`)
+```env
+VITE_API_BASE_URL=https://unispark-backend-api.onrender.com/api
 ```
 
 ---

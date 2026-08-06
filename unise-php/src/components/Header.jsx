@@ -31,7 +31,7 @@ export default function Header({ onOpenEnquiry }) {
   // Fetch header configuration from backend API (MongoDB Atlas)
   const loadBackendHeaderConfig = async () => {
     try {
-      const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+      const apiBase = import.meta.env.VITE_API_BASE_URL || 'https://unispark-backend-api.onrender.com/api';
       const res = await fetch(`${apiBase}/header`);
       const data = await res.json();
       if (data.success && data.data) {

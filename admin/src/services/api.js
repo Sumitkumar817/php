@@ -1,4 +1,5 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://unispark-backend-api.onrender.com/api';
+export const WEBSITE_BASE_URL = import.meta.env.VITE_WEBSITE_URL || 'https://unispark-website-kappa.vercel.app';
 
 // Fetch Footer Config (GET /api/footer)
 export const fetchFooterConfig = async () => {

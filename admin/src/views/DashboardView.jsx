@@ -1,19 +1,21 @@
 import React from 'react';
 import {
   Home, Layout, Info, Lightbulb, Building, Phone, LayoutGrid,
-  ArrowUpRight, Shield, Globe, MessageSquare, Users, Layers, BookOpen
+  ArrowUpRight, Shield, Globe, MessageSquare, Users, Layers, BookOpen,
+  Package, FileText, Lock
 } from 'lucide-react';
+import { WEBSITE_BASE_URL } from '../services/api';
 
-const PAGES = [
+const getPages = (baseUrl) => [
   {
     key: 'website-home',
     label: 'Home Page',
-    subtitle: 'Hero Section',
+    subtitle: 'Hero & Sections CMS',
     desc: 'Edit main hero banner, headline, subtext, and CTA buttons shown on the homepage.',
     Icon: Home,
     color: '#6366f1',
     bg: 'rgba(99,102,241,0.12)',
-    route: 'http://localhost:3001/',
+    route: `${baseUrl}/`,
   },
   {
     key: 'website-header',
@@ -23,7 +25,7 @@ const PAGES = [
     Icon: Layout,
     color: '#0073b7',
     bg: 'rgba(0,115,183,0.12)',
-    route: 'http://localhost:3001/',
+    route: `${baseUrl}/`,
   },
   {
     key: 'website-about',
@@ -33,7 +35,7 @@ const PAGES = [
     Icon: Info,
     color: '#10b981',
     bg: 'rgba(16,185,129,0.12)',
-    route: 'http://localhost:3001/about-us',
+    route: `${baseUrl}/about-us`,
   },
   {
     key: 'website-solution',
@@ -43,7 +45,7 @@ const PAGES = [
     Icon: Lightbulb,
     color: '#f59e0b',
     bg: 'rgba(245,158,11,0.12)',
-    route: 'http://localhost:3001/solutions',
+    route: `${baseUrl}/solutions`,
   },
   {
     key: 'website-industry',
@@ -53,7 +55,7 @@ const PAGES = [
     Icon: Building,
     color: '#ef4444',
     bg: 'rgba(239,68,68,0.12)',
-    route: 'http://localhost:3001/industries',
+    route: `${baseUrl}/industries`,
   },
   {
     key: 'website-contact',
@@ -63,7 +65,7 @@ const PAGES = [
     Icon: Phone,
     color: '#06b6d4',
     bg: 'rgba(6,182,212,0.12)',
-    route: 'http://localhost:3001/contact-us',
+    route: `${baseUrl}/contact-us`,
   },
   {
     key: 'website-footer',
@@ -73,7 +75,7 @@ const PAGES = [
     Icon: LayoutGrid,
     color: '#8b5cf6',
     bg: 'rgba(139,92,246,0.12)',
-    route: 'http://localhost:3001/',
+    route: `${baseUrl}/`,
   },
   {
     key: 'website-users',
@@ -97,18 +99,22 @@ const PAGES = [
   },
 ];
 
-// Live website page quick-preview links
-const LIVE_ROUTES = [
-  { label: 'Homepage', url: 'http://localhost:3001/', icon: 'fa-house' },
-  { label: 'About Us', url: 'http://localhost:3001/about-us', icon: 'fa-circle-info' },
-  { label: 'Solutions', url: 'http://localhost:3001/solutions', icon: 'fa-lightbulb' },
-  { label: 'Industries', url: 'http://localhost:3001/industries', icon: 'fa-building' },
-  { label: 'Contact Us', url: 'http://localhost:3001/contact-us', icon: 'fa-phone' },
-  { label: 'Privacy Policy', url: 'http://localhost:3001/privacy-policy', icon: 'fa-file-shield' },
-  { label: 'Terms & Conditions', url: 'http://localhost:3001/terms-and-conditions', icon: 'fa-file-contract' },
+// Live website page quick-preview links matching unise-php routes
+const getLiveRoutes = (baseUrl) => [
+  { label: 'Homepage', path: '/', url: `${baseUrl}/`, icon: 'fa-house' },
+  { label: 'About Us', path: '/about-us', url: `${baseUrl}/about-us`, icon: 'fa-circle-info' },
+  { label: 'Solutions', path: '/solutions', url: `${baseUrl}/solutions`, icon: 'fa-lightbulb' },
+  { label: 'Industries', path: '/industries', url: `${baseUrl}/industries`, icon: 'fa-building' },
+  { label: 'Our Products', path: '/our-products', url: `${baseUrl}/our-products`, icon: 'fa-box-open' },
+  { label: 'Contact Us', path: '/contact-us', url: `${baseUrl}/contact-us`, icon: 'fa-phone' },
+  { label: 'Privacy Policy', path: '/privacy-policy', url: `${baseUrl}/privacy-policy`, icon: 'fa-file-shield' },
+  { label: 'Terms & Conditions', path: '/terms-and-conditions', url: `${baseUrl}/terms-and-conditions`, icon: 'fa-file-contract' },
 ];
 
 export default function DashboardView({ onSelectSection }) {
+  const pages = getPages(WEBSITE_BASE_URL);
+  const liveRoutes = getLiveRoutes(WEBSITE_BASE_URL);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
 
@@ -138,9 +144,9 @@ export default function DashboardView({ onSelectSection }) {
           </p>
         </div>
         <a
-          href="http://localhost:3001"
+          href={WEBSITE_BASE_URL}
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           style={{
             display: 'flex', alignItems: 'center', gap: '0.5rem',
             padding: '0.65rem 1.35rem', borderRadius: '10px',
@@ -149,7 +155,10 @@ export default function DashboardView({ onSelectSection }) {
             color: '#fff', fontWeight: 700, fontSize: '0.85rem',
             textDecoration: 'none', backdropFilter: 'blur(4px)',
             transition: 'background 0.2s',
+            cursor: 'pointer'
           }}
+          onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.28)'}
+          onMouseLeave={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.18)'}
         >
           <Globe size={16} />
           <span>Open Live Website</span>
@@ -164,28 +173,24 @@ export default function DashboardView({ onSelectSection }) {
             <Layers size={20} className="text-primary" />
             All Pages & Sections
           </h3>
-          <p className="card-subtitle">Click any card to jump directly into that page's CMS editor.</p>
+          <p className="card-subtitle">Select a page to edit its CMS content or click the preview link to view the live page on the website.</p>
         </div>
         <div className="card-body">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
-            {PAGES.map(({ key, label, subtitle, desc, Icon, color, bg, route }) => (
-              <button
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))', gap: '1.25rem' }}>
+            {pages.map(({ key, label, subtitle, desc, Icon, color, bg, route }) => (
+              <div
                 key={key}
-                onClick={() => onSelectSection(key)}
                 style={{
                   padding: '1.35rem',
                   backgroundColor: 'var(--bg-input)',
                   border: '1px solid var(--border-color)',
                   borderRadius: 'var(--radius-md)',
-                  textAlign: 'left',
-                  color: 'var(--text-main)',
-                  cursor: 'pointer',
-                  transition: 'all 0.18s ease',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '0.85rem',
+                  justifyContent: 'space-between',
+                  gap: '1rem',
+                  transition: 'all 0.18s ease',
                   position: 'relative',
-                  overflow: 'hidden',
                 }}
                 onMouseEnter={e => {
                   e.currentTarget.style.borderColor = color;
@@ -198,39 +203,96 @@ export default function DashboardView({ onSelectSection }) {
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
-                {/* Icon + Arrow Row */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: bg, color: color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <Icon size={20} />
-                  </div>
-                  <ArrowUpRight size={16} color={color} />
-                </div>
-
-                {/* Text Content */}
+                {/* Header Row */}
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', flexWrap: 'wrap' }}>
-                    <span style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-main)' }}>{label}</span>
-                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: color, backgroundColor: bg, padding: '0.1rem 0.5rem', borderRadius: '6px' }}>{subtitle}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                    <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: bg, color: color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <Icon size={20} />
+                    </div>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: color, backgroundColor: bg, padding: '0.2rem 0.6rem', borderRadius: '6px' }}>
+                      {subtitle}
+                    </span>
                   </div>
-                  <p style={{ margin: '0.35rem 0 0', fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>{desc}</p>
+
+                  <h4 style={{ fontSize: '1.05rem', fontWeight: 700, margin: '0 0 0.4rem 0', color: 'var(--text-main)' }}>
+                    {label}
+                  </h4>
+                  <p style={{ margin: 0, fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                    {desc}
+                  </p>
                 </div>
 
-                {/* Live Route Preview */}
-                {route && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                {/* Actions Footer Row */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.75rem', borderTop: '1px solid var(--border-color)', gap: '0.5rem', flexWrap: 'wrap' }}>
+                  <button
+                    onClick={() => onSelectSection(key)}
+                    style={{
+                      padding: '0.45rem 0.9rem',
+                      borderRadius: '6px',
+                      backgroundColor: 'transparent',
+                      border: `1px solid ${color}`,
+                      color: color,
+                      fontSize: '0.78rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      transition: 'all 0.15s ease',
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.backgroundColor = color;
+                      e.currentTarget.style.color = '#fff';
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                      e.currentTarget.style.color = color;
+                    }}
+                  >
+                    <span>Edit in CMS</span>
+                    <ArrowUpRight size={13} />
+                  </button>
+
+                  {route ? (
                     <a
                       href={route}
                       target="_blank"
-                      rel="noreferrer"
-                      onClick={e => e.stopPropagation()}
-                      style={{ fontSize: '0.72rem', fontWeight: 600, color: color, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.25rem', opacity: 0.85 }}
+                      rel="noopener noreferrer"
+                      title={`Open live page: ${route}`}
+                      style={{
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        color: 'var(--text-muted)',
+                        textDecoration: 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.3rem',
+                        padding: '0.45rem 0.75rem',
+                        borderRadius: '6px',
+                        backgroundColor: 'rgba(255,255,255,0.04)',
+                        border: '1px solid var(--border-color)',
+                        transition: 'all 0.15s ease',
+                      }}
+                      onMouseEnter={e => {
+                        e.currentTarget.style.color = '#0073b7';
+                        e.currentTarget.style.borderColor = '#0073b7';
+                        e.currentTarget.style.backgroundColor = 'rgba(0,115,183,0.08)';
+                      }}
+                      onMouseLeave={e => {
+                        e.currentTarget.style.color = 'var(--text-muted)';
+                        e.currentTarget.style.borderColor = 'var(--border-color)';
+                        e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.04)';
+                      }}
                     >
-                      <Globe size={11} />
-                      {route.replace('http://localhost:3001', '') || '/'}
+                      <Globe size={12} style={{ color: '#0073b7' }} />
+                      <span>Live Preview</span>
+                      <ArrowUpRight size={11} />
                     </a>
-                  </div>
-                )}
-              </button>
+                  ) : (
+                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', opacity: 0.6 }}>Admin Only</span>
+                  )}
+                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -243,38 +305,45 @@ export default function DashboardView({ onSelectSection }) {
             <BookOpen size={20} className="text-primary" />
             Live Website Pages
           </h3>
-          <p className="card-subtitle">Preview live pages on the frontend website in a new tab.</p>
+          <p className="card-subtitle">
+            Direct shortcuts to open and test your production website pages on Vercel: <code style={{ color: '#0073b7', fontSize: '0.8rem' }}>{WEBSITE_BASE_URL}</code>
+          </p>
         </div>
         <div className="card-body">
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-            {LIVE_ROUTES.map(({ label, url, icon }) => (
+            {liveRoutes.map(({ label, path, url, icon }) => (
               <a
                 key={url}
                 href={url}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
+                title={`Visit live page: ${url}`}
                 style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-                  padding: '0.55rem 1.1rem', borderRadius: '8px',
+                  display: 'inline-flex', alignItems: 'center', gap: '0.55rem',
+                  padding: '0.6rem 1.15rem', borderRadius: '8px',
                   border: '1px solid var(--border-color)',
                   backgroundColor: 'var(--bg-input)',
-                  color: 'var(--text-main)', fontSize: '0.82rem', fontWeight: 600,
-                  textDecoration: 'none', transition: 'all 0.15s',
+                  color: 'var(--text-main)', fontSize: '0.83rem', fontWeight: 600,
+                  textDecoration: 'none', transition: 'all 0.15s ease',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.04)',
                 }}
                 onMouseEnter={e => {
                   e.currentTarget.style.borderColor = '#0073b7';
                   e.currentTarget.style.color = '#0073b7';
-                  e.currentTarget.style.backgroundColor = 'rgba(0,115,183,0.06)';
+                  e.currentTarget.style.backgroundColor = 'rgba(0,115,183,0.08)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
                 }}
                 onMouseLeave={e => {
                   e.currentTarget.style.borderColor = 'var(--border-color)';
                   e.currentTarget.style.color = 'var(--text-main)';
                   e.currentTarget.style.backgroundColor = 'var(--bg-input)';
+                  e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
                 <i className={`fa-solid ${icon} text-xs`} style={{ color: '#0073b7' }} />
                 <span>{label}</span>
-                <ArrowUpRight size={12} style={{ opacity: 0.6 }} />
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 400 }}>{path}</span>
+                <ArrowUpRight size={12} style={{ opacity: 0.7 }} />
               </a>
             ))}
           </div>

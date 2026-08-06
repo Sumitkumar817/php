@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Save, Plus, Edit, Trash2, X, Lightbulb, Shield, Check, Star, UploadCloud, Layers, FileText, ExternalLink, Image as ImageIcon } from 'lucide-react';
-import { fetchSection3Config, updateSection3Config } from '../services/api';
+import { fetchSection3Config, updateSection3Config, WEBSITE_BASE_URL } from '../services/api';
 
 const QUICK_ICONS = [
   { name: 'CCTV Camera', class: 'fa-video' },
@@ -581,13 +581,13 @@ export default function SolutionsEditor({ onShowToast }) {
                   <span>Inside Page CMS — {activeInsideService.title}</span>
                 </h3>
                 <span style={{ fontSize: '0.8rem', color: '#0073b7', fontWeight: 600 }}>
-                  Route: http://localhost:3001/solutions/{activeInsideService.id}
+                  Route: {WEBSITE_BASE_URL}/solutions/{activeInsideService.id}
                 </span>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <a
-                  href={`http://localhost:3001/solutions/${activeInsideService.id}`}
+                  href={`${WEBSITE_BASE_URL}/solutions/${activeInsideService.id}`}
                   target="_blank"
                   rel="noreferrer"
                   className="btn-primary"
