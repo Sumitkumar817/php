@@ -54,7 +54,8 @@ export default function SolutionsSection() {
 
   const loadSection3FromBackend = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/section3');
+      const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+      const res = await fetch(`${apiBase}/section3`);
       const data = await res.json();
       if (data.success && data.data) {
         setSec3Config({

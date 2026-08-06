@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { solutionsData } from '../data/solutionsData';
 import { industriesData } from '../data/industriesData';
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 
 const defaultFooter = {

@@ -19,7 +19,8 @@ export default function SolutionDetailPage({ onOpenEnquiry }) {
 
   const loadServiceFromBackend = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/section3');
+      const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+      const res = await fetch(`${apiBase}/section3`);
       const data = await res.json();
       if (data.success && data.data && Array.isArray(data.data.services)) {
         const found = data.data.services.find(

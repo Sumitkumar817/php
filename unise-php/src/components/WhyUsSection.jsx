@@ -42,7 +42,8 @@ export default function WhyUsSection() {
 
   const loadSection6FromBackend = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/section6');
+      const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+      const res = await fetch(`${apiBase}/section6`);
       const data = await res.json();
       if (data.success && data.data) {
         setSec6Config({

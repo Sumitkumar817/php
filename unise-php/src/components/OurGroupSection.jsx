@@ -16,7 +16,8 @@ export default function OurGroupSection({ data: propData }) {
 
   useEffect(() => {
     if (!propData) {
-      fetch('http://localhost:5000/api/about')
+      const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+      fetch(`${apiBase}/about`)
         .then(res => res.json())
         .then(d => {
           if (d.success && d.data) setInternalData(d.data);

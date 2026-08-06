@@ -34,9 +34,11 @@ export default function ContactPage() {
     ]
   });
 
+  const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+
   const loadConfig = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/contact');
+      const res = await fetch(`${apiBase}/contact`);
       const data = await res.json();
       if (data.success && data.data) {
         setConfig(prev => ({ ...prev, ...data.data }));
@@ -57,7 +59,7 @@ export default function ContactPage() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const res = await fetch('http://localhost:5000/api/contact/message', {
+      const res = await fetch(`${apiBase}/contact/message`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

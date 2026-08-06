@@ -14,7 +14,8 @@ export default function IndustriesSection() {
 
   const loadSection5FromBackend = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/section5');
+      const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+      const res = await fetch(`${apiBase}/section5`);
       const data = await res.json();
       if (data.success && data.data) {
         setSec5Config({
