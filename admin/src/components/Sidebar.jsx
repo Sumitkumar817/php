@@ -15,7 +15,8 @@ import {
   ChevronDown,
   ChevronRight,
   Phone,
-  MessageSquare
+  MessageSquare,
+  SlidersHorizontal
 } from 'lucide-react';
 
 export default function Sidebar({ activeSection, setActiveSection, onLogout, isMobileOpen, onCloseMobile }) {

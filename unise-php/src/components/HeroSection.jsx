@@ -161,18 +161,6 @@ export default function HeroSection({ onOpenEnquiry }) {
           </div>
         </div>
       </div>
-
-      {/* Trust Bar Marquee */}
-      <div className="relative z-10 w-full bg-white text-slate-900 border-t border-slate-200 py-4 overflow-hidden">
-        <div className="flex w-[200%] animate-[marquee_25s_linear_infinite] gap-8">
-          {[...trustItems, ...trustItems].map((item, idx) => (
-            <div key={idx} className="flex items-center gap-2 text-xs font-bold text-slate-800 whitespace-nowrap shrink-0 px-4">
-              <i className={`fa-solid ${item.icon} text-[#0073b7] text-sm`}></i>
-              <span>{item.text}</span>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

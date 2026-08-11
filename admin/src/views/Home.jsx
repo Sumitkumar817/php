@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Save, UploadCloud, Film, CheckCircle2, Link2, Type, FileText, Plus, X, Image as ImageIcon, Layers, Edit, Trash2, Shield, Check, Star } from 'lucide-react';
 import { fetchHeroConfig, updateHeroConfig, fetchSection2Config, updateSection2Config, fetchSection3Config, updateSection3Config, fetchSection4Config, updateSection4Config, fetchSection5Config, updateSection5Config, fetchSection6Config, updateSection6Config, fetchPartnerConfig, updatePartnerConfig, fetchStatsConfig, updateStatsConfig, fetchAboutConfig, updateAboutConfig } from '../services/api';
+import MarqueeEditor from './MarqueeEditor';
 
 export default function Home({ onShowToast }) {
   // ==========================================
@@ -1528,6 +1529,10 @@ export default function Home({ onShowToast }) {
         </div>
       </div>
 
+      {/* ========================================================================= */}
+      {/* MARQUEE TICKER SECTION (BETWEEN SECTION 1 & SECTION 2)                    */}
+      {/* ========================================================================= */}
+      <MarqueeEditor onShowToast={onShowToast} />
 
       {/* ========================================================================= */}
       {/* SECTION 2: SECTION 2 SETTINGS CARD                                         */}

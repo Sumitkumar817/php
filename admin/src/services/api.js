@@ -1,4 +1,11 @@
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://unispark-backend-api.onrender.com/api';
+const getApiBaseUrl = () => {
+  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+    return 'http://localhost:5000/api';
+  }
+  return import.meta.env.VITE_API_BASE_URL || 'https://unispark-backend-api.onrender.com/api';
+};
+
+export const API_BASE_URL = getApiBaseUrl();
 export const WEBSITE_BASE_URL = import.meta.env.VITE_WEBSITE_URL || 'https://unispark-website-kappa.vercel.app';
 
 // Fetch Footer Config (GET /api/footer)
@@ -320,6 +327,32 @@ export const updateHeroConfig = async (heroData) => {
     return await res.json();
   } catch (error) {
     console.warn('API Error updateHeroConfig:', error);
+    return { success: false, message: 'Backend server is offline or unreachable' };
+  }
+};
+
+// Fetch Marquee Config (GET /api/marquee)
+export const fetchMarqueeConfig = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/marquee`);
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error fetchMarqueeConfig:', error);
+    return { success: false, message: 'Backend server is offline or unreachable' };
+  }
+};
+
+// Update Marquee Config (PUT /api/marquee)
+export const updateMarqueeConfig = async (marqueeData) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/marquee`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(marqueeData)
+    });
+    return await res.json();
+  } catch (error) {
+    console.warn('API Error updateMarqueeConfig:', error);
     return { success: false, message: 'Backend server is offline or unreachable' };
   }
 };

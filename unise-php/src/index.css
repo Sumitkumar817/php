@@ -80,6 +80,20 @@ body {
   animation: whatsappRadarPulse 2.5s cubic-bezier(0.16, 1, 0.3, 1) infinite 1.25s;
 }
 
+/* Continuous Infinite Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+
 /* ==========================================================================
    Google Translate Complete Hiding & Clean Integration Styles
    Suppress top navbar, banners, popups, tooltips and frame shifts

@@ -5,6 +5,7 @@ import Toast from './components/Toast';
 import LoginPage from './views/LoginPage';
 import Home from './views/Home';
 import HeaderEditor from './views/HeaderEditor';
+import MarqueeEditor from './views/MarqueeEditor';
 import GenericSectionEditor from './views/GenericSectionEditor';
 import About from './views/About';
 import ContactEditor from './views/ContactEditor';
@@ -67,6 +68,8 @@ export default function App() {
         return ['Dashboard', 'Overview'];
       case 'website-home':
         return ['Home', 'Hero Section'];
+      case 'website-marquee':
+        return ['Website', 'Marquee Ticker'];
       case 'website-header':
         return ['Website', 'Header Config'];
       case 'website-about':
@@ -144,6 +147,10 @@ export default function App() {
             <Home onShowToast={showToast} />
           )}
 
+          {activeSection === 'website-marquee' && (
+            <MarqueeEditor onShowToast={showToast} />
+          )}
+
           {activeSection === 'website-header' && (
             <HeaderEditor onShowToast={showToast} />
           )}
@@ -180,7 +187,7 @@ export default function App() {
             <DashboardView onSelectSection={(sec) => setActiveSection(sec)} />
           )}
 
-          {activeSection !== 'website-home' && activeSection !== 'website-header' && activeSection !== 'website-users' && activeSection !== 'website-about' && activeSection !== 'website-solution' && activeSection !== 'website-industry' && activeSection !== 'website-contact' && activeSection !== 'website-footer' && activeSection !== 'enquiries' && activeSection !== 'dashboard' && (
+          {activeSection !== 'website-home' && activeSection !== 'website-marquee' && activeSection !== 'website-header' && activeSection !== 'website-users' && activeSection !== 'website-about' && activeSection !== 'website-solution' && activeSection !== 'website-industry' && activeSection !== 'website-contact' && activeSection !== 'website-footer' && activeSection !== 'enquiries' && activeSection !== 'dashboard' && (
             <GenericSectionEditor
               sectionKey={activeSection}
               title={breadcrumbs[1]}

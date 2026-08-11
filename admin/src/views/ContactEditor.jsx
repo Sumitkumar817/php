@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Save, Plus, X, Trash2, Edit } from 'lucide-react';
 import { fetchContactConfig, updateContactConfig } from '../services/api';
+import CountrySelect from '../components/CountrySelect';
+import { COUNTRIES, detectCountryFromPhone } from '../data/countries';
 
 export default function ContactEditor({ onShowToast }) {
   const [loading, setLoading] = useState(true);
@@ -9,6 +11,8 @@ export default function ContactEditor({ onShowToast }) {
   // Settings
   const [bannerTitle, setBannerTitle] = useState('');
   const [bannerDesc, setBannerDesc] = useState('');
+  const [country, setCountry] = useState('United Arab Emirates');
+  const [countryCode, setCountryCode] = useState('+971');
   const [phone, setPhone] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
   const [email, setEmail] = useState('');
@@ -16,6 +20,14 @@ export default function ContactEditor({ onShowToast }) {
   const [coverage, setCoverage] = useState('');
   const [workingHours, setWorkingHours] = useState('');
   const [mapEmbedUrl, setMapEmbedUrl] = useState('');
+  
+  // Enquiry Form CMS
+  const [formBadge, setFormBadge] = useState('ENQUIRY FORM');
+  const [formTitle, setFormTitle] = useState('Send us a message!');
+  const [formSubtitle, setFormSubtitle] = useState('');
+  const [formSuccessTitle, setFormSuccessTitle] = useState('Enquiry Dispatched!');
+  const [formSuccessDesc, setFormSuccessDesc] = useState('');
+  
   const [partnerLinks, setPartnerLinks] = useState([]);
 
   // Modal
@@ -31,6 +43,8 @@ export default function ContactEditor({ onShowToast }) {
     if (res.success && res.data) {
       setBannerTitle(res.data.bannerTitle || '');
       setBannerDesc(res.data.bannerDesc || '');
+      setCountry(res.data.country || 'United Arab Emirates');
+      setCountryCode(res.data.countryCode || '+971');
       setPhone(res.data.phone || '');
       setWhatsapp(res.data.whatsapp || '');
       setEmail(res.data.email || '');
@@ -38,6 +52,14 @@ export default function ContactEditor({ onShowToast }) {
       setCoverage(res.data.coverage || '');
       setWorkingHours(res.data.workingHours || '');
       setMapEmbedUrl(res.data.mapEmbedUrl || '');
+      
+      // Enquiry Form CMS
+      setFormBadge(res.data.formBadge || 'ENQUIRY FORM');
+      setFormTitle(res.data.formTitle || 'Send us a message!');
+      setFormSubtitle(res.data.formSubtitle || '');
+      setFormSuccessTitle(res.data.formSuccessTitle || 'Enquiry Dispatched!');
+      setFormSuccessDesc(res.data.formSuccessDesc || '');
+
       if (Array.isArray(res.data.partnerLinks)) {
         setPartnerLinks(res.data.partnerLinks);
       }
@@ -49,6 +71,15 @@ export default function ContactEditor({ onShowToast }) {
     loadData();
   }, []);
 
+  const handlePhoneChange = (val) => {
+    setPhone(val);
+    const detected = detectCountryFromPhone(val);
+    if (detected) {
+      setCountry(detected.country.name);
+      setCountryCode(detected.dialCode);
+    }
+  };
+
   const handleSave = async (e) => {
     if (e) e.preventDefault();
     setIsSaving(true);
@@ -56,6 +87,8 @@ export default function ContactEditor({ onShowToast }) {
     const payload = {
       bannerTitle,
       bannerDesc,
+      country,
+      countryCode,
       phone,
       whatsapp,
       email,
@@ -63,6 +96,11 @@ export default function ContactEditor({ onShowToast }) {
       coverage,
       workingHours,
       mapEmbedUrl,
+      formBadge,
+      formTitle,
+      formSubtitle,
+      formSuccessTitle,
+      formSuccessDesc,
       partnerLinks
     };
 
@@ -151,18 +189,56 @@ export default function ContactEditor({ onShowToast }) {
             
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
               <div className="form-group">
-                <label className="form-label">Phone Number (Display)</label>
-                <input type="text" className="form-control" value={phone} onChange={e => setPhone(e.target.value)} placeholder="+971 50 288 5874" />
+                <CountrySelect
+                  value={country}
+                  onChange={(selected) => {
+                    setCountry(selected.name);
+                    setCountryCode(selected.dialCode);
+                  }}
+                  label="Headquarters / Default Country"
+                />
               </div>
+
               <div className="form-group">
-                <label className="form-label">WhatsApp Number (Link Format)</label>
-                <input type="text" className="form-control" value={whatsapp} onChange={e => setWhatsapp(e.target.value)} placeholder="971502885874" />
+                <label className="form-label">Phone Number (Display)</label>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <CountrySelect
+                    variant="dialCodeOnly"
+                    value={countryCode}
+                    onChange={(selected) => {
+                      setCountry(selected.name);
+                      setCountryCode(selected.dialCode);
+                    }}
+                  />
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={phone}
+                    onChange={e => handlePhoneChange(e.target.value)}
+                    placeholder="e.g. +971 50 288 5874"
+                    style={{ flex: 1 }}
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Sales Email</label>
-              <input type="email" className="form-control" value={email} onChange={e => setEmail(e.target.value)} placeholder="info@unisparkinnovation.com" />
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+              <div className="form-group">
+                <label className="form-label">WhatsApp Number (Direct Link Format)</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={whatsapp}
+                  onChange={e => setWhatsapp(e.target.value)}
+                  placeholder="971502885874"
+                />
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.35rem' }}>International format without '+' (e.g. 971502885874)</p>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Sales Email</label>
+                <input type="email" className="form-control" value={email} onChange={e => setEmail(e.target.value)} placeholder="info@unisparkinnovation.com" />
+              </div>
             </div>
             
             <div className="form-group">
@@ -182,10 +258,75 @@ export default function ContactEditor({ onShowToast }) {
           </div>
         </div>
 
+        {/* Enquiry Form Section (CMS) */}
+        <div className="content-card" style={{ width: '100%' }}>
+          <div className="content-card-header" style={{ padding: '1.25rem 1.75rem', borderBottom: '1px solid var(--border-color)' }}>
+            <h2 className="card-title" style={{ fontSize: '1.1rem', fontWeight: 600 }}>3. Enquiry Form Section (Headers & Success Screen)</h2>
+          </div>
+          <div className="content-card-body" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+              <div className="form-group">
+                <label className="form-label">Form Badge / Tagline (e.g. ENQUIRY FORM)</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={formBadge}
+                  onChange={e => setFormBadge(e.target.value)}
+                  placeholder="ENQUIRY FORM"
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Form Main Heading (e.g. Send us a message!)</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={formTitle}
+                  onChange={e => setFormTitle(e.target.value)}
+                  placeholder="Send us a message!"
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Form Subtitle / Instructions (Optional)</label>
+              <input
+                type="text"
+                className="form-control"
+                value={formSubtitle}
+                onChange={e => setFormSubtitle(e.target.value)}
+                placeholder="Fill in the details below and our technical engineering team will get back to you promptly."
+              />
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+              <div className="form-group">
+                <label className="form-label">Success Screen Heading</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={formSuccessTitle}
+                  onChange={e => setFormSuccessTitle(e.target.value)}
+                  placeholder="Enquiry Dispatched!"
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Success Screen Description</label>
+                <textarea
+                  className="form-control"
+                  rows={2}
+                  value={formSuccessDesc}
+                  onChange={e => setFormSuccessDesc(e.target.value)}
+                  placeholder="Thank you for contacting UniSpark Innovation. Our technical engineering division will respond quickly within 2 business hours."
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Location Map Section */}
         <div className="content-card" style={{ width: '100%' }}>
           <div className="content-card-header" style={{ padding: '1.25rem 1.75rem', borderBottom: '1px solid var(--border-color)' }}>
-            <h2 className="card-title" style={{ fontSize: '1.1rem', fontWeight: 600 }}>3. Location Map</h2>
+            <h2 className="card-title" style={{ fontSize: '1.1rem', fontWeight: 600 }}>4. Location Map</h2>
           </div>
           <div className="content-card-body" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div className="form-group">
@@ -199,7 +340,7 @@ export default function ContactEditor({ onShowToast }) {
         {/* Partner Links Section */}
         <div className="content-card" style={{ width: '100%' }}>
           <div className="content-card-header" style={{ padding: '1.25rem 1.75rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h2 className="card-title" style={{ fontSize: '1.1rem', fontWeight: 600 }}>4. Partner Links (Bottom Banner)</h2>
+            <h2 className="card-title" style={{ fontSize: '1.1rem', fontWeight: 600 }}>5. Partner Links (Bottom Banner)</h2>
             <button type="button" onClick={handleOpenAdd} className="btn-primary" style={{ padding: '0.4rem 1rem' }}>
               <Plus size={14} /> <span>Add Link</span>
             </button>

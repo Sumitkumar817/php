@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { COUNTRIES, DEFAULT_COUNTRY, detectCountryFromPhone } from '../data/countries';
+import CountrySelect from '../components/CountrySelect';
 
 export default function ContactPage() {
   const { t, i18n } = useTranslation();
@@ -8,6 +10,8 @@ export default function ContactPage() {
     fullName: '',
     companyName: '',
     email: '',
+    country: DEFAULT_COUNTRY.name,
+    countryCode: DEFAULT_COUNTRY.dialCode,
     phone: '',
     location: '',
     enquiryType: '',
@@ -21,6 +25,8 @@ export default function ContactPage() {
   const [config, setConfig] = useState({
     bannerTitle: "Get in Touch — We're Ready to Help",
     bannerDesc: "Whether you need a site survey, a product quotation, or information about our annual maintenance contracts — our team is ready to respond quickly and professionally. Contact us by phone, email, or complete the enquiry form below.",
+    country: "United Arab Emirates",
+    countryCode: "+971",
     phone: "+971 50 288 5874",
     whatsapp: "971502885874",
     email: "info@unisparkinnovation.com",
@@ -28,6 +34,11 @@ export default function ContactPage() {
     coverage: "Dubai · Abu Dhabi · Sharjah · UAE Nationwide",
     workingHours: "Sunday – Thursday, 8:00 AM – 6:00 PM (UAE)",
     mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28884.867909334753!2d55.2707828!3d25.2048493!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f43348a6d0883%3A0x2f57581dbf302924!2sDubai!5e0!3m2!1sen!2sae!4v1625000000000!5m2!1sen!2sae",
+    formBadge: "ENQUIRY FORM",
+    formTitle: "Send us a message!",
+    formSubtitle: "Fill in the details below and our technical engineering team will get back to you promptly.",
+    formSuccessTitle: "Enquiry Dispatched!",
+    formSuccessDesc: "Thank you for contacting UniSpark Innovation. Our technical engineering division will respond quickly within 2 business hours.",
     partnerLinks: [
       { title: "Looking for IT Services?", label: "Visit Horizon Hive Technology L.L.C", url: "https://horizonhivetechnology.com/" },
       { title: "Looking for HR Solutions?", label: "Visit UniSpark Innovations Human Resource Consultants L.L.C", url: "https://usihr.com/" }
@@ -42,6 +53,13 @@ export default function ContactPage() {
       const data = await res.json();
       if (data.success && data.data) {
         setConfig(prev => ({ ...prev, ...data.data }));
+        if (data.data.country) {
+          setFormData(prev => ({
+            ...prev,
+            country: prev.country === DEFAULT_COUNTRY.name ? data.data.country : prev.country,
+            countryCode: prev.countryCode === DEFAULT_COUNTRY.dialCode ? (data.data.countryCode || prev.countryCode) : prev.countryCode
+          }));
+        }
       }
     } catch (err) {
       console.warn("Error fetching contact config:", err);
@@ -54,6 +72,39 @@ export default function ContactPage() {
     window.addEventListener('focus', handleFocus);
     return () => window.removeEventListener('focus', handleFocus);
   }, []);
+
+  const handleCountryChange = (countryName) => {
+    const found = COUNTRIES.find(c => c.name === countryName);
+    setFormData(prev => ({
+      ...prev,
+      country: countryName,
+      countryCode: found ? found.dialCode : prev.countryCode
+    }));
+  };
+
+  const handleCountryCodeChange = (dialCode) => {
+    const found = COUNTRIES.find(c => c.dialCode === dialCode);
+    setFormData(prev => ({
+      ...prev,
+      countryCode: dialCode,
+      country: found ? found.name : prev.country
+    }));
+  };
+
+  const handlePhoneChange = (e) => {
+    const value = e.target.value;
+    const detected = detectCountryFromPhone(value);
+    if (detected) {
+      setFormData(prev => ({
+        ...prev,
+        country: detected.country.name,
+        countryCode: detected.dialCode,
+        phone: detected.localNumber
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, phone: value }));
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -68,7 +119,16 @@ export default function ContactPage() {
       if (data.success) {
         setSubmitted(true);
         setFormData({
-          fullName: '', companyName: '', email: '', phone: '', location: '', enquiryType: '', service: '', message: ''
+          fullName: '',
+          companyName: '',
+          email: '',
+          country: DEFAULT_COUNTRY.name,
+          countryCode: DEFAULT_COUNTRY.dialCode,
+          phone: '',
+          location: '',
+          enquiryType: '',
+          service: '',
+          message: ''
         });
       } else {
         alert("Failed to submit enquiry. Please try again.");
@@ -109,9 +169,12 @@ export default function ContactPage() {
         <div className="p-8 sm:p-10 rounded-3xl bg-white border border-slate-200 shadow-xl">
           <div className="mb-6">
             <span className="text-xs font-bold uppercase tracking-wider text-[#0073b7] flex items-center gap-2 mb-1">
-              <i className="fa-solid fa-network-wired text-xs"></i> ENQUIRY FORM
+              <i className="fa-solid fa-network-wired text-xs"></i> {config.formBadge || 'ENQUIRY FORM'}
             </span>
-            <h2 className="text-2xl font-extrabold text-slate-900">Send us a message!</h2>
+            <h2 className="text-2xl font-extrabold text-slate-900">{config.formTitle || 'Send us a message!'}</h2>
+            {config.formSubtitle && (
+              <p className="text-sm text-slate-500 mt-1 font-light">{config.formSubtitle}</p>
+            )}
           </div>
 
           {submitted ? (
@@ -119,9 +182,9 @@ export default function ContactPage() {
               <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl">
                 <i className="fa-solid fa-circle-check"></i>
               </div>
-              <h3 className="text-2xl font-bold text-slate-900">Enquiry Dispatched!</h3>
+              <h3 className="text-2xl font-bold text-slate-900">{config.formSuccessTitle || 'Enquiry Dispatched!'}</h3>
               <p className="text-sm text-slate-600 max-w-md mx-auto">
-                Thank you for contacting UniSpark Innovation. Our technical engineering division will respond quickly within 2 business hours.
+                {config.formSuccessDesc || 'Thank you for contacting UniSpark Innovation. Our technical engineering division will respond quickly within 2 business hours.'}
               </p>
               <button
                 onClick={() => setSubmitted(false)}
@@ -178,40 +241,69 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              {/* Row 2 (3 Columns) */}
+              {/* Row 2 (Country & Phone with Code & City/Location) */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Searchable Country Selector */}
+                <div>
+                  <CountrySelect
+                    value={formData.country}
+                    onChange={(selected) => {
+                      setFormData(prev => ({
+                        ...prev,
+                        country: selected.name,
+                        countryCode: selected.dialCode
+                      }));
+                    }}
+                    label="Country *"
+                  />
+                </div>
+
+                {/* Phone with Searchable Country Dial Code */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
                     Phone Number *
                   </label>
-                  <input
-                    type="tel"
-                    required
-                    placeholder="+971 XX XXX XXXX"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-[#0073b7] focus:bg-white transition"
-                  />
+                  <div className="flex gap-2">
+                    <CountrySelect
+                      variant="dialCodeOnly"
+                      value={formData.countryCode}
+                      onChange={(selected) => {
+                        setFormData(prev => ({
+                          ...prev,
+                          country: selected.name,
+                          countryCode: selected.dialCode
+                        }));
+                      }}
+                    />
+                    <input
+                      type="tel"
+                      required
+                      placeholder="e.g. 50 123 4567 or +91 9876543210"
+                      value={formData.phone}
+                      onChange={handlePhoneChange}
+                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-[#0073b7] focus:bg-white transition"
+                    />
+                  </div>
                 </div>
 
+                {/* City / State / Location */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                    Emirate / Location *
+                    City / Emirate / Location *
                   </label>
-                  <select
+                  <input
+                    type="text"
                     required
+                    placeholder="e.g. Dubai / Abu Dhabi / Riyadh"
                     value={formData.location}
                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                     className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-[#0073b7] focus:bg-white transition"
-                  >
-                    <option value="" disabled>Select Location...</option>
-                    <option value="Dubai">Dubai</option>
-                    <option value="Abu Dhabi">Abu Dhabi</option>
-                    <option value="Sharjah">Sharjah</option>
-                    <option value="Other UAE">Other UAE</option>
-                  </select>
+                  />
                 </div>
+              </div>
 
+              {/* Row 3 (Enquiry Type & Service of Interest) */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
                     Enquiry Type *
@@ -229,28 +321,27 @@ export default function ContactPage() {
                     <option value="General Enquiry">General Enquiry</option>
                   </select>
                 </div>
-              </div>
 
-              {/* Service of Interest */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                  Service of Interest
-                </label>
-                <select
-                  value={formData.service}
-                  onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-[#0073b7] focus:bg-white transition"
-                >
-                  <option value="" disabled>Select Service...</option>
-                  <option value="CCTV">CCTV</option>
-                  <option value="Access Control">Access Control</option>
-                  <option value="Alarm Systems">Alarm Systems</option>
-                  <option value="Fire Alarm">Fire Alarm</option>
-                  <option value="Biometric">Biometric</option>
-                  <option value="Perimeter">Perimeter</option>
-                  <option value="System Integration">System Integration</option>
-                  <option value="Other">Other</option>
-                </select>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                    Service of Interest
+                  </label>
+                  <select
+                    value={formData.service}
+                    onChange={(e) => setFormData({ ...formData, service: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-[#0073b7] focus:bg-white transition"
+                  >
+                    <option value="" disabled>Select Service...</option>
+                    <option value="CCTV">CCTV</option>
+                    <option value="Access Control">Access Control</option>
+                    <option value="Alarm Systems">Alarm Systems</option>
+                    <option value="Fire Alarm">Fire Alarm</option>
+                    <option value="Biometric">Biometric</option>
+                    <option value="Perimeter">Perimeter</option>
+                    <option value="System Integration">System Integration</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
               </div>
 
               {/* Full Width Message */}

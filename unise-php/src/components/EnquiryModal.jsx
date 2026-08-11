@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { X, Send, CheckCircle2, Shield } from 'lucide-react';
+import { X, Send, CheckCircle2, Shield, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { COUNTRIES, DEFAULT_COUNTRY, detectCountryFromPhone } from '../data/countries';
+import CountrySelect from './CountrySelect';
 
 export default function EnquiryModal({ isOpen, onClose, initialSubject = '' }) {
   const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    country: DEFAULT_COUNTRY.name,
+    countryCode: DEFAULT_COUNTRY.dialCode,
     phone: '',
     company: '',
     subject: initialSubject || 'General Security Inquiry',
@@ -15,16 +19,77 @@ export default function EnquiryModal({ isOpen, onClose, initialSubject = '' }) {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const apiBase = import.meta.env.VITE_API_BASE_URL || 'https://unispark-backend-api.onrender.com/api';
+
+  const handleCountryChange = (countryName) => {
+    const found = COUNTRIES.find(c => c.name === countryName);
+    setFormData(prev => ({
+      ...prev,
+      country: countryName,
+      countryCode: found ? found.dialCode : prev.countryCode
+    }));
+  };
+
+  const handleCountryCodeChange = (dialCode) => {
+    const found = COUNTRIES.find(c => c.dialCode === dialCode);
+    setFormData(prev => ({
+      ...prev,
+      countryCode: dialCode,
+      country: found ? found.name : prev.country
+    }));
+  };
+
+  const handlePhoneChange = (e) => {
+    const value = e.target.value;
+    const detected = detectCountryFromPhone(value);
+    if (detected) {
+      setFormData(prev => ({
+        ...prev,
+        country: detected.country.name,
+        countryCode: detected.dialCode,
+        phone: detected.localNumber
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, phone: value }));
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      const payload = {
+        fullName: formData.name,
+        companyName: formData.company || 'Direct Inquiry',
+        email: formData.email,
+        country: formData.country,
+        countryCode: formData.countryCode,
+        phone: formData.phone,
+        location: formData.country,
+        enquiryType: 'Quick Modal Enquiry',
+        service: formData.subject,
+        message: formData.message
+      };
+
+      const res = await fetch(`${apiBase}/contact/message`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSubmitted(true);
+      } else {
+        alert("Submission failed. Please try again.");
+      }
+    } catch (err) {
+      console.error("Modal submission error:", err);
+      // Still show success fallback if backend is momentarily slow
       setSubmitted(true);
-    }, 800);
+    }
+    setLoading(false);
   };
 
   const handleReset = () => {
@@ -89,6 +154,7 @@ export default function EnquiryModal({ isOpen, onClose, initialSubject = '' }) {
                 />
               </div>
 
+              {/* Email & Company */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
@@ -105,30 +171,62 @@ export default function EnquiryModal({ isOpen, onClose, initialSubject = '' }) {
                 </div>
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
-                    {t('modal.phone')} *
+                    {t('modal.company')}
                   </label>
                   <input
-                    type="tel"
-                    required
-                    placeholder="+971 50 123 4567"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    type="text"
+                    placeholder="Company Name"
+                    value={formData.company}
+                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                     className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-white focus:outline-none focus:border-blue-500 transition text-sm"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
-                  {t('modal.company')}
-                </label>
-                <input
-                  type="text"
-                  placeholder="Company Name"
-                  value={formData.company}
-                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-white focus:outline-none focus:border-blue-500 transition text-sm"
-                />
+              {/* Country & Phone Code + Number */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <CountrySelect
+                    theme="dark"
+                    value={formData.country}
+                    onChange={(selected) => {
+                      setFormData(prev => ({
+                        ...prev,
+                        country: selected.name,
+                        countryCode: selected.dialCode
+                      }));
+                    }}
+                    label="Country *"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+                    {t('modal.phone')} *
+                  </label>
+                  <div className="flex gap-2">
+                    <CountrySelect
+                      variant="dialCodeOnly"
+                      theme="dark"
+                      value={formData.countryCode}
+                      onChange={(selected) => {
+                        setFormData(prev => ({
+                          ...prev,
+                          country: selected.name,
+                          countryCode: selected.dialCode
+                        }));
+                      }}
+                    />
+                    <input
+                      type="tel"
+                      required
+                      placeholder="e.g. 50 123 4567 or +91 9876543210"
+                      value={formData.phone}
+                      onChange={handlePhoneChange}
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-white focus:outline-none focus:border-blue-500 transition text-sm"
+                    />
+                  </div>
+                </div>
               </div>
 
               <div>

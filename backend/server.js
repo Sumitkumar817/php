@@ -17,6 +17,8 @@ import partnerRoutes from './routes/partnerRoutes.js';
 import statsRoutes from './routes/statsRoutes.js';
 import footerRoutes from './routes/footerRoutes.js';
 
+import marqueeRoutes from './routes/marqueeRoutes.js';
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -33,6 +35,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/header', headerRoutes);
 app.use('/api/hero', heroRoutes);
+app.use('/api/marquee', marqueeRoutes);
 app.use('/api/section2', section2Routes);
 app.use('/api/section3', section3Routes);
 app.use('/api/section4', section4Routes);

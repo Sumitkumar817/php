@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import HeroSection from '../components/HeroSection';
+import MarqueeSection from '../components/MarqueeSection';
 import AboutSection from '../components/AboutSection';
 import SolutionsSection from '../components/SolutionsSection';
 import DivisionsSection from '../components/DivisionsSection';
@@ -41,6 +42,7 @@ export default function HomePage({ onOpenEnquiry }) {
   return (
     <div className="space-y-0">
       <HeroSection onOpenEnquiry={onOpenEnquiry} />
+      <MarqueeSection />
       <AboutSection />
       <SolutionsSection />
       <DivisionsSection onOpenEnquiry={onOpenEnquiry} />
