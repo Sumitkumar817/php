@@ -113,7 +113,7 @@ export default function PartnersSection() {
           {tickerPartners.map((partner, idx) => (
             <div
               key={idx}
-              className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-400 transition-all duration-300 flex items-center justify-center h-22 sm:h-24 w-44 sm:w-52 shrink-0 group"
+              className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-400 transition-all duration-300 flex items-center justify-center h-20 sm:h-24 w-44 sm:w-52 shrink-0 group"
             >
               {partner.link ? (
                 <a href={partner.link} target="_blank" rel="noreferrer" className="flex items-center justify-center w-full h-full">

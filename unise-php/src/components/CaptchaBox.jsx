@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { RotateCw, AlertTriangle } from 'lucide-react';
 
 export default function CaptchaBox({
   captchaInput,
@@ -109,7 +110,7 @@ export default function CaptchaBox({
             }`}
             title="Refresh CAPTCHA Code"
           >
-            <i className="fa-solid fa-rotate text-sm"></i>
+            <RotateCw className="w-4 h-4" />
           </button>
         </div>
 
@@ -135,7 +136,7 @@ export default function CaptchaBox({
 
       {captchaError && (
         <p className="text-xs font-semibold text-rose-500 mt-1 flex items-center gap-1.5 animate-fadeIn">
-          <i className="fa-solid fa-triangle-exclamation"></i>
+          <AlertTriangle className="w-4 h-4 text-rose-500 shrink-0" />
           <span>{captchaError}</span>
         </p>
       )}
