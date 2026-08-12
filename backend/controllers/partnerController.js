@@ -5,6 +5,9 @@ import cloudinary from '../config/cloudinary.js';
 const defaultPartners = {
   badgeText: 'GLOBAL ALLIANCE',
   headingText: 'Powered by the World\'s Leading Security Brands',
+  isVisible: true,
+  bgColor: '#ffffff',
+  speed: 25,
   partnersList: [
     { name: 'Genetec', logoUrl: '/images/pt1.jpg', link: '' },
     { name: 'Hikvision', logoUrl: '/images/pt2.jpg', link: '' },
@@ -60,7 +63,7 @@ export const getPartnerConfig = async (req, res) => {
 };
 
 export const updatePartnerConfig = async (req, res) => {
-  const { badgeText, headingText, partnersList } = req.body;
+  const { badgeText, headingText, isVisible, bgColor, speed, partnersList } = req.body;
   try {
     let processedPartners = [];
     if (Array.isArray(partnersList)) {
@@ -77,6 +80,9 @@ export const updatePartnerConfig = async (req, res) => {
     const updateData = {
       badgeText: badgeText || defaultPartners.badgeText,
       headingText: headingText || defaultPartners.headingText,
+      isVisible: isVisible !== undefined ? Boolean(isVisible) : defaultPartners.isVisible,
+      bgColor: bgColor || defaultPartners.bgColor,
+      speed: speed !== undefined && speed !== null ? Number(speed) : defaultPartners.speed,
       partnersList: processedPartners.length > 0 ? processedPartners : defaultPartners.partnersList
     };
 

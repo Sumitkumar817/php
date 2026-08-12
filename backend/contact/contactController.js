@@ -67,6 +67,12 @@ export const updateContactConfig = async (req, res) => {
 // ======================= MESSAGES / ENQUIRIES =======================
 export const submitMessage = async (req, res) => {
   try {
+    // Honeypot Bot Rejection Check
+    if (req.body.honeypot && String(req.body.honeypot).trim() !== '') {
+      console.warn("Backend rejected automated bot submission.");
+      return res.status(400).json({ success: false, message: 'Automated submission rejected' });
+    }
+
     const payload = {
       country: req.body.country || 'United Arab Emirates',
       countryCode: req.body.countryCode || '+971',

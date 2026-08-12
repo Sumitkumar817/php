@@ -220,6 +220,9 @@ export default function Home({ onShowToast }) {
   // ==========================================
   const [sec7Badge, setSec7Badge] = useState('GLOBAL ALLIANCE');
   const [sec7Heading, setSec7Heading] = useState("Powered by the World's Leading Security Brands");
+  const [sec7IsVisible, setSec7IsVisible] = useState(true);
+  const [sec7BgColor, setSec7BgColor] = useState('#ffffff');
+  const [sec7Speed, setSec7Speed] = useState(25);
   const [partnersList, setPartnersList] = useState([]);
   const [loadingSec7, setLoadingSec7] = useState(true);
   const [isSavingSec7, setIsSavingSec7] = useState(false);
@@ -421,6 +424,9 @@ export default function Home({ onShowToast }) {
     if (res.success && res.data) {
       setSec7Badge(res.data.badgeText || 'GLOBAL ALLIANCE');
       setSec7Heading(res.data.headingText || "Powered by the World's Leading Security Brands");
+      setSec7IsVisible(res.data.isVisible !== undefined ? res.data.isVisible : true);
+      setSec7BgColor(res.data.bgColor || '#ffffff');
+      setSec7Speed(res.data.speed !== undefined ? res.data.speed : 25);
       if (Array.isArray(res.data.partnersList)) {
         setPartnersList(res.data.partnersList);
       }
@@ -609,6 +615,9 @@ export default function Home({ onShowToast }) {
     const res = await updatePartnerConfig({
       badgeText: sec7Badge,
       headingText: sec7Heading,
+      isVisible: sec7IsVisible,
+      bgColor: sec7BgColor,
+      speed: sec7Speed,
       partnersList
     });
     setIsSavingSec7(false);
@@ -2968,6 +2977,20 @@ export default function Home({ onShowToast }) {
         <div className="card-body">
           <form onSubmit={handleSaveSec7} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
+            {/* Section Visibility Control */}
+            <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', backgroundColor: 'var(--bg-input)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+              <input
+                type="checkbox"
+                id="sec7IsVisible"
+                checked={sec7IsVisible}
+                onChange={(e) => setSec7IsVisible(e.target.checked)}
+                style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+              />
+              <label htmlFor="sec7IsVisible" style={{ fontWeight: 600, cursor: 'pointer', margin: 0, color: 'var(--text-main)' }}>
+                Show Section 7 (Brand Logos Marquee) on Main Website
+              </label>
+            </div>
+
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
               <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                 <label className="form-label">Badge Text</label>
@@ -2989,6 +3012,51 @@ export default function Home({ onShowToast }) {
                   onChange={(e) => setSec7Heading(e.target.value)}
                   placeholder="e.g. Powered by the World's Leading Security Brands"
                 />
+              </div>
+
+              {/* Background Color Picker */}
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Background Color</label>
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                  <input
+                    type="color"
+                    value={sec7BgColor}
+                    onChange={(e) => setSec7BgColor(e.target.value)}
+                    style={{ width: '42px', height: '38px', padding: '2px', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', background: 'none' }}
+                  />
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={sec7BgColor}
+                    onChange={(e) => setSec7BgColor(e.target.value)}
+                    placeholder="#ffffff"
+                  />
+                </div>
+              </div>
+
+              {/* Marquee Speed Control */}
+              <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label className="form-label">Marquee Speed (Scroll duration: {sec7Speed}s)</label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <input
+                    type="range"
+                    min="5"
+                    max="60"
+                    value={sec7Speed}
+                    onChange={(e) => setSec7Speed(Number(e.target.value))}
+                    style={{ flex: 1, cursor: 'pointer' }}
+                  />
+                  <input
+                    type="number"
+                    className="form-control"
+                    style={{ width: '75px' }}
+                    min="5"
+                    max="60"
+                    value={sec7Speed}
+                    onChange={(e) => setSec7Speed(Number(e.target.value))}
+                  />
+                </div>
+                <small style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>Lower value = Faster speed, Higher value = Slower speed</small>
               </div>
             </div>
 

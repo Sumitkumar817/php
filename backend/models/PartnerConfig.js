@@ -9,6 +9,9 @@ const partnerSchema = new mongoose.Schema({
 const partnerConfigSchema = new mongoose.Schema({
   badgeText: { type: String, default: 'GLOBAL ALLIANCE' },
   headingText: { type: String, default: 'Powered by the World\'s Leading Security Brands' },
+  isVisible: { type: Boolean, default: true },
+  bgColor: { type: String, default: '#ffffff' },
+  speed: { type: Number, default: 25 },
   partnersList: [partnerSchema]
 }, { timestamps: true });
 

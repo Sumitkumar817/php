@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { COUNTRIES, DEFAULT_COUNTRY, detectCountryFromPhone } from '../data/countries';
 import CountrySelect from '../components/CountrySelect';
+import CaptchaBox from '../components/CaptchaBox';
 
 export default function ContactPage() {
   const { t, i18n } = useTranslation();
@@ -21,6 +22,12 @@ export default function ContactPage() {
 
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Anti-Bot CAPTCHA & Honeypot State
+  const [captchaInput, setCaptchaInput] = useState('');
+  const [captchaExpected, setCaptchaExpected] = useState('');
+  const [captchaError, setCaptchaError] = useState('');
+  const [honeypot, setHoneypot] = useState('');
 
   const [config, setConfig] = useState({
     bannerTitle: "Get in Touch — We're Ready to Help",
@@ -108,16 +115,33 @@ export default function ContactPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Honeypot anti-bot verification check
+    if (honeypot && honeypot.trim() !== '') {
+      console.warn("Spam bot submission blocked via honeypot.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Security CAPTCHA verification check
+    if (!captchaInput || captchaInput.trim().toUpperCase() !== captchaExpected.trim().toUpperCase()) {
+      setCaptchaError('Security CAPTCHA verification failed. Please enter the correct code shown.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    setCaptchaError('');
     setIsSubmitting(true);
     try {
       const res = await fetch(`${apiBase}/contact/message`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ ...formData, honeypot })
       });
       const data = await res.json();
       if (data.success) {
         setSubmitted(true);
+        setCaptchaInput('');
         setFormData({
           fullName: '',
           companyName: '',
@@ -356,6 +380,31 @@ export default function ContactPage() {
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-[#0073b7] focus:bg-white transition resize-none"
+                />
+              </div>
+
+              {/* Honeypot Anti-Bot Field (Hidden from human users) */}
+              <input
+                type="text"
+                name="website_url_security_verify"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                style={{ display: 'none' }}
+                tabIndex={-1}
+                autoComplete="off"
+              />
+
+              {/* Anti-Bot Visual Security CAPTCHA */}
+              <div className="pt-2 border-t border-slate-200">
+                <CaptchaBox
+                  captchaInput={captchaInput}
+                  setCaptchaInput={(val) => {
+                    setCaptchaInput(val);
+                    if (captchaError) setCaptchaError('');
+                  }}
+                  captchaError={captchaError}
+                  theme="light"
+                  onCaptchaGenerated={(code) => setCaptchaExpected(code)}
                 />
               </div>
 

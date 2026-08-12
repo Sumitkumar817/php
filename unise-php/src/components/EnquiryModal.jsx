@@ -3,6 +3,7 @@ import { X, Send, CheckCircle2, Shield, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { COUNTRIES, DEFAULT_COUNTRY, detectCountryFromPhone } from '../data/countries';
 import CountrySelect from './CountrySelect';
+import CaptchaBox from './CaptchaBox';
 
 export default function EnquiryModal({ isOpen, onClose, initialSubject = '' }) {
   const { t } = useTranslation();
@@ -18,6 +19,12 @@ export default function EnquiryModal({ isOpen, onClose, initialSubject = '' }) {
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // Anti-Bot CAPTCHA & Honeypot State
+  const [captchaInput, setCaptchaInput] = useState('');
+  const [captchaExpected, setCaptchaExpected] = useState('');
+  const [captchaError, setCaptchaError] = useState('');
+  const [honeypot, setHoneypot] = useState('');
 
   if (!isOpen) return null;
 
@@ -58,6 +65,22 @@ export default function EnquiryModal({ isOpen, onClose, initialSubject = '' }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Honeypot anti-bot verification check
+    if (honeypot && honeypot.trim() !== '') {
+      console.warn("Spam bot submission blocked via honeypot.");
+      setLoading(false);
+      return;
+    }
+
+    // Security CAPTCHA verification check
+    if (!captchaInput || captchaInput.trim().toUpperCase() !== captchaExpected.trim().toUpperCase()) {
+      setCaptchaError('Security CAPTCHA verification failed. Please enter the correct code shown.');
+      setLoading(false);
+      return;
+    }
+
+    setCaptchaError('');
     setLoading(true);
     try {
       const payload = {
@@ -251,6 +274,31 @@ export default function EnquiryModal({ isOpen, onClose, initialSubject = '' }) {
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-white focus:outline-none focus:border-blue-500 transition text-sm resize-none"
+                />
+              </div>
+
+              {/* Honeypot Anti-Bot Field (Hidden from human users) */}
+              <input
+                type="text"
+                name="website_url_security_verify"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                style={{ display: 'none' }}
+                tabIndex={-1}
+                autoComplete="off"
+              />
+
+              {/* Anti-Bot Visual Security CAPTCHA */}
+              <div className="pt-2 border-t border-slate-800">
+                <CaptchaBox
+                  captchaInput={captchaInput}
+                  setCaptchaInput={(val) => {
+                    setCaptchaInput(val);
+                    if (captchaError) setCaptchaError('');
+                  }}
+                  captchaError={captchaError}
+                  theme="dark"
+                  onCaptchaGenerated={(code) => setCaptchaExpected(code)}
                 />
               </div>
 
