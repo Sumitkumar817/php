@@ -1,0 +1,7 @@
+{
+  "buildCommand": "cd unise-php && npm run build",
+  "outputDirectory": "unise-php/dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
