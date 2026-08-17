@@ -1,6 +1,7 @@
 {
-  "buildCommand": "cd unise-php && npm run build",
-  "outputDirectory": "unise-php/dist",
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
