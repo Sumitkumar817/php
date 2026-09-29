@@ -1,285 +1,297 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { solutionsData } from '../data/solutionsData';
-import { industriesData } from '../data/industriesData';
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://unispark-backend-api.onrender.com/api';
-
-
-const defaultFooter = {
-  logoUrl: '/images/logo.png',
-  companyName: 'UniSpark Innovation Security Systems & Equipment Trading L.L.C',
-  companyTagline: 'Next-generation enterprise protection and cyber-physical infrastructure logic designed for global digital business velocity.',
-  groupCompaniesLabel: 'Group Companies:',
-  groupCompanies: [
-    { label: 'Horizon Hive Technology L.L.C', url: 'https://horizonhivetechnology.com/' },
-    { label: 'UniSpark Innovations HR Consultants L.L.C', url: 'https://usihr.com/' }
-  ],
-  socialLinks: [
-    { platform: 'Facebook', icon: 'fa-facebook-f', url: 'https://www.facebook.com/UnisparkInnovation/' },
-    { platform: 'Instagram', icon: 'fa-instagram', url: 'https://www.instagram.com/unispark_innovation/' },
-    { platform: 'X / Twitter', icon: 'fa-x-twitter', url: 'https://x.com/unispark_inn' },
-    { platform: 'LinkedIn', icon: 'fa-linkedin-in', url: 'https://www.linkedin.com/company/unispark-innovation/posts/?feedView=all' }
-  ],
-  solutionsColumnTitle: 'SOLUTIONS',
-  industriesColumnTitle: 'INDUSTRIES',
-  quickLinksColumnTitle: 'QUICK LINKS',
-  quickLinks: [
-    { label: 'Home', url: '/' },
-    { label: 'About Us', url: '/about-us' },
-    { label: 'Solutions', url: '/solutions' },
-    { label: 'Industries', url: '/industries' },
-    { label: 'Contact Us', url: '/contact-us' }
-  ],
-  serviceAreasLabel: 'Service Areas:',
-  serviceAreas: 'Dubai | Abu Dhabi | Sharjah | UAE Nationwide',
-  officeLocation: 'Dubai, United Arab Emirates',
-  email: 'sales@unisparkinnovation.com',
-  emailLabel: 'Sales',
-  phone: '+971 50 288 5874',
-  phoneLabel: 'Call',
-  whatsappNumber: '971502885874',
-  copyrightText: 'UniSpark Innovation Security Systems & Equipment Trading L.L.C. All rights reserved.'
-};
+import { 
+  Link2, 
+  Camera, 
+  KeyRound, 
+  Siren, 
+  Video, 
+  ShieldCheck, 
+  Flame, 
+  Fingerprint, 
+  Network, 
+  Wrench,
+  Plane,
+  Building2,
+  Fuel,
+  Building,
+  HeartPulse,
+  Home,
+  MapPin,
+  Mail,
+  Phone
+} from 'lucide-react';
 
 export default function Footer() {
-  const { t } = useTranslation();
-  const [footer, setFooter] = useState(defaultFooter);
-  const [solutions, setSolutions] = useState(solutionsData);
-  const [industries, setIndustries] = useState(industriesData);
-
-
-  const fetchAll = async () => {
-    try {
-      const [footerRes, sec3Res, sec5Res] = await Promise.all([
-        fetch(`${API_BASE}/footer`),
-        fetch(`${API_BASE}/section3`),
-        fetch(`${API_BASE}/section5`),
-      ]);
-      const [footerData, sec3Data, sec5Data] = await Promise.all([
-        footerRes.json(),
-        sec3Res.json(),
-        sec5Res.json(),
-      ]);
-
-      if (footerData.success && footerData.data) {
-        setFooter({ ...defaultFooter, ...footerData.data });
-      }
-      if (sec3Data.success && Array.isArray(sec3Data.data?.services) && sec3Data.data.services.length > 0) {
-        setSolutions(sec3Data.data.services);
-      }
-      if (sec5Data.success && Array.isArray(sec5Data.data?.cards) && sec5Data.data.cards.length > 0) {
-        setIndustries(sec5Data.data.cards);
-      }
-    } catch {
-      // silently use defaults
-    }
-  };
+  const [footerConfig, setFooterConfig] = useState({
+    email: 'info@unisparkinnovation.com',
+    phone: '+971 50 288 5874',
+    officeLocation: 'Dubai, United Arab Emirates',
+    whatsappNumber: '971502885874'
+  });
 
   useEffect(() => {
-    fetchAll();
-    const interval = setInterval(fetchAll, 8000);
-    const onFocus = () => fetchAll();
-    window.addEventListener('focus', onFocus);
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('focus', onFocus);
+    const fetchFooter = async () => {
+      try {
+        const apiBase = import.meta.env.VITE_API_BASE_URL || ((typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.'))) ? 'http://localhost:5000/api' : 'https://unispark-backend-api.onrender.com/api');
+        const res = await fetch(`${apiBase}/footer`);
+        const data = await res.json();
+        if (data.success && data.data) {
+          setFooterConfig(prev => ({
+            ...prev,
+            email: data.data.email || prev.email,
+            phone: data.data.phone || prev.phone,
+            officeLocation: data.data.officeLocation || prev.officeLocation,
+            whatsappNumber: data.data.whatsappNumber || prev.whatsappNumber
+          }));
+        }
+      } catch (e) {
+        // fallback
+      }
     };
+    fetchFooter();
   }, []);
 
-  const whatsappUrl = `https://wa.me/${footer.whatsappNumber || '971502885874'}`;
+  const whatsappUrl = `https://wa.me/${footerConfig.whatsappNumber || '971502885874'}`;
 
   return (
-    <footer className="relative bg-[#004b78] text-slate-200 overflow-hidden pt-16 pb-8 border-t border-white/10 font-sans">
-
-      {/* WhatsApp Floating Button */}
-      <div className="fixed bottom-7 right-7 z-50 flex items-center">
+    <footer className="relative overflow-hidden bg-[#014B78] text-slate-100 py-10 font-sans">
+      {/* Floating Chat Support & WhatsApp Button */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3 pointer-events-auto">
+        <div 
+          onClick={() => window.open(whatsappUrl, '_blank')}
+          className="w-16 md:w-24 cursor-pointer rounded-2xl overflow-hidden hover:scale-105 transition-transform duration-300 drop-shadow-md m-auto"
+        >
+          <img 
+            alt="Chat Support" 
+            src="/images/chat-support.png" 
+            className="w-full h-auto" 
+          />
+        </div>
         <a
           href={whatsappUrl}
           target="_blank"
           rel="noreferrer"
-          className="relative w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition duration-300 group"
-          aria-label="WhatsApp Business"
+          className="relative inline-flex items-center gap-2 font-semibold text-[0.85rem] text-white px-[20px] py-[10px] rounded-[15px] border border-white/50 shadow-[0px_4px_10px_rgba(0,0,0,0.15)] drop-shadow-[2px_3px_0px_rgba(0,0,0,0.44)] bg-gradient-to-r from-[#00b008] to-[#006719] transition duration-300 active:scale-95 hover:scale-[1.02]"
         >
-          <div className="absolute inset-0 rounded-full bg-[#25D366] whatsapp-pulse-back pointer-events-none" />
-          <div className="absolute inset-0 rounded-full bg-[#25D366] whatsapp-pulse-front pointer-events-none" />
-          <i className="fa-brands fa-whatsapp text-2xl relative z-10" />
+          <i className="fa-brands fa-whatsapp text-lg"></i>
+          <span>Chat With Us</span>
         </a>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+      <div className="max-w-[1200px] mx-auto p-5 py-0 px-0">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none -translate-x-1/2 -translate-y-1/2"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none translate-x-1/2 translate-y-1/2"></div>
 
-        {/* Main Footer Columns */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-12 border-b border-white/10">
+        <div className="container mx-auto px-4 md:px-6 max-w-7xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 items-start pb-10 border-b border-white/10">
+            
+            {/* Col 1: Brand Info */}
+            <div className="col-span-12 lg:col-span-4 pr-0 lg:pr-8">
+              <div className="flex flex-col">
+                <Link to="/" className="inline-flex items-center gap-2 mb-4">
+                  <img
+                    src="/images/logo.png"
+                    alt="UniSpark Innovation Logo"
+                    className="max-w-[200px] brightness-0 invert"
+                    onError={(e) => { e.target.src = '/images/logo.png'; }}
+                  />
+                </Link>
 
-          {/* ===== Brand Info Column ===== */}
-          <div className="lg:col-span-4 space-y-4">
-            <Link to="/" className="inline-block">
-              <img
-                src={footer.logoUrl || '/images/logo.png'}
-                alt={footer.companyName}
-                className="h-12 w-auto object-contain brightness-0 invert"
-                onError={e => { e.target.src = '/images/logo.png'; }}
-              />
-            </Link>
+                <h6 className="text-white text-sm font-semibold mb-2">
+                  UniSpark Innovation Security Systems &amp; Equipment Trading L.L.C
+                </h6>
 
-            <h4 className="text-white text-xs font-bold leading-relaxed uppercase tracking-wider">
-              {footer.companyName}
-            </h4>
+                <p className="text-[13px] leading-relaxed mb-4 opacity-85 text-white">
+                  Next-generation enterprise protection and cyber-physical infrastructure logic designed for global digital business velocity.
+                </p>
 
-            <p className="text-xs text-slate-300 leading-relaxed opacity-90">
-              {footer.companyTagline}
-            </p>
+                <div className="mb-4">
+                  <span className="bg-white text-slate-900 text-xs px-2 py-1 rounded-full inline-block mb-2 font-medium">
+                    Group Companies:
+                  </span>
+                  <nav className="flex flex-col space-y-1.5 opacity-70 text-xs">
+                    <a
+                      href="https://horizonhivetechnology.com/"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-white hover:text-white inline-flex items-center transition-colors"
+                    >
+                      <Link2 className="w-3 h-3 me-1.5" /> Horizon Hive Technology L.L.C
+                    </a>
+                    <a
+                      href="https://usihr.com/"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-white hover:text-white inline-flex items-center transition-colors"
+                    >
+                      <Link2 className="w-3 h-3 me-1.5" /> UniSpark Innovations HR Consultants L.L.C
+                    </a>
+                  </nav>
+                </div>
 
-            {/* Group Companies */}
-            {Array.isArray(footer.groupCompanies) && footer.groupCompanies.length > 0 && (
-              <div className="space-y-2 pt-2">
-                <span className="inline-block px-3 py-1 rounded bg-white/10 text-white text-[11px] font-bold uppercase tracking-wider">
-                  {footer.groupCompaniesLabel || 'Group Companies:'}
-                </span>
-                <ul className="space-y-1.5 text-xs text-slate-300">
-                  {footer.groupCompanies.map((gc, idx) => (
-                    <li key={idx}>
-                      <a
-                        href={gc.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="hover:text-white transition flex items-center gap-1.5"
-                      >
-                        <i className="fa-solid fa-link text-[10px]" /> {gc.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Social Icons */}
-            {Array.isArray(footer.socialLinks) && footer.socialLinks.length > 0 && (
-              <div className="flex items-center gap-2 pt-2 flex-wrap">
-                {footer.socialLinks.map((s, idx) => (
+                {/* Social icons */}
+                <div className="flex items-center gap-2">
                   <a
-                    key={idx}
-                    href={s.url}
+                    href="https://www.facebook.com/UnisparkInnovation/"
                     target="_blank"
                     rel="noreferrer"
-                    className="w-9 h-9 rounded-lg bg-white/10 text-white flex items-center justify-center hover:bg-white hover:text-[#004b78] transition"
-                    aria-label={s.platform}
-                    title={s.platform}
+                    className="w-8 h-8 rounded bg-slate-900/15 hover:bg-[#0a6eab] text-slate-300 hover:text-white flex items-center justify-center transition-all"
+                    aria-label="Facebook"
                   >
-                    <i className={`fa-brands ${s.icon || 'fa-globe'} text-sm`} />
+                    <i className="fa-brands fa-facebook-f text-sm"></i>
                   </a>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* ===== Solutions Column ===== */}
-          <div className="lg:col-span-4 space-y-4">
-            <h5 className="text-white text-xs font-bold uppercase tracking-wider border-b border-white/20 pb-2">
-              {footer.solutionsColumnTitle || 'SOLUTIONS'}
-            </h5>
-            <ul className="space-y-2 text-xs text-slate-200">
-              {solutions.map((s) => (
-                <li key={s.id}>
-                  <Link to={`/solutions/${s.id}`} className="hover:text-white transition flex items-center gap-2">
-                    <i className={`fa-solid ${s.icon || 'fa-shield-halved'} text-[10px] opacity-70`} />
-                    <span>{s.title}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* ===== Industries Column ===== */}
-          <div className="lg:col-span-2 space-y-4">
-            <h5 className="text-white text-xs font-bold uppercase tracking-wider border-b border-white/20 pb-2">
-              {footer.industriesColumnTitle || 'INDUSTRIES'}
-            </h5>
-            <ul className="space-y-2 text-xs text-slate-200">
-              {industries.map((ind) => (
-                <li key={ind.id}>
-                  <Link to={`/industries/${ind.id}`} className="hover:text-white transition flex items-center gap-2">
-                    <i className={`fa-solid ${ind.icon || 'fa-building'} text-[10px] opacity-70`} />
-                    <span>{ind.title}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* ===== Quick Links Column ===== */}
-          <div className="lg:col-span-2 space-y-4">
-            <h5 className="text-white text-xs font-bold uppercase tracking-wider border-b border-white/20 pb-2">
-              {footer.quickLinksColumnTitle || 'QUICK LINKS'}
-            </h5>
-            <ul className="space-y-2 text-xs text-slate-200">
-              {(Array.isArray(footer.quickLinks) && footer.quickLinks.length > 0
-                ? footer.quickLinks
-                : defaultFooter.quickLinks
-              ).map((ql, idx) => (
-                <li key={idx}>
-                  <Link to={ql.url} className="hover:text-white transition flex items-center gap-2">
-                    <i className="fa-solid fa-angle-right text-[10px]" />
-                    <span>{ql.label}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-        </div>
-
-        {/* ===== Contact Strip ===== */}
-        <div className="py-6 my-6 bg-white/10 rounded-2xl px-6 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-white">
-          <div>
-            <span className="inline-block px-3 py-1 rounded bg-white/10 text-white font-bold uppercase text-[10px] mb-1">
-              {footer.serviceAreasLabel || 'Service Areas:'}
-            </span>
-            <div className="font-semibold text-white/90">{footer.serviceAreas}</div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center gap-6">
-            <div className="flex items-center gap-2">
-              <i className="fa-solid fa-location-dot text-base text-cyan-300" />
-              <div>
-                <img src="/images/dubai.svg" alt="Dubai Vector" className="h-6 w-auto mb-0.5 filter invert" onError={e => e.target.style.display = 'none'} />
-                <div className="font-semibold">{footer.officeLocation}</div>
+                  <a
+                    href="https://www.instagram.com/unispark_innovation/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-8 h-8 rounded bg-slate-900/15 hover:bg-[#0a6eab] text-slate-300 hover:text-white flex items-center justify-center transition-all"
+                    aria-label="Instagram"
+                  >
+                    <i className="fa-brands fa-instagram text-sm"></i>
+                  </a>
+                  <a
+                    href="https://x.com/unispark_inn"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-8 h-8 rounded bg-slate-900/15 hover:bg-[#0a6eab] text-slate-300 hover:text-white flex items-center justify-center transition-all"
+                    aria-label="X-Twitter"
+                  >
+                    <i className="fa-brands fa-x-twitter text-sm"></i>
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/company/unispark-innovation/posts/?feedView=all"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-8 h-8 rounded bg-slate-900/15 hover:bg-[#0a6eab] text-slate-300 hover:text-white flex items-center justify-center transition-all"
+                    aria-label="LinkedIn"
+                  >
+                    <i className="fa-brands fa-linkedin-in text-sm"></i>
+                  </a>
+                </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <i className="fa-solid fa-envelope text-base text-cyan-300" />
-              <div>
-                <a href={`mailto:${footer.email}`} className="font-semibold hover:underline">
-                  {footer.emailLabel}: {footer.email}
+            {/* Col 2: Solutions */}
+            <div className="col-span-12 md:col-span-6 lg:col-span-3">
+              <h6 className="text-white font-bold text-sm uppercase tracking-wider mb-4 border-b border-white/20 pb-2">
+                Solutions
+              </h6>
+              <nav className="flex flex-col space-y-2 text-[13px]">
+                <Link className="flex items-center gap-2 text-slate-300 hover:text-white transition" to="/solutions/cctv-and-ip-camera-systems">
+                  <Camera className="w-4 h-4 text-slate-400" />
+                  <span>CCTV &amp; IP Camera Systems</span>
+                </Link>
+                <Link className="flex items-center gap-2 text-slate-300 hover:text-white transition" to="/solutions/access-control-systems">
+                  <KeyRound className="w-4 h-4 text-slate-400" />
+                  <span>Access Control Systems</span>
+                </Link>
+                <Link className="flex items-center gap-2 text-slate-300 hover:text-white transition" to="/solutions/intruder-alarm-and-detection-systems">
+                  <Siren className="w-4 h-4 text-slate-400" />
+                  <span>Intruder Alarm &amp; Detection</span>
+                </Link>
+                <Link className="flex items-center gap-2 text-slate-300 hover:text-white transition" to="/solutions/video-intercom-and-door-entry-systems">
+                  <Video className="w-4 h-4 text-slate-400" />
+                  <span>Video Intercom &amp; Door Entry</span>
+                </Link>
+                <Link className="flex items-center gap-2 text-slate-300 hover:text-white transition" to="/solutions/perimeter-security-and-fencing-systems">
+                  <ShieldCheck className="w-4 h-4 text-slate-400" />
+                  <span>Perimeter Security &amp; Fencing</span>
+                </Link>
+                <Link className="flex items-center gap-2 text-slate-300 hover:text-white transition" to="/solutions/fire-alarm-and-detection-systems">
+                  <Flame className="w-4 h-4 text-slate-400" />
+                  <span>Fire Alarm &amp; Detection Systems</span>
+                </Link>
+                <Link className="flex items-center gap-2 text-slate-300 hover:text-white transition" to="/solutions/biometric-and-smart-security-systems">
+                  <Fingerprint className="w-4 h-4 text-slate-400" />
+                  <span>Biometric &amp; Smart Security</span>
+                </Link>
+                <Link className="flex items-center gap-2 text-slate-300 hover:text-white transition" to="/solutions/system-integration-and-control-room-setup">
+                  <Network className="w-4 h-4 text-slate-400" />
+                  <span>System Integration &amp; Control Room</span>
+                </Link>
+                <Link className="flex items-center gap-2 text-slate-300 hover:text-white transition" to="/solutions/maintenance-contracts">
+                  <Wrench className="w-4 h-4 text-slate-400" />
+                  <span>Maintenance Contracts (AMC)</span>
+                </Link>
+              </nav>
+            </div>
+
+            {/* Col 3: Industries */}
+            <div className="col-span-12 md:col-span-3 lg:col-span-3">
+              <h6 className="text-white font-bold text-sm uppercase tracking-wider mb-4 border-b border-white/20 pb-2">
+                Industries
+              </h6>
+              <nav className="flex flex-col space-y-2 text-[13px]">
+                <Link className="flex items-center gap-2 text-slate-300 hover:text-white transition" to="/industries/aviation-security">
+                  <Plane className="w-4 h-4 text-slate-400" />
+                  <span>Aviation Security</span>
+                </Link>
+                <Link className="flex items-center gap-2 text-slate-300 hover:text-white transition" to="/industries/real-estate-security">
+                  <Building2 className="w-4 h-4 text-slate-400" />
+                  <span>Real Estate Security</span>
+                </Link>
+                <Link className="flex items-center gap-2 text-slate-300 hover:text-white transition" to="/industries/oil-and-gas-security">
+                  <Fuel className="w-4 h-4 text-slate-400" />
+                  <span>Oil &amp; Gas Security</span>
+                </Link>
+                <Link className="flex items-center gap-2 text-slate-300 hover:text-white transition" to="/industries/hospitality-security">
+                  <Building className="w-4 h-4 text-slate-400" />
+                  <span>Hospitality Security</span>
+                </Link>
+                <Link className="flex items-center gap-2 text-slate-300 hover:text-white transition" to="/industries/healthcare-security">
+                  <HeartPulse className="w-4 h-4 text-slate-400" />
+                  <span>Healthcare Security</span>
+                </Link>
+                <Link className="flex items-center gap-2 text-slate-300 hover:text-white transition" to="/industries/consumer-security">
+                  <Home className="w-4 h-4 text-slate-400" />
+                  <span>Consumer Security</span>
+                </Link>
+              </nav>
+            </div>
+
+            {/* Col 4: Quick Links / Contact */}
+            <div className="col-span-12 md:col-span-3 lg:col-span-2">
+              <h6 className="text-white font-bold text-sm uppercase tracking-wider mb-4 border-b border-white/20 pb-2">
+                Quick Links
+              </h6>
+              <nav className="flex flex-col space-y-2 text-[13px]">
+                <Link className="text-slate-300 hover:text-white transition" to="/">Home</Link>
+                <Link className="text-slate-300 hover:text-white transition" to="/about-us">About Us</Link>
+                <Link className="text-slate-300 hover:text-white transition" to="/solutions">Solutions</Link>
+                <Link className="text-slate-300 hover:text-white transition" to="/industries">Industries</Link>
+                <Link className="text-slate-300 hover:text-white transition" to="/contact-us">Contact Us</Link>
+              </nav>
+
+              <div className="mt-6 pt-4 border-t border-white/10 space-y-2 text-xs text-slate-300">
+                <a href={`tel:${footerConfig.phone}`} className="flex items-center gap-2 hover:text-white transition">
+                  <Phone className="w-3.5 h-3.5 text-cyan-300" />
+                  <span>{footerConfig.phone}</span>
                 </a>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <i className="fa-solid fa-phone text-base text-cyan-300" />
-              <div className="font-bold">
-                <a href={`tel:${footer.phone?.replace(/\s+/g, '')}`} className="hover:underline">
-                  {footer.phoneLabel}: {footer.phone}
+                <a href={`mailto:${footerConfig.email}`} className="flex items-center gap-2 hover:text-white transition">
+                  <Mail className="w-3.5 h-3.5 text-cyan-300" />
+                  <span>{footerConfig.email}</span>
                 </a>
+                <div className="flex items-center gap-2 text-slate-300">
+                  <MapPin className="w-3.5 h-3.5 text-cyan-300 shrink-0" />
+                  <span>{footerConfig.officeLocation}</span>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* ===== Copyright Bar ===== */}
-        <div className="flex flex-col sm:flex-row items-center justify-between pt-4 text-xs text-white/70 gap-4">
-          <div>
-            {t('footer.copyright')}
           </div>
-          <div className="flex items-center gap-6">
-            <Link to="/privacy-policy" className="hover:text-white transition">{t('footer.privacy')}</Link>
-            <Link to="/terms-and-conditions" className="hover:text-white transition">{t('footer.terms')}</Link>
-          </div>
-        </div>
 
+          {/* Copyright bar */}
+          <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-300 opacity-80">
+            <div>
+              &copy; {new Date().getFullYear()} UniSpark Innovation Security Systems &amp; Equipment Trading L.L.C. All rights reserved.
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-slate-300">Dubai &middot; Abu Dhabi &middot; Sharjah &middot; UAE Nationwide</span>
+            </div>
+          </div>
+
+        </div>
       </div>
     </footer>
   );

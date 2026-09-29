@@ -1,176 +1,184 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Laptop, Users, ShieldCheck, Building2, Network, Cpu } from 'lucide-react';
+import { Shield, Users, Network, ArrowRight } from 'lucide-react';
 
-const IconMap = {
-  Laptop,
-  Users,
-  ShieldCheck,
-  Building2,
-  Network,
-  Cpu
-};
-
-export default function OurGroupSection({ data: propData }) {
-  const [internalData, setInternalData] = useState(null);
-
-  useEffect(() => {
-    if (!propData) {
-      const apiBase = import.meta.env.VITE_API_BASE_URL || 'https://unispark-backend-api.onrender.com/api';
-      fetch(`${apiBase}/about`)
-        .then(res => res.json())
-        .then(d => {
-          if (d.success && d.data) setInternalData(d.data);
-        })
-        .catch(err => console.warn('Error fetching group section data:', err));
-    }
-  }, [propData]);
-
-  const data = propData || internalData;
-
-  const badge = data?.groupBadge || 'CORPORATE ARCHITECTURE';
-  const title = data?.groupTitle || 'OUR GROUP STRUCTURE';
-  const desc = data?.groupDesc || 'UniSpark Security is part of the UniSpark Innovations Group — a UAE-registered group of companies delivering technology, human resource, and physical security solutions.';
-  const cards = Array.isArray(data?.groupCards) && data.groupCards.length > 0 ? data.groupCards : [
-    {
-      tag: 'GROUP LEAD TECHNOLOGY ENTITY',
-      title: 'Horizon Hive Technology L.L.C',
-      subtitle: 'Core Business:',
-      tags: ['Managed IT', 'Cybersecurity', 'Digital Transformation', 'Aviation IT', 'AI/ML Surveillance', 'Network Infrastructure'],
-      icon: 'Laptop',
-      link: 'https://www.horizonhivetechnology.com/',
-      disclaimer: 'You are being redirected to Horizon Hive Technology L.L.C, a sister entity of UniSpark Security Systems & Equipment Trading L.L.C.'
-    },
-    {
-      tag: 'SISTER ENTITY – HR DIVISION',
-      title: 'UniSpark Innovations HR Consultants L.L.C',
-      subtitle: 'Core Business:',
-      tags: ['HR Consultancy', 'Payroll', 'HRMS', 'Staff Augmentation', 'Skilled Manpower'],
-      icon: 'Users',
-      link: 'https://usihr.com/',
-      disclaimer: 'You are being redirected to UniSpark Innovations HR Consultants L.L.C, a sister entity of UniSpark Security Systems & Equipment Trading L.L.C.'
-    },
-    {
-      tag: 'SISTER ENTITY – PHYSICAL SECURITY DIVISION',
-      title: 'UniSpark Security Systems & Equipment Trading (This Entity)',
-      subtitle: 'Core Business:',
-      tags: ['Security Equipment Installation & Maintenance', 'Security Systems & Equipment Trading'],
-      icon: 'ShieldCheck',
-      link: '/solutions',
-      disclaimer: ''
-    }
-  ];
-
+export default function OurGroupSection({ data }) {
   return (
-    <section className="relative py-20 bg-[#f8fafc] text-slate-900 overflow-hidden border-t border-slate-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-        
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50 border border-blue-100 text-[#0073b7] text-xs font-bold uppercase tracking-wider">
-            <Building2 className="w-4 h-4 text-[#0073b7]" />
-            <span>{badge}</span>
+    <section className="relative w-full overflow-hidden bg-[#f1f5f9] py-12 md:py-16">
+      <div className="absolute top-[30%] left-[-10%] w-[350px] h-[350px] md:w-[600px] md:h-[600px] bg-[#1380c2]/5 rounded-full blur-[90px] pointer-events-none z-0"></div>
+      
+      <div className="max-w-[1200px] mx-auto p-5 py-2 px-5 md:px-6 lg:px-2">
+        <div className="relative z-10">
+          
+          {/* Header */}
+          <div className="flex flex-col items-center text-center mb-10 max-w-3xl mx-auto">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 mb-3 text-xs font-semibold tracking-wide uppercase text-[#1380c2] bg-[#1380c2]/10 border border-[#1380c2]/20 rounded-full">
+              Our Group
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">
+              Three Entities, <span className="bg-gradient-to-r from-[#1380c2] to-[#0c5683] bg-clip-text text-transparent">One Vision</span>
+            </h2>
+            <p className="text-sm sm:text-base text-gray-600 mt-3 leading-relaxed max-w-3xl">
+              Our group operates through three specialised entities covering IT, HR, and Security — all under one unified group identity, delivering integrated enterprise solutions across the UAE and GCC.
+            </p>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900">
-            {title.includes('STRUCTURE') ? (
-              <>
-                {title.split('STRUCTURE')[0]}
-                <span className="text-[#0073b7]">STRUCTURE</span>
-                {title.split('STRUCTURE')[1]}
-              </>
-            ) : title.includes('Vision') ? (
-              <>
-                {title.split('Vision')[0]}
-                <span className="text-[#0073b7]">Vision</span>
-                {title.split('Vision')[1]}
-              </>
-            ) : (
-              title
-            )}
-          </h2>
-          <p className="text-sm text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            {desc}
-          </p>
-        </div>
 
-        {/* Group Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-          {cards.map((item, idx) => {
-            const IconComp = IconMap[item.icon] || Building2;
-            const isExternal = item.link && (item.link.startsWith('http://') || item.link.startsWith('https://'));
-
-            return (
-              <div
-                key={idx}
-                className="p-8 rounded-2xl bg-white border border-slate-200/90 shadow-md hover:shadow-xl transition duration-300 flex flex-col justify-between"
-              >
-                <div>
-                  {/* Top Tag & Icon */}
-                  <div className="flex items-start justify-between gap-4 mb-4">
-                    {item.tag && (
-                      <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-[10px] font-bold uppercase tracking-wider text-slate-600">
-                        {item.tag}
-                      </span>
-                    )}
-                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#0073b7] flex items-center justify-center shrink-0">
-                      <IconComp className="w-5 h-5" />
-                    </div>
+          {/* Cards */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+            
+            {/* Entity 1 */}
+            <div className="group flex flex-col justify-between bg-white p-6 rounded-2xl border border-gray-200/60 shadow-sm hover:shadow-md hover:border-[#1380c2]/30 transition-all duration-300">
+              <div>
+                <div className="flex items-start gap-3 border-b border-gray-100 pb-4 mb-4">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#1380c2]/10 text-[#1380c2] group-hover:bg-[#1380c2] group-hover:text-white transition-all duration-300 shrink-0">
+                    <Shield className="w-5 h-5" />
                   </div>
-
-                  {/* Title & Subtitle */}
-                  <h3 className="text-xl font-extrabold text-slate-900 leading-snug">
-                    {item.title}
-                  </h3>
-                  
-                  {item.subtitle && (
-                    <p className="text-xs text-slate-500 font-medium mt-3 mb-2">
-                      {item.subtitle}
+                  <div>
+                    <h3 className="text-base font-bold text-gray-900 leading-snug group-hover:text-[#1380c2] transition-colors duration-300">
+                      UniSpark Security Systems &amp; Equipment Trading L.L.C
+                    </h3>
+                    <p className="text-xs font-semibold text-[#1380c2] mt-1">
+                      Security Equipment, Systems Installation &amp; Trading
                     </p>
-                  )}
-
-                  {/* Tags Pill List */}
-                  {Array.isArray(item.tags) && item.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 pt-2 border-t border-slate-100">
-                      {item.tags.map((t, tIdx) => (
-                        <span key={tIdx} className="px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 text-xs font-medium">
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+                  </div>
                 </div>
 
-                <div className="pt-8 space-y-3">
-                  {item.disclaimer && (
-                    <p className="text-[11px] text-slate-400 italic leading-snug">
-                      {item.disclaimer}
-                    </p>
-                  )}
-                  {item.link && (
-                    isExternal ? (
-                      <a
-                        href={item.link}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-xs font-bold uppercase tracking-wider text-[#0073b7] hover:text-[#005a96] flex items-center gap-1 transition"
-                      >
-                        <span>VISIT WEBSITE →</span>
-                      </a>
-                    ) : (
-                      <Link
-                        to={item.link}
-                        className="text-xs font-bold uppercase tracking-wider text-[#0073b7] hover:text-[#005a96] flex items-center gap-1 transition"
-                      >
-                        <span>EXPLORE SOLUTIONS →</span>
-                      </Link>
-                    )
-                  )}
-                </div>
+                <ul className="space-y-2 mb-6">
+                  {[
+                    'CCTV & IP Camera Systems',
+                    'Access Control Systems',
+                    'Intruder Alarm & Detection Systems',
+                    'Video Intercom & Door Entry Systems',
+                    'Perimeter Security & Fencing Systems',
+                    'Fire Alarm & Detection Systems',
+                    'Biometric & Smart Security Systems',
+                    'System Integration & Control Room Setup',
+                    'Maintenance Contracts — AMC & PMC'
+                  ].map((item, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-xs text-gray-600 leading-normal">
+                      <span className="text-[#1380c2] mt-1 shrink-0">▪</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            );
-          })}
-        </div>
 
+              <div className="mt-auto pt-4 border-t border-gray-100/60">
+                <Link
+                  to="/solutions"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1380c2] hover:text-[#0f6ba3] transition-colors duration-300 group/btn"
+                >
+                  <span>Explore Solutions</span>
+                  <ArrowRight className="w-3.5 h-3.5 transform transition-transform duration-300 group-hover/btn:translate-x-1" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Entity 2 */}
+            <div className="group flex flex-col justify-between bg-white p-6 rounded-2xl border border-gray-200/60 shadow-sm hover:shadow-md hover:border-[#1380c2]/30 transition-all duration-300">
+              <div>
+                <div className="flex items-start gap-3 border-b border-gray-100 pb-4 mb-4">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#1380c2]/10 text-[#1380c2] group-hover:bg-[#1380c2] group-hover:text-white transition-all duration-300 shrink-0">
+                    <Users className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold text-gray-900 leading-snug group-hover:text-[#1380c2] transition-colors duration-300">
+                      UniSpark Innovations HR Consultants L.L.C
+                    </h3>
+                    <p className="text-xs font-semibold text-[#1380c2] mt-1">
+                      HR, Payroll, HRMS &amp; Staff Augmentation
+                    </p>
+                  </div>
+                </div>
+
+                <ul className="space-y-2 mb-6">
+                  {[
+                    'HR Consulting & Strategy',
+                    'Payroll Management',
+                    'HRMS Implementation',
+                    'Staff Augmentation',
+                    'Talent Acquisition',
+                    'Workforce Planning'
+                  ].map((item, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-xs text-gray-600 leading-normal">
+                      <span className="text-[#1380c2] mt-1 shrink-0">▪</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="mt-auto pt-4 border-t border-gray-100/60">
+                <p className="text-[11px] text-gray-400 leading-normal mb-3 whitespace-normal italic">
+                  You are being redirected to UniSpark Innovations HR Consultants L.L.C, a sister entity of UniSpark Security Systems &amp; Equipment Trading L.L.C.
+                </p>
+                <a
+                  href="https://usihr.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1380c2] hover:text-[#0f6ba3] transition-colors duration-300 group/btn"
+                >
+                  <span>Visit Website</span>
+                  <ArrowRight className="w-3.5 h-3.5 transform transition-transform duration-300 group-hover/btn:translate-x-1" />
+                </a>
+              </div>
+            </div>
+
+            {/* Entity 3 */}
+            <div className="group flex flex-col justify-between bg-white p-6 rounded-2xl border border-gray-200/60 shadow-sm hover:shadow-md hover:border-[#1380c2]/30 transition-all duration-300">
+              <div>
+                <div className="flex items-start gap-3 border-b border-gray-100 pb-4 mb-4">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#1380c2]/10 text-[#1380c2] group-hover:bg-[#1380c2] group-hover:text-white transition-all duration-300 shrink-0">
+                    <Network className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold text-gray-900 leading-snug group-hover:text-[#1380c2] transition-colors duration-300">
+                      Horizon Hive Technology L.L.C
+                    </h3>
+                    <p className="text-xs font-semibold text-[#1380c2] mt-1">
+                      Lead Entity — IT, Cybersecurity &amp; Digital Transformation
+                    </p>
+                  </div>
+                </div>
+
+                <ul className="space-y-2 mb-6">
+                  {[
+                    'Advisory as a Service',
+                    'Cybersecurity Services',
+                    'Managed IT Services',
+                    'Aviation IT Services',
+                    'Video Analytics & AI Surveillance',
+                    'Digital Employee Experience',
+                    'Network Infrastructure & Security',
+                    'End User Support',
+                    'Unified Audio & Video Solutions'
+                  ].map((item, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-xs text-gray-600 leading-normal">
+                      <span className="text-[#1380c2] mt-1 shrink-0">▪</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="mt-auto pt-4 border-t border-gray-100/60">
+                <p className="text-[11px] text-gray-400 leading-normal mb-3 whitespace-normal italic">
+                  You are being redirected to Horizon Hive Technology L.L.C, a sister entity of UniSpark Security Systems &amp; Equipment Trading L.L.C.
+                </p>
+                <a
+                  href="https://www.horizonhivetechnology.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1380c2] hover:text-[#0f6ba3] transition-colors duration-300 group/btn"
+                >
+                  <span>Visit Website</span>
+                  <ArrowRight className="w-3.5 h-3.5 transform transition-transform duration-300 group-hover/btn:translate-x-1" />
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
       </div>
     </section>
   );

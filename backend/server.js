@@ -1,7 +1,8 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import { connectDB } from './config/db.js';
+import mongoose from 'mongoose';
+import { connectDB, getDBStatus } from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import headerRoutes from './routes/headerRoutes.js';
@@ -16,14 +17,15 @@ import contactRoutes from './contact/contactRoutes.js';
 import partnerRoutes from './routes/partnerRoutes.js';
 import statsRoutes from './routes/statsRoutes.js';
 import footerRoutes from './routes/footerRoutes.js';
-
 import marqueeRoutes from './routes/marqueeRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Connect to MongoDB Atlas
-connectDB();
+connectDB().catch(err => {
+  console.warn('Initial MongoDB connection attempt error:', err.message);
+});
 
 // Middleware with 100MB payload limit for base64 image/video uploads
 app.use(cors());
@@ -49,7 +51,30 @@ app.use('/api/footer', footerRoutes);
 
 // Root route
 app.get('/', (req, res) => {
-  res.json({ message: 'UNISE Admin Backend API Server Running', status: 'OK' });
+  res.json({
+    message: 'UNISE Admin Backend API Server Running',
+    status: 'OK',
+    database: getDBStatus() ? 'Connected' : 'Offline / In-Memory'
+  });
+});
+
+// Health check route
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'OK',
+    server: 'UNISE Backend API',
+    uptime: Math.round(process.uptime()),
+    timestamp: new Date().toISOString(),
+    database: {
+      connected: getDBStatus(),
+      readyState: mongoose.connection.readyState,
+      name: mongoose.connection.name || 'unise_security',
+      host: mongoose.connection.host || 'cluster0'
+    },
+    cloudinary: {
+      configured: Boolean(process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET)
+    }
+  });
 });
 
 // Global Express Error Handler
@@ -59,6 +84,14 @@ app.use((err, req, res, next) => {
 });
 
 // Start Server
-app.listen(PORT, () => {
-  console.log(`Backend Server running on port ${PORT}`);
+const server = app.listen(PORT, () => {
+  console.log(`🚀 Backend Server running on http://localhost:${PORT}`);
+});
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`❌ Port ${PORT} is already in use by another process. Please close the process using port ${PORT} or configure PORT in .env.`);
+  } else {
+    console.error('❌ Server error:', err);
+  }
 });

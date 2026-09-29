@@ -16,7 +16,7 @@ export default function HomePage({ onOpenEnquiry }) {
 
   const loadAboutData = async () => {
     try {
-      const apiBase = import.meta.env.VITE_API_BASE_URL || 'https://unispark-backend-api.onrender.com/api';
+      const apiBase = import.meta.env.VITE_API_BASE_URL || ((typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.'))) ? 'http://localhost:5000/api' : 'https://unispark-backend-api.onrender.com/api');
       const res = await fetch(`${apiBase}/about`);
       const data = await res.json();
       if (data.success && data.data) {
