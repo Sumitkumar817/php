@@ -5,37 +5,37 @@ import cloudinary from '../config/cloudinary.js';
 const defaultAbout = {
   bannerBadge: 'ABOUT UNISPARK SECURITY',
   bannerTitle: 'About UniSpark Security Systems',
-  bannerDesc: 'UniSpark Innovation Security Systems & Equipment Trading L.L.C is a Dubai-registered company specializing in end-to-end physical security solutions — from design and supply to professional installation, commissioning, and long-term AMC maintenance. We serve enterprises, real estate developers, aviation facilities, oil & gas installations, hospitality groups, healthcare institutions, and consumer properties across the UAE.',
-  bannerBgImage: '',
+  bannerDesc: 'UniSpark Innovation Security Systems & Equipment Trading L.L.C is a Dubai-registered company specialising in end-to-end physical security solutions — from design and supply to professional installation, commissioning, and long-term maintenance. We serve enterprises, real estate developers, aviation facilities, oil & gas installations, hospitality groups, healthcare institutions, and consumer properties across the UAE, bringing hands-on technical expertise and a zero-compromise commitment to security.',
+  bannerBgImage: '/images/contact-bg.jpg',
   mainHeading: 'WHO WE ARE',
-  mainDesc: 'We are a physical security company built on technical credibility, regulatory compliance, and a deep understanding of the UAE market. Our engineers have hands-on experience across every system category we offer — CCTV, access control, intruder alarms, fire detection, biometrics, perimeter security, and integrated control room design.',
+  mainDesc: 'We are a physical security company built on technical credibility, regulatory compliance, and a deep understanding of the UAE market. Our engineers have hands-on experience across every system category we offer — CCTV, access control, intruder alarm, fire detection, biometrics, perimeter security, and integrated control room design.\n\nWe do not sell security. We deliver it — with precision design, certified installation, and long-term maintenance agreements that ensure your systems remain operational and compliant at all times.',
   mission: {
     title: 'OUR MISSION',
-    description: 'To be the UAE\'s most reliable security systems partner — delivering design, supply, installation, and maintenance of world-class physical security infrastructure that protects assets and people with zero compromise.',
+    description: 'To be the UAE\'s most reliable security systems partner — delivering design, supply, installation, and maintenance of world-class physical security infrastructure that protects businesses, assets, and people with zero compromise.',
     icon: 'Target'
   },
   vision: {
     title: 'OUR VISION',
-    description: 'To become a leading UAE security brand — synonymous with technical excellence, rapid response, and uncompromising commitment to safety across every sector we serve.',
+    description: 'To become a leading UAE-based security systems brand — synonymous with technical excellence, rapid response, and uncompromising commitment to safety across every sector we serve, from aviation and real estate to oil & gas and healthcare.',
     icon: 'Eye'
   },
   mainImage: '/images/abt-sec.jpg',
-  glanceBadge: 'QUICK OVERVIEW',
+  glanceBadge: 'Quick Overview',
   glanceTitle: 'COMPANY AT A GLANCE',
   glanceCards: [
-    { title: "Registered Location", desc: "Dubai, United Arab Emirates", icon: "Building2" },
-    { title: "Business Core", desc: "Security Systems Trading, Installation & Maintenance", icon: "Wrench" },
-    { title: "Geographic Coverage", desc: "Dubai, Abu Dhabi, Sharjah & All Northern Emirates", icon: "Globe" },
-    { title: "Target Sectors", desc: "Commercial, Real Estate, Aviation, Oil & Gas, Healthcare", icon: "Target" },
-    { title: "Key Partners", desc: "Hikvision, Dahua, ZKTeco, HID, Bosch, Honeywell", icon: "Award" },
-    { title: "Compliance", desc: "UAE Civil Defence & SIRA Standard Operations", icon: "ShieldCheck" }
+    { title: "Registered", desc: "Dubai, United Arab Emirates", icon: "Building2" },
+    { title: "Business Type", desc: "Security Equipment Trading · Installation · Maintenance", icon: "Settings" },
+    { title: "Target Market", desc: "UAE Commercial, Industrial & Residential — B2B & B2G", icon: "Users" },
+    { title: "Service Areas", desc: "Dubai · Abu Dhabi · Sharjah · UAE Nationwide", icon: "MapPin" },
+    { title: "Industries Served", desc: "Aviation · Real Estate · Oil & Gas · Hospitality · Healthcare", icon: "ShieldAlert" },
+    { title: "Group", desc: "UniSpark Innovation Group of Companies.", icon: "Network" }
   ],
-  groupBadge: 'CORPORATE ARCHITECTURE',
+  groupBadge: 'Corporate Architecture',
   groupTitle: 'OUR GROUP STRUCTURE',
   groupDesc: 'UniSpark Security is part of the UniSpark Innovations Group — a UAE-registered group of companies delivering technology, human resource, and physical security solutions.',
   groupCards: [
     {
-      tag: 'GROUP LEAD TECHNOLOGY ENTITY',
+      tag: 'Group Lead Technology Entity',
       title: 'Horizon Hive Technology L.L.C',
       subtitle: 'Core Business:',
       tags: ['Managed IT', 'Cybersecurity', 'Digital Transformation', 'Aviation IT', 'AI/ML Surveillance', 'Network Infrastructure'],
@@ -44,7 +44,7 @@ const defaultAbout = {
       disclaimer: 'You are being redirected to Horizon Hive Technology L.L.C, a sister entity of UniSpark Security Systems & Equipment Trading L.L.C.'
     },
     {
-      tag: 'SISTER ENTITY – HR DIVISION',
+      tag: 'Sister Entity — HR Division',
       title: 'UniSpark Innovations HR Consultants L.L.C',
       subtitle: 'Core Business:',
       tags: ['HR Consultancy', 'Payroll', 'HRMS', 'Staff Augmentation', 'Skilled Manpower'],
@@ -53,23 +53,23 @@ const defaultAbout = {
       disclaimer: 'You are being redirected to UniSpark Innovations HR Consultants L.L.C, a sister entity of UniSpark Security Systems & Equipment Trading L.L.C.'
     },
     {
-      tag: 'SISTER ENTITY – PHYSICAL SECURITY DIVISION',
+      tag: 'Sister Entity — Physical Security Division',
       title: 'UniSpark Security Systems & Equipment Trading (This Entity)',
       subtitle: 'Core Business:',
       tags: ['Security Equipment Installation & Maintenance', 'Security Systems & Equipment Trading'],
-      icon: 'ShieldCheck',
+      icon: 'Shield',
       link: '/solutions',
       disclaimer: ''
     }
   ],
-  diffBadge: 'WHY CHOOSE US',
+  diffBadge: 'Why Choose Us',
   diffTitle: 'Our Key Differentiators',
   diffDesc: 'UniSpark combines regulatory excellence, technical expertise, and a vendor-neutral approach to deliver reliable, end-to-end security infrastructure tailored to your needs.',
   diffCards: [
     {
       title: 'UAE-Compliant by Design',
       desc: 'Every installation follows UAE Civil Defence, NESA, and DESC standards. We handle compliance documentation so you don\'t have to.',
-      icon: 'ShieldCheck'
+      icon: 'FileLock'
     },
     {
       title: 'Multi-Brand Vendor Independence',
@@ -79,17 +79,17 @@ const defaultAbout = {
     {
       title: 'One Partner, Full Lifecycle',
       desc: 'Site survey, design, supply, installation, testing, commissioning, handover, and AMC. You deal with one team across the full project lifecycle.',
-      icon: 'Share2'
+      icon: 'Waypoints'
     },
     {
       title: 'SLA-Governed Service',
       desc: 'Emergency response, preventive maintenance, remote health monitoring, and spare parts supply — all governed by formal SLA agreements.',
-      icon: 'Clock'
+      icon: 'Handshake'
     },
     {
       title: 'Cross-Sector Experience',
       desc: 'From international airports to residential compounds, from oil field installations to hotel lobbies, we have deployed security systems across every major UAE sector.',
-      icon: 'Globe'
+      icon: 'Building'
     },
     {
       title: 'Backed by Technology Expertise',
@@ -97,14 +97,14 @@ const defaultAbout = {
       icon: 'Cpu'
     }
   ],
-  ctaBadge: 'NEXT-GEN INTEGRATION',
-  ctaTitle: "Let's Discuss Your Security Requirements",
-  ctaDesc: 'Whether you need a single CCTV installation or a full-site security infrastructure project, our team is ready to assess, design, and deliver.',
-  ctaPrimaryBtnText: 'Request a Free Site Survey',
+  ctaBadge: 'AMC & PMC Consultation',
+  ctaTitle: 'Ready to Discuss Your Maintenance Contracts — AMC & PMC Requirements?',
+  ctaDesc: 'Our engineers are available for site surveys across Dubai, Abu Dhabi, Sharjah, and all UAE locations.',
+  ctaPrimaryBtnText: 'Request an AMC/PMC Quotation',
   ctaPrimaryBtnLink: '/contact-us',
-  ctaSecondaryBtnText: 'Download Company Profile',
-  ctaSecondaryBtnLink: '/company-profile.pdf',
-  ctaBgImage: ''
+  ctaSecondaryBtnText: 'Call Our Team',
+  ctaSecondaryBtnLink: 'tel:+971502885874',
+  ctaBgImage: '/images/home-cta.jpg'
 };
 
 let inMemoryAbout = { ...defaultAbout };

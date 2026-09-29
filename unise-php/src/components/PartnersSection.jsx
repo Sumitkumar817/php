@@ -1,137 +1,81 @@
 import React, { useState, useEffect } from 'react';
+import { Handshake } from 'lucide-react';
+
+const defaultPartners = [
+  { name: 'Stripe', logoUrl: '/images/pt1.jpg' },
+  { name: 'HashiCorp', logoUrl: '/images/pt2.jpg' },
+  { name: 'Digital', logoUrl: '/images/pt3.jpg' },
+  { name: 'Cloudflare', logoUrl: '/images/pt4.jpg' },
+  { name: 'Airbnb', logoUrl: '/images/pt5.jpg' },
+  { name: 'Slack', logoUrl: '/images/pt6.jpg' },
+  { name: 'Intercom', logoUrl: '/images/pt7.jpg' },
+  { name: 'GitHub', logoUrl: '/images/pt8.jpg' },
+  { name: 'Figma', logoUrl: '/images/pt9.jpg' }
+];
 
 export default function PartnersSection() {
-  const [partnerConfig, setPartnerConfig] = useState({
-    badgeText: 'GLOBAL ALLIANCE',
-    headingText: 'Powered by the World\'s Leading Security Brands',
-    isVisible: true,
-    bgColor: '#ffffff',
-    speed: 25,
-    partnersList: [
-      { name: 'Genetec', logoUrl: '/images/pt1.jpg', link: '' },
-      { name: 'Hikvision', logoUrl: '/images/pt2.jpg', link: '' },
-      { name: 'Dahua', logoUrl: '/images/pt3.jpg', link: '' },
-      { name: 'Axis', logoUrl: '/images/pt4.jpg', link: '' },
-      { name: 'Bosch', logoUrl: '/images/pt5.jpg', link: '' },
-      { name: 'ZKTeco', logoUrl: '/images/pt6.jpg', link: '' },
-      { name: 'HID', logoUrl: '/images/pt7.jpg', link: '' }
-    ]
-  });
-
-  const getApiBase = () => {
-    if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-      return 'http://localhost:5000/api';
-    }
-    return import.meta.env.VITE_API_BASE_URL || 'https://unispark-backend-api.onrender.com/api';
-  };
-
-  const loadPartnersFromBackend = async () => {
-    try {
-      const apiBase = getApiBase();
-      const res = await fetch(`${apiBase}/partners`);
-      const data = await res.json();
-      if (data.success && data.data) {
-        setPartnerConfig(prev => ({
-          badgeText: data.data.badgeText || 'GLOBAL ALLIANCE',
-          headingText: data.data.headingText || 'Powered by the World\'s Leading Security Brands',
-          isVisible: data.data.isVisible !== undefined ? data.data.isVisible : true,
-          bgColor: data.data.bgColor || '#ffffff',
-          speed: Number(data.data.speed) || 25,
-          partnersList: Array.isArray(data.data.partnersList) && data.data.partnersList.length > 0 ? data.data.partnersList : prev.partnersList
-        }));
-      }
-    } catch (err) {
-      console.warn('Error fetching partner config:', err);
-    }
-  };
+  const [partners, setPartners] = useState(defaultPartners);
 
   useEffect(() => {
-    loadPartnersFromBackend();
-
-    const handleFocus = () => loadPartnersFromBackend();
-    window.addEventListener('focus', handleFocus);
-    const interval = setInterval(loadPartnersFromBackend, 3000);
-
-    return () => {
-      window.removeEventListener('focus', handleFocus);
-      clearInterval(interval);
+    const fetchPartners = async () => {
+      try {
+        const apiBase = import.meta.env.VITE_API_BASE_URL || ((typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.'))) ? 'http://localhost:5000/api' : 'https://unispark-backend-api.onrender.com/api');
+        const res = await fetch(`${apiBase}/partners`);
+        const data = await res.json();
+        if (data.success && data.data && Array.isArray(data.data.partnersList) && data.data.partnersList.length > 0) {
+          setPartners(data.data.partnersList);
+        }
+      } catch (e) {
+        // fallback
+      }
     };
+    fetchPartners();
   }, []);
 
-  if (!partnerConfig.isVisible) {
-    return null;
-  }
-
-  const partners = partnerConfig.partnersList || [];
-  if (partners.length === 0) {
-    return null;
-  }
-
-  // Duplicate partner list for continuous seamless infinite loop from right to left
-  const tickerPartners = [...partners, ...partners, ...partners, ...partners];
+  const marqueeList = [...partners, ...partners];
 
   return (
-    <section
-      className="relative py-14 sm:py-16 text-slate-900 overflow-hidden border-t border-slate-200/80 transition-colors duration-300"
-      style={{ backgroundColor: partnerConfig.bgColor }}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 mb-8 sm:mb-10 text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-[#0080c6] text-xs font-bold uppercase tracking-wider">
-          <i className="fa-solid fa-handshake-angle text-xs"></i>
-          <span>{partnerConfig.badgeText}</span>
+    <section className="relative w-full overflow-hidden bg-white py-12 md:py-16">
+      <div className="max-w-[1200px] mx-auto p-5 py-2 px-5 md:px-6 lg:px-2">
+        <div className="relative z-10">
+          <div className="flex flex-col items-center text-center mb-10 max-w-3xl mx-auto">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 mb-3 text-xs font-semibold tracking-wide uppercase text-[#1380c2] bg-[#1380c2]/10 border border-[#1380c2]/20 rounded-full">
+              <Handshake className="w-3.5 h-3.5" /> Global Alliance
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">
+              Powered by the World&#x27;s Leading <span className="bg-gradient-to-r from-[#1380c2] to-[#0c5683] bg-clip-text text-transparent">Security Brands</span>
+            </h2>
+          </div>
         </div>
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900">
-          {partnerConfig.headingText.includes('Security Brands') ? (
-            <>
-              {partnerConfig.headingText.split('Security Brands')[0]}
-              <span className="text-[#0080c6]">Security Brands</span>
-              {partnerConfig.headingText.split('Security Brands')[1]}
-            </>
-          ) : (
-            partnerConfig.headingText
-          )}
-        </h2>
-      </div>
 
-      {/* Marquee Wrapper with dynamic side gradient overlays */}
-      <div className="relative max-w-full overflow-hidden py-2">
-        <div
-          className="absolute left-0 top-0 bottom-0 w-12 sm:w-24 z-10 pointer-events-none transition-all duration-300"
-          style={{ background: `linear-gradient(to right, ${partnerConfig.bgColor}, transparent)` }}
-        ></div>
-        <div
-          className="absolute right-0 top-0 bottom-0 w-12 sm:w-24 z-10 pointer-events-none transition-all duration-300"
-          style={{ background: `linear-gradient(to left, ${partnerConfig.bgColor}, transparent)` }}
-        ></div>
-
-        {/* Dynamic Right-to-Left Scrolling Track */}
-        <div
-          key={`partner-marquee-${partnerConfig.speed}-${partnerConfig.bgColor}-${partners.length}`}
-          className="flex w-max items-center gap-5 sm:gap-6 animate-marquee hover:[animation-play-state:paused] cursor-pointer select-none"
-          style={{ animationDuration: `${partnerConfig.speed}s` }}
-        >
-          {tickerPartners.map((partner, idx) => (
-            <div
-              key={idx}
-              className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-400 transition-all duration-300 flex items-center justify-center h-20 sm:h-24 w-44 sm:w-52 shrink-0 group"
-            >
-              {partner.link ? (
-                <a href={partner.link} target="_blank" rel="noreferrer" className="flex items-center justify-center w-full h-full">
-                  <img
-                    src={partner.logoUrl}
-                    alt={partner.name}
-                    className="max-h-12 max-w-[85%] object-contain transition duration-300 group-hover:scale-105"
-                  />
-                </a>
-              ) : (
+        <div className="relative w-full overflow-hidden whitespace-nowrap bg-gray-50/50 py-6 border-y border-gray-100 flex">
+          <style>{`
+            @keyframes marquee-partner {
+              0% { transform: translateX(0%); }
+              100% { transform: translateX(-50%); }
+            }
+            .animate-partner-marquee {
+              animation: marquee-partner 30s linear infinite;
+            }
+            .animate-partner-marquee:hover {
+              animation-play-state: paused;
+            }
+          `}</style>
+          <div className="flex gap-8 items-center animate-partner-marquee min-w-full shrink-0">
+            {marqueeList.map((pt, idx) => (
+              <div
+                key={idx}
+                className="flex items-center justify-center bg-white border border-gray-200/60 shadow-sm rounded-xl p-1 w-[180px] h-[100px] shrink-0 transition-all duration-300 hover:border-[#1380c2]/20 hover:shadow-md"
+              >
                 <img
-                  src={partner.logoUrl}
-                  alt={partner.name}
-                  className="max-h-12 max-w-[85%] object-contain transition duration-300 group-hover:scale-105"
+                  src={pt.logoUrl || `/images/pt${(idx % 9) + 1}.jpg`}
+                  alt={pt.name || 'Partner Logo'}
+                  className="max-w-full max-h-full object-contain filter opacity-90 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+                  onError={(e) => { e.target.src = `/images/pt${(idx % 9) + 1}.jpg`; }}
                 />
-              )}
-            </div>
-          ))}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

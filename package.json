@@ -3,6 +3,12 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
+    "start": "cd backend && npm start",
+    "dev": "cd backend && npm run dev",
+    "backend": "cd backend && npm run dev",
+    "server": "cd backend && npm run dev",
+    "admin": "cd admin && npm run dev",
+    "website": "cd unise-php && npm run dev",
     "build": "cd unise-php && npm run build",
     "build:admin": "cd admin && npm run build",
     "build:website": "cd unise-php && npm run build"

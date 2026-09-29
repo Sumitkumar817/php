@@ -40,7 +40,7 @@ export default function App() {
   return (
     <Router>
       <ScrollToTop />
-      <div className="flex flex-col min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-blue-600 selection:text-white">
+      <div className="flex flex-col min-h-screen bg-white text-slate-900 font-sans selection:bg-[#0a6eab] selection:text-white">
         <Header onOpenEnquiry={handleOpenEnquiry} />
 
         <main className="flex-grow">

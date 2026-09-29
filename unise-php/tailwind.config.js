@@ -19,7 +19,8 @@ export default {
         }
       },
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+        display: ['Poppins', '"Plus Jakarta Sans"', 'sans-serif'],
       },
       boxShadow: {
         'card': '0 4px 20px rgba(0, 0, 0, 0.05)',
