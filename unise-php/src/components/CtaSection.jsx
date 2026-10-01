@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Boxes, ArrowRight } from 'lucide-react';
+import { Boxes, ArrowRight, Phone } from 'lucide-react';
 
 export default function CtaSection({ data: propData, onOpenEnquiry }) {
   const [internalData, setInternalData] = useState(null);
@@ -45,14 +45,21 @@ export default function CtaSection({ data: propData, onOpenEnquiry }) {
             <p className="text-sm sm:text-base md:text-lg text-slate-300 font-light max-w-xl mb-8 leading-relaxed">
               {desc}
             </p>
-            <div className="flex justify-center w-full">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
               <Link
-                to={primaryBtnLink}
-                className="group inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white bg-[#1380c2] hover:bg-[#0f6ba3] rounded-lg shadow-lg shadow-[#1380c2]/20 transition-all duration-300"
+                to={primaryBtnLink || '/contact-us'}
+                className="group flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 text-xs font-bold text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg shadow-lg shadow-cyan-900/20 transition-all duration-150 border border-cyan-500/30 uppercase tracking-wider"
               >
-                <span>{primaryBtnText}</span>
-                <ArrowRight className="w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1" />
+                <span>{primaryBtnText || 'Request an AMC/PMC Quotation'}</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-150" />
               </Link>
+              <a
+                href="tel:+971-4-1234567"
+                className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 text-xs font-bold text-slate-300 hover:text-white bg-slate-800/60 hover:bg-slate-800 border border-slate-700/50 hover:border-slate-600 rounded-lg transition-all duration-150 uppercase tracking-wider backdrop-blur-sm"
+              >
+                <Phone className="w-3.5 h-3.5" />
+                <span>Call Our Team</span>
+              </a>
             </div>
           </div>
         </div>

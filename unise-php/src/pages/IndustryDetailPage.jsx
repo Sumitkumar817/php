@@ -1,347 +1,467 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Building, ArrowLeft, CheckCircle, ShieldAlert, ShieldCheck, Star } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { industriesData } from '../data/industriesData';
-import CtaSection from '../components/CtaSection';
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || ((typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.'))) ? 'http://localhost:5000/api' : 'https://unispark-backend-api.onrender.com/api');
+import {
+  ChevronRight,
+  ArrowRight,
+  ShieldAlert,
+  ShieldCheck,
+  TriangleAlert,
+  ListCheck,
+  Video,
+  Fingerprint,
+  Radio,
+  Flame,
+  Network,
+  Plane,
+  PlaneTakeoff,
+  Building2,
+  Activity,
+  MapPin,
+  Phone,
+  Bell,
+  Wrench,
+  Package,
+  HeartPulse,
+  Shield
+} from 'lucide-react';
 
 export default function IndustryDetailPage({ onOpenEnquiry }) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { slug } = useParams();
-  const [industry, setIndustry] = useState(null);
-  const [allIndustries, setAllIndustries] = useState(industriesData);
-  const [loading, setLoading] = useState(true);
 
-  const fetchData = async () => {
+  // Primary static industry data directly from industriesData
+  const staticFallback =
+    industriesData.find((i) => i.id === slug || i.slug === slug) || industriesData[0];
+
+  const [backendIndustry, setBackendIndustry] = useState(null);
+
+  const loadIndustryFromBackend = async () => {
     try {
-      const res = await fetch(`${API_BASE}/section5`);
+      const apiBase =
+        import.meta.env.VITE_API_BASE_URL ||
+        (typeof window !== 'undefined' &&
+        (window.location.hostname === 'localhost' ||
+          window.location.hostname === '127.0.0.1' ||
+          window.location.hostname.startsWith('192.168.'))
+          ? 'http://localhost:5000/api'
+          : 'https://unispark-backend-api.onrender.com/api');
+      const res = await fetch(`${apiBase}/section5`);
       const data = await res.json();
-      if (data.success && Array.isArray(data.data?.cards) && data.data.cards.length > 0) {
-        setAllIndustries(data.data.cards);
-        const found = data.data.cards.find(c => c.id === slug);
-        setIndustry(found || data.data.cards[0]);
-      } else {
-        const fallback = industriesData.find(i => i.id === slug) || industriesData[0];
-        setIndustry(fallback);
-        setAllIndustries(industriesData);
+      if (data.success && data.data && Array.isArray(data.data.cards)) {
+        const found = data.data.cards.find(
+          (c) => c.id === slug || c.slug === slug
+        );
+        if (found) {
+          setBackendIndustry(found);
+        }
       }
-    } catch {
-      const fallback = industriesData.find(i => i.id === slug) || industriesData[0];
-      setIndustry(fallback);
-      setAllIndustries(industriesData);
-    } finally {
-      setLoading(false);
+    } catch (err) {
+      console.warn('Error loading industry detail from backend:', err);
     }
   };
 
   useEffect(() => {
-    fetchData();
-    const interval = setInterval(fetchData, 5000);
-    const onFocus = () => fetchData();
-    window.addEventListener('focus', onFocus);
+    loadIndustryFromBackend();
+    const handleFocus = () => loadIndustryFromBackend();
+    window.addEventListener('focus', handleFocus);
+    const interval = setInterval(loadIndustryFromBackend, 10000);
+
     return () => {
+      window.removeEventListener('focus', handleFocus);
       clearInterval(interval);
-      window.removeEventListener('focus', onFocus);
     };
   }, [slug]);
 
-  if (loading) {
-    return (
-      <div className="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center">
-        <div className="text-center space-y-3">
-          <div className="w-8 h-8 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-slate-400 text-sm">Loading industry data...</p>
-        </div>
-      </div>
-    );
-  }
+  // Helper: use backend array only if populated properly, otherwise retain full static array
+  const pickArray = (backendArr, fallbackArr) => {
+    if (Array.isArray(backendArr) && backendArr.length >= (fallbackArr?.length || 1)) {
+      return backendArr;
+    }
+    return fallbackArr || [];
+  };
 
-  if (!industry) {
-    return (
-      <div className="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center">
-        <p className="text-slate-400">Industry sector not found.</p>
-      </div>
-    );
-  }
+  // Combine backend CMS data with static fallback
+  const industry = {
+    ...staticFallback,
+    pageTitle: backendIndustry?.pageTitle || staticFallback.pageTitle || staticFallback.title,
+    breadcrumbTitle: staticFallback.breadcrumbTitle || staticFallback.title,
+    bannerTagline: backendIndustry?.bannerTagline || staticFallback.bannerTagline,
+    bannerBgImage:
+      backendIndustry?.bannerBgImage && backendIndustry.bannerBgImage.trim() !== ''
+        ? backendIndustry.bannerBgImage
+        : staticFallback.bannerBgImage || '/images/aviation-bg.jpg',
+    heroCtaText: backendIndustry?.heroCtaText || staticFallback.heroCtaText || 'Request an Aviation Security Assessment',
+    heroCtaLink: backendIndustry?.heroCtaLink || staticFallback.heroCtaLink || '/contact-us',
+    overviewBadge: backendIndustry?.overviewBadge || staticFallback.overviewBadge || 'SECTOR OVERVIEW',
+    overviewHeading: backendIndustry?.overviewHeading || staticFallback.overviewHeading || `${staticFallback.title} STANDARDS`,
+    description: backendIndustry?.description || staticFallback.description,
+    challengesHeading: backendIndustry?.challengesHeading || staticFallback.challengesHeading || 'Sector Security Challenges:',
+    challengesText: backendIndustry?.challengesText || staticFallback.challengesText,
+    secImage:
+      backendIndustry?.overviewImage && backendIndustry.overviewImage.trim() !== ''
+        ? backendIndustry.overviewImage
+        : staticFallback.secImage || '/images/aviation-sec.jpg',
+    secImageAlt: staticFallback.secImageAlt || staticFallback.title,
+    solutionsBadge: backendIndustry?.solutionsBadge || staticFallback.solutionsBadge || 'Ecosystem Deployment',
+    solutionsHeading:
+      backendIndustry?.solutionsHeading ||
+      staticFallback.solutionsHeading ||
+      'OUR SOLUTIONS FOR <span class="bg-clip-text text-transparent" style="background-image:linear-gradient(to right, #0a6eab, #1d4ed8)">THIS SECTOR</span>',
+    solutionsProvided: pickArray(backendIndustry?.solutionsProvided, staticFallback.solutionsProvided),
+    brandsHeading:
+      backendIndustry?.brandsHeading ||
+      staticFallback.brandsHeading ||
+      'KEY BRANDS FOR <span class="bg-clip-text text-transparent" style="background-image:linear-gradient(to right, #0a6eab, #1d4ed8)">THIS SECTOR</span>',
+    brandsSubheading: backendIndustry?.brandsSubheading || staticFallback.brandsSubheading,
+    brands: pickArray(backendIndustry?.brands, staticFallback.brands),
+    whyBadge: backendIndustry?.whyBadge || staticFallback.whyBadge || 'Compliance & Expertise',
+    whyHeading:
+      backendIndustry?.whyHeading ||
+      staticFallback.whyHeading ||
+      `WHY UNISPARK FOR <span class="bg-clip-text text-transparent uppercase" style="background-image:linear-gradient(to right, #0a6eab, #1d4ed8)">${staticFallback.title}</span>`,
+    whyChooseUs: pickArray(backendIndustry?.whyChooseUs, staticFallback.whyChooseUs),
+    ctaHeading: backendIndustry?.ctaHeading || staticFallback.ctaHeading,
+    ctaDesc: backendIndustry?.ctaDesc || staticFallback.ctaDesc,
+    ctaBtn1Text: backendIndustry?.ctaBtn1Text || staticFallback.ctaBtn1Text || 'Request a Sector Assessment',
+    ctaBtn1Link: backendIndustry?.ctaBtn1Link || staticFallback.ctaBtn1Link || '/contact-us',
+    ctaBtn2Text: backendIndustry?.ctaBtn2Text || staticFallback.ctaBtn2Text || 'Call Our Team',
+    ctaBtn2Link: backendIndustry?.ctaBtn2Link || staticFallback.ctaBtn2Link || 'tel:+971502885874'
+  };
 
-  // Helper: fallback to static data fields if CMS fields are empty
-  const staticFallback = industriesData.find(i => i.id === slug) || {};
+  const renderSolutionIcon = (iconName, title = '') => {
+    const str = `${iconName || ''} ${title}`.toLowerCase();
+    if (str.includes('video') || str.includes('cctv') || str.includes('camera') || str.includes('surveillance')) {
+      return <Video className="w-5 h-5" />;
+    }
+    if (str.includes('fingerprint') || str.includes('access') || str.includes('gate') || str.includes('door') || str.includes('lock') || str.includes('turnstile')) {
+      return <Fingerprint className="w-5 h-5" />;
+    }
+    if (str.includes('radio') || str.includes('perimeter') || str.includes('intrusion') || str.includes('fence') || str.includes('beam') || str.includes('radar')) {
+      return <Radio className="w-5 h-5" />;
+    }
+    if (str.includes('flame') || str.includes('fire') || str.includes('smoke')) {
+      return <Flame className="w-5 h-5" />;
+    }
+    if (str.includes('network') || str.includes('soc') || str.includes('control') || str.includes('command') || str.includes('vms') || str.includes('server')) {
+      return <Network className="w-5 h-5" />;
+    }
+    if (str.includes('vehicle') || str.includes('bollard') || str.includes('mitigation') || str.includes('parking') || str.includes('anpr')) {
+      return <ShieldAlert className="w-5 h-5" />;
+    }
+    if (str.includes('bell') || str.includes('intercom') || str.includes('doorbell') || str.includes('alarm')) {
+      return <Bell className="w-5 h-5" />;
+    }
+    if (str.includes('wrench') || str.includes('amc') || str.includes('maintenance') || str.includes('repair')) {
+      return <Wrench className="w-5 h-5" />;
+    }
+    if (str.includes('package') || str.includes('bundle')) {
+      return <Package className="w-5 h-5" />;
+    }
+    if (str.includes('heart') || str.includes('nurse') || str.includes('patient') || str.includes('hospital') || str.includes('medical')) {
+      return <HeartPulse className="w-5 h-5" />;
+    }
+    return <Shield className="w-5 h-5" />;
+  };
 
-  const challenges = Array.isArray(industry.keyChallenges) && industry.keyChallenges.length > 0
-    ? industry.keyChallenges
-    : (staticFallback.keyChallenges || []).map(c => ({ title: '', desc: c, icon: 'fa-triangle-exclamation' }));
-
-  const solutions = Array.isArray(industry.solutionsProvided) && industry.solutionsProvided.length > 0
-    ? industry.solutionsProvided
-    : (staticFallback.solutionsProvided || []).map(s => ({ title: '', desc: s, icon: 'fa-check' }));
+  const renderWhyIcon = (iconName, title = '') => {
+    const str = `${iconName || ''} ${title}`.toLowerCase();
+    if (str.includes('experience') || str.includes('sector') || str.includes('aviation') || str.includes('plane')) {
+      return <PlaneTakeoff className="w-5 h-5" />;
+    }
+    if (str.includes('compliance') || str.includes('sira') || str.includes('standards') || str.includes('regulatory') || str.includes('civil') || str.includes('building')) {
+      return <Building2 className="w-5 h-5" />;
+    }
+    if (str.includes('service') || str.includes('lifecycle') || str.includes('end-to-end') || str.includes('execution') || str.includes('activity')) {
+      return <Activity className="w-5 h-5" />;
+    }
+    if (str.includes('response') || str.includes('fast') || str.includes('uae-wide') || str.includes('pin') || str.includes('location') || str.includes('map')) {
+      return <MapPin className="w-5 h-5" />;
+    }
+    return <ShieldAlert className="w-5 h-5" />;
+  };
 
   return (
-    <div className="bg-slate-950 text-slate-100 min-h-screen">
-
-      {/* ===== BANNER ===== */}
+    <div className="w-full text-slate-900 bg-white font-sans">
+      {/* 1. Header Banner */}
       <section
-        className="relative py-24 bg-slate-900 border-b border-slate-800 overflow-hidden"
-        style={industry.bannerBgImage ? {
-          backgroundImage: `linear-gradient(to bottom right, rgba(2,6,23,0.85), rgba(7,20,50,0.75)), url(${industry.bannerBgImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        } : {}}
+        className="relative bg-gray-900/70 text-white py-12 lg:py-16 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${industry.bannerBgImage})` }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 space-y-6">
-          <Link to="/industries" className="inline-flex items-center gap-2 text-xs font-semibold text-cyan-400 hover:text-white transition">
-            <ArrowLeft className="w-4 h-4" /> {t('nav.allIndustries')}
-          </Link>
+        <div className="max-w-[1200px] mx-auto p-5 py-1 px-0 md:px-2 lg:px-0">
+          <div className="absolute inset-0 bg-gray-950/50 backdrop-blur-[1px]"></div>
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12">
+              <div className="lg:col-span-10">
+                <nav aria-label="breadcrumb" className="mb-6 bg-white rounded-full px-4 py-2 inline-block shadow-sm">
+                  <ol className="flex flex-wrap items-center gap-2 text-xs md:text-sm text-gray-500">
+                    <li className="flex items-center gap-2">
+                      <Link className="hover:text-gray-900 transition-colors" to="/">
+                        Home
+                      </Link>
+                      <ChevronRight className="w-3 h-3 text-gray-400 shrink-0" />
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Link className="hover:text-gray-900 transition-colors" to="/industries">
+                        Industries
+                      </Link>
+                      <ChevronRight className="w-3 h-3 text-gray-400 shrink-0" />
+                    </li>
+                    <li className="text-gray-800 font-medium" aria-current="page">
+                      {industry.breadcrumbTitle}
+                    </li>
+                  </ol>
+                </nav>
 
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl bg-cyan-600/20 text-cyan-400 flex items-center justify-center">
-              <i className={`fa-solid ${industry.icon || 'fa-building'} text-xl`} />
-            </div>
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Sector Framework</span>
-          </div>
-
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-white leading-tight">
-            {industry.pageTitle || `${industry.title} Security Solutions`}
-          </h1>
-
-          {industry.bannerTagline && (
-            <p className="text-xs font-semibold tracking-widest text-cyan-400 uppercase">
-              {industry.bannerTagline}
-            </p>
-          )}
-
-          {industry.subtitle && (
-            <p className="text-base sm:text-lg text-slate-300 max-w-4xl leading-relaxed">
-              {industry.subtitle}
-            </p>
-          )}
-
-          {industry.heroCtaText && (
-            <a
-              href={industry.heroCtaLink || '/contact-us'}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white text-sm font-bold tracking-wide uppercase transition shadow-lg"
-              onClick={(e) => { if (industry.heroCtaLink && !industry.heroCtaLink.startsWith('http')) { e.preventDefault(); onOpenEnquiry && onOpenEnquiry(industry.title); } }}
-            >
-              {industry.heroCtaText}
-            </a>
-          )}
-        </div>
-      </section>
-
-      {/* ===== OVERVIEW ===== */}
-      {(industry.overviewParagraph1 || industry.overviewHeading || industry.description) && (
-        <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              {industry.overviewBadge && (
-                <span className="inline-block text-xs font-bold tracking-widest text-cyan-400 uppercase">{industry.overviewBadge}</span>
-              )}
-              {industry.overviewHeading && (
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight">{industry.overviewHeading}</h2>
-              )}
-              <p className="text-slate-300 leading-relaxed text-sm sm:text-base">
-                {industry.overviewParagraph1 || industry.description || staticFallback.description}
-              </p>
-              {industry.overviewParagraph2 && (
-                <p className="text-slate-400 leading-relaxed text-sm">{industry.overviewParagraph2}</p>
-              )}
-            </div>
-            {(industry.overviewImage || industry.image) && (
-              <div className="rounded-2xl overflow-hidden border border-slate-800">
-                <img
-                  src={industry.overviewImage || industry.image}
-                  alt={industry.title}
-                  className="w-full h-72 object-cover"
-                  onError={e => { e.target.style.display = 'none'; }}
+                <h1
+                  className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-white leading-tight"
+                  dangerouslySetInnerHTML={{ __html: industry.pageTitle }}
                 />
-              </div>
-            )}
-          </div>
-        </section>
-      )}
 
-      {/* ===== MAIN CONTENT GRID ===== */}
-      <section className="py-10 max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <p
+                  className="mt-3 text-sm md:text-base text-gray-200 font-medium max-w-4xl"
+                  dangerouslySetInnerHTML={{ __html: industry.bannerTagline }}
+                />
 
-          {/* Left Column */}
-          <div className="lg:col-span-8 space-y-10">
-
-            {/* Key Challenges */}
-            {challenges.length > 0 && (
-              <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 space-y-6">
-                <h3 className="text-2xl font-bold text-white flex items-center gap-3">
-                  <ShieldAlert className="w-6 h-6 text-amber-400" />
-                  {industry.keyChallengesHeading || 'Key Sector Security Challenges'}
-                </h3>
-                <div className="space-y-4">
-                  {challenges.map((item, idx) => (
-                    <div key={idx} className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-3">
-                      <span className="w-7 h-7 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs shrink-0 mt-0.5">
-                        {item.icon ? <i className={`fa-solid ${item.icon} text-xs`} /> : '!'}
-                      </span>
-                      <div>
-                        {item.title && <p className="text-sm font-bold text-white mb-1">{item.title}</p>}
-                        <p className="text-sm text-slate-300">{item.desc}</p>
-                      </div>
-                    </div>
-                  ))}
+                <div className="mt-6">
+                  {industry.heroCtaLink?.startsWith('http') ? (
+                    <a
+                      className="group inline-flex items-center gap-2 bg-[#0a6eab] hover:bg-[#0a5d8c] text-white font-semibold text-sm px-5 py-2.5 rounded shadow transition-all duration-200"
+                      href={industry.heroCtaLink}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <span>{industry.heroCtaText}</span>
+                      <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                    </a>
+                  ) : (
+                    <Link
+                      className="group inline-flex items-center gap-2 bg-[#0a6eab] hover:bg-[#0a5d8c] text-white font-semibold text-sm px-5 py-2.5 rounded shadow transition-all duration-200"
+                      to={industry.heroCtaLink || '/contact-us'}
+                    >
+                      <span>{industry.heroCtaText}</span>
+                      <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                    </Link>
+                  )}
                 </div>
-              </div>
-            )}
-
-            {/* Solutions Provided */}
-            {solutions.length > 0 && (
-              <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 space-y-6">
-                <h3 className="text-2xl font-bold text-white flex items-center gap-3">
-                  <ShieldCheck className="w-6 h-6 text-cyan-400" />
-                  {industry.solutionsProvidedHeading || 'Tailored Security Solutions Implemented'}
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {solutions.map((item, idx) => (
-                    <div key={idx} className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-3">
-                      <span className="w-7 h-7 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xs shrink-0 mt-0.5">
-                        {item.icon ? <i className={`fa-solid ${item.icon} text-xs`} /> : <CheckCircle className="w-4 h-4" />}
-                      </span>
-                      <div>
-                        {item.title && <p className="text-sm font-bold text-white mb-1">{item.title}</p>}
-                        <p className="text-xs font-medium text-slate-300">{item.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Brands */}
-            {Array.isArray(industry.brands) && industry.brands.length > 0 && (
-              <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 space-y-5">
-                <div>
-                  <h3 className="text-xl font-bold text-white">{industry.brandsHeading || 'APPROVED BRANDS & TECHNOLOGY'}</h3>
-                  {industry.brandsSubheading && <p className="text-sm text-slate-400 mt-1">{industry.brandsSubheading}</p>}
-                </div>
-                <div className="flex flex-wrap gap-4">
-                  {industry.brands.map((b, idx) => (
-                    <div key={idx} className="flex flex-col items-center gap-2 p-3 rounded-xl bg-slate-950 border border-slate-800 min-w-[100px]">
-                      {b.src && (
-                        <img src={b.src} alt={b.name} className="h-10 object-contain" onError={e => { e.target.style.display = 'none'; }} />
-                      )}
-                      <span className="text-xs text-slate-300 font-medium text-center">{b.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Sub-Sectors */}
-            {Array.isArray(industry.targetSectors) && industry.targetSectors.length > 0 && (
-              <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 space-y-5">
-                <div>
-                  {industry.sectorsBadge && <span className="text-xs font-bold tracking-widest text-cyan-400 uppercase">{industry.sectorsBadge}</span>}
-                  <h3 className="text-xl font-bold text-white mt-1">{industry.sectorsHeading || 'SPECIALIZED VERTICALS SERVED'}</h3>
-                  {industry.sectorsDesc && <p className="text-sm text-slate-400 mt-1">{industry.sectorsDesc}</p>}
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {industry.targetSectors.map((sec, idx) => (
-                    <div key={idx} className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-blue-600/20 text-blue-400 flex items-center justify-center shrink-0">
-                        <i className={`fa-solid ${sec.icon || 'fa-building'} text-sm`} />
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold text-white">{sec.title}</p>
-                        {sec.desc && <p className="text-xs text-slate-400 mt-1">{sec.desc}</p>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Why Choose Us */}
-            {Array.isArray(industry.whyChooseUs) && industry.whyChooseUs.length > 0 && (
-              <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 space-y-5">
-                <div>
-                  {industry.whyBadge && <span className="text-xs font-bold tracking-widest text-cyan-400 uppercase">{industry.whyBadge}</span>}
-                  <h3 className="text-xl font-bold text-white mt-1">{industry.whyHeading || 'Why UniSpark?'}</h3>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {industry.whyChooseUs.map((item, idx) => (
-                    <div key={idx} className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-green-500/20 text-green-400 flex items-center justify-center shrink-0">
-                        <i className={`fa-solid ${item.icon || 'fa-star'} text-sm`} />
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold text-white">{item.title}</p>
-                        {item.desc && <p className="text-xs text-slate-400 mt-1">{item.desc}</p>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Right Sidebar */}
-          <div className="lg:col-span-4 space-y-6">
-            <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-4">
-              <h4 className="text-lg font-bold text-white">Need Sector-Specific Advice?</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Consult with our specialized sector engineers for SIRA-compliant blueprints and site assessments.
-              </p>
-              <button
-                onClick={() => onOpenEnquiry && onOpenEnquiry(`Consultation for ${industry.title}`)}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-semibold text-xs tracking-wider uppercase transition shadow-lg"
-              >
-                {industry.heroCtaText || 'Request Sector Assessment'}
-              </button>
-            </div>
-
-            {/* Other Industries */}
-            <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-4">
-              <h4 className="text-sm font-bold uppercase tracking-wider text-cyan-400">Other Industry Sectors</h4>
-              <div className="space-y-2">
-                {allIndustries.filter(i => i.id !== industry.id).map((item) => (
-                  <Link
-                    key={item.id}
-                    to={`/industries/${item.id}`}
-                    className="block p-3 rounded-xl hover:bg-slate-800 transition text-xs font-medium text-slate-300 hover:text-white flex items-center gap-2"
-                  >
-                    <i className={`fa-solid ${item.icon || 'fa-building'} text-cyan-400 text-xs`} />
-                    {item.title}
-                  </Link>
-                ))}
               </div>
             </div>
           </div>
-
         </div>
       </section>
 
-      {/* ===== BOTTOM CTA ===== */}
-      {(industry.ctaHeading || industry.ctaDesc) ? (
-        <section className="py-20 bg-gradient-to-br from-slate-900 to-slate-950 border-t border-slate-800">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-6">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white">{industry.ctaHeading}</h2>
-            {industry.ctaDesc && <p className="text-slate-300 text-base leading-relaxed">{industry.ctaDesc}</p>}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              {industry.ctaBtn1Text && (
-                <a href={industry.ctaBtn1Link || '/contact-us'} className="px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-bold text-sm tracking-wide uppercase transition shadow-lg">
-                  {industry.ctaBtn1Text}
-                </a>
-              )}
-              {industry.ctaBtn2Text && (
-                <a href={industry.ctaBtn2Link || 'tel:+971502885874'} className="px-8 py-4 rounded-xl border border-slate-600 hover:border-cyan-500 text-slate-300 hover:text-white font-semibold text-sm transition">
-                  {industry.ctaBtn2Text}
-                </a>
-              )}
+      {/* 2. Overview Section */}
+      <section className="relative py-12 bg-white">
+        <div className="max-w-[1200px] mx-auto p-5 py-2 px-5 md:px-6 lg:px-2">
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+              <div>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wider text-[#0a6eab] bg-blue-50 border border-blue-100 mb-3 uppercase">
+                  <ShieldAlert className="w-3.5 h-3.5" />
+                  <span>{industry.overviewBadge || 'SECTOR OVERVIEW'}</span>
+                </span>
+                <h2
+                  className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-3"
+                  dangerouslySetInnerHTML={{ __html: industry.overviewHeading }}
+                />
+                <p className="text-gray-600 text-sm md:text-base leading-relaxed mb-4">
+                  {industry.description}
+                </p>
+                {industry.challengesText && (
+                  <div className="bg-gray-100/80 border border-gray-200/60 rounded-xl p-4">
+                    <h5 className="flex items-center gap-2 text-sm font-bold text-gray-900 mb-1.5">
+                      <TriangleAlert className="w-4 h-4 text-amber-500 shrink-0" />
+                      <span>{industry.challengesHeading || 'Sector Security Challenges:'}</span>
+                    </h5>
+                    <p className="text-gray-500 text-xs md:text-sm leading-normal m-0">
+                      {industry.challengesText}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="lg:px-4">
+                <div className="relative p-2 bg-gray-50 border border-gray-100 rounded-2xl shadow-sm">
+                  <div className="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-[#0a6eab] rounded-tl-xl -mt-px -ml-px"></div>
+                  <div className="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-[#0a6eab] rounded-br-xl -mb-px -mr-px"></div>
+                  <div className="overflow-hidden rounded-xl bg-gray-100 aspect-[4/3] lg:aspect-auto">
+                    <img
+                      src={industry.secImage}
+                      alt={industry.secImageAlt || industry.title}
+                      className="w-full h-full object-cover min-h-[280px] lg:min-h-[340px]"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Solutions For This Sector Section */}
+      {industry.solutionsProvided && industry.solutionsProvided.length > 0 && (
+        <section className="relative py-12 bg-gray-50">
+          <div className="max-w-[1200px] mx-auto p-5 p-5">
+            <div className="text-center mb-10">
+              <span
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wider bg-opacity-10 mb-3 uppercase"
+                style={{ color: '#0a6eab', backgroundColor: '#0a6eab1a' }}
+              >
+                <ListCheck className="w-3.5 h-3.5" />
+                <span>{industry.solutionsBadge || 'Ecosystem Deployment'}</span>
+              </span>
+              <h2
+                className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900"
+                dangerouslySetInnerHTML={{ __html: industry.solutionsHeading }}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-center">
+              {industry.solutionsProvided.map((sol, idx) => (
+                <div
+                  key={idx}
+                  className="flex flex-col items-start p-5 bg-white rounded-xl shadow-sm border border-gray-100/80 hover:shadow-md transition-shadow duration-200"
+                >
+                  <div
+                    className="w-11 h-11 mb-3.5 flex items-center justify-center rounded-full shrink-0"
+                    style={{ color: '#0a6eab', backgroundColor: '#0a6eab1a' }}
+                  >
+                    {renderSolutionIcon(sol.icon, sol.title)}
+                  </div>
+                  <h4 className="text-sm font-bold tracking-wide text-gray-900 uppercase mb-2">
+                    {sol.title}
+                  </h4>
+                  <p className="text-gray-500 text-xs md:text-sm leading-relaxed m-0">
+                    {sol.desc}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
-      ) : (
-        <CtaSection onOpenEnquiry={onOpenEnquiry} />
       )}
 
+      {/* 4. Key Brands For This Sector Section */}
+      {industry.brands && industry.brands.length > 0 && (
+        <section className="bg-white py-12 border-b border-gray-100">
+          <div className="max-w-[1200px] mx-auto p-5 p-5">
+            <div className="text-center mb-8">
+              <h2
+                className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900"
+                dangerouslySetInnerHTML={{ __html: industry.brandsHeading }}
+              />
+              {industry.brandsSubheading && (
+                <p className="text-gray-500 text-xs md:text-sm mt-2 max-w-2xl mx-auto leading-relaxed">
+                  {industry.brandsSubheading}
+                </p>
+              )}
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              {industry.brands.map((brand, idx) => (
+                <div
+                  key={idx}
+                  className="w-[calc(50%-8px)] sm:w-36 md:w-64 h-[130px] p-4 flex items-center justify-center border border-gray-200/80 rounded-xl bg-white shadow-sm hover:shadow-md transition-shadow duration-200 shrink-0"
+                >
+                  <img
+                    src={brand.src}
+                    alt={brand.alt || brand.name || 'Brand Partner'}
+                    className="max-h-[65px] md:max-h-[75px] max-w-[85%] w-auto object-contain"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 5. Why UniSpark For This Sector Section */}
+      {industry.whyChooseUs && industry.whyChooseUs.length > 0 && (
+        <section className="relative py-12 bg-gray-50 border-b border-gray-100">
+          <div className="max-w-[1200px] mx-auto p-5 p-5">
+            <div className="text-center mb-10">
+              <span
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wider bg-opacity-10 mb-3 uppercase"
+                style={{ color: '#0a6eab', backgroundColor: '#0a6eab1a' }}
+              >
+                <ShieldAlert className="w-3.5 h-3.5" />
+                <span>{industry.whyBadge || 'Compliance & Expertise'}</span>
+              </span>
+              <h2
+                className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900"
+                dangerouslySetInnerHTML={{ __html: industry.whyHeading }}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
+              {industry.whyChooseUs.map((w, idx) => (
+                <div
+                  key={idx}
+                  className="flex flex-col items-start p-5 bg-white rounded-xl shadow-sm border border-gray-100/80 hover:shadow-md transition-shadow duration-200"
+                >
+                  <div
+                    className="w-11 h-11 mb-3.5 flex items-center justify-center rounded-full shrink-0"
+                    style={{ color: '#0a6eab', backgroundColor: '#0a6eab1a' }}
+                  >
+                    {renderWhyIcon(w.icon, w.title)}
+                  </div>
+                  <h4 className="text-sm font-bold tracking-wide text-gray-900 uppercase mb-2">
+                    {w.title}
+                  </h4>
+                  <p className="text-gray-500 text-xs md:text-sm leading-relaxed m-0">
+                    {w.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 6. CTA Section */}
+      <section className="relative w-full overflow-hidden bg-slate-950 py-12 md:py-14">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none z-0"
+          style={{ backgroundImage: "url('/images/home-cta.jpg')" }}
+        ></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-900/90 to-slate-950/95 pointer-events-none z-10"></div>
+        <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none z-10"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none z-10"></div>
+        <div className="max-w-[1200px] mx-auto p-5 py-2 px-2 relative z-20">
+          <div className="flex flex-col items-center justify-center text-center max-w-3xl mx-auto">
+            <h2
+              className="text-2xl sm:text-3xl md:text-5xl font-semibold font-black text-white tracking-tight leading-tight uppercase"
+              dangerouslySetInnerHTML={{
+                __html:
+                  industry.ctaHeading ||
+                  'Ready to Discuss Your <span class="bg-gradient-to-r from-cyan-400 via-sky-400 to-indigo-400 bg-clip-text text-transparent">Sector Security Requirements?</span>'
+              }}
+            />
+            <p className="text-xs sm:text-sm text-slate-300 font-light mt-3 mb-6 max-w-xl leading-relaxed">
+              {industry.ctaDesc ||
+                'Our engineers are available for site surveys across Dubai, Abu Dhabi, Sharjah, and all UAE locations.'}
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
+              <Link
+                to={industry.ctaBtn1Link || '/contact-us'}
+                className="group flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 text-xs font-bold text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg shadow-lg shadow-cyan-900/20 transition-all duration-150 border border-cyan-500/30 uppercase tracking-wider"
+              >
+                <span>{industry.ctaBtn1Text || 'Request an AMC/PMC Quotation'}</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-150" />
+              </Link>
+              <a
+                href={industry.ctaBtn2Link || 'tel:+971-4-1234567'}
+                className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 text-xs font-bold text-slate-300 hover:text-white bg-slate-800/60 hover:bg-slate-800 border border-slate-700/50 hover:border-slate-600 rounded-lg transition-all duration-150 uppercase tracking-wider backdrop-blur-sm"
+              >
+                <Phone className="w-3.5 h-3.5" />
+                <span>{industry.ctaBtn2Text || 'Call Our Team'}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

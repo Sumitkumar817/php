@@ -34,6 +34,9 @@ const serviceSchema = new mongoose.Schema({
   // FULL INSIDE PAGE CMS FIELDS
   pageTitle: { type: String, default: '' },
   bannerTagline: { type: String, default: 'Professional Installation · Commissioning · Long-Term Maintenance | UAE-Wide Coverage' },
+  bannerBgImage: { type: String, default: '' },
+  scopeSecImage: { type: String, default: '' },
+  ctaBgImage: { type: String, default: '' },
   heroCtaText: { type: String, default: 'Request a Site Survey' },
   heroCtaLink: { type: String, default: '/contact-us' },
 
@@ -81,6 +84,7 @@ const defaultServicesData = [
     overviewHeading: 'COMPLETE CCTV & IP CAMERA SYSTEMS',
     description: 'UniSpark delivers complete CCTV and IP camera solutions — from initial site survey and camera placement design through to installation, network configuration, remote viewing setup, and ongoing health monitoring. We supply and install systems from the world\'s leading brands, tailored to the exact requirements of your site.',
     secImage: '/images/cctv-sec.jpg',
+    bannerBgImage: '/images/cctv-bg.jpg',
     scopeBadge: 'Scope of Work',
     scopeHeading: "WHAT'S INCLUDED IN OUR SERVICE",
     scopeOfWork: [
@@ -113,6 +117,7 @@ const defaultServicesData = [
     overviewHeading: 'COMPLETE ACCESS CONTROL SYSTEMS',
     description: 'UniSpark designs and installs access control systems that provide precise, auditable control over who can access which areas of your facility — and when.',
     secImage: '/images/access-sec.jpg',
+    bannerBgImage: '/images/aviation-bg.jpg',
     scopeBadge: 'Scope of Work',
     scopeHeading: "WHAT'S INCLUDED IN OUR SERVICE",
     scopeOfWork: [
@@ -141,6 +146,7 @@ const defaultServicesData = [
     overviewHeading: 'COMPLETE INTRUDER ALARM & DETECTION SYSTEMS',
     description: 'Protect your commercial and residential premises against unauthorized entry, burglary, and perimeter intrusion.',
     secImage: '/images/intruder-sec.jpg',
+    bannerBgImage: '/images/intruder-bg.jpg',
     scopeBadge: 'Scope of Work',
     scopeHeading: "WHAT'S INCLUDED IN OUR SERVICE",
     scopeOfWork: [
@@ -167,6 +173,7 @@ const defaultServicesData = [
     overviewHeading: 'COMPLETE VIDEO INTERCOM SYSTEMS',
     description: 'Enhance access convenience and entry security with UniSpark\'s video intercom and door entry systems.',
     secImage: '/images/intercom-sec.jpg',
+    bannerBgImage: '/images/intercom-bg.jpg',
     scopeBadge: 'Scope of Work',
     scopeHeading: "WHAT'S INCLUDED IN OUR SERVICE",
     scopeOfWork: [
@@ -193,6 +200,7 @@ const defaultServicesData = [
     overviewHeading: 'COMPLETE PERIMETER SECURITY SYSTEMS',
     description: 'UniSpark deploys high-grade physical and electronic perimeter security solutions designed to protect critical infrastructure.',
     secImage: '/images/perimeter-sec.jpg',
+    bannerBgImage: '/images/perimeter-bg.jpg',
     scopeBadge: 'Scope of Work',
     scopeHeading: "WHAT'S INCLUDED IN OUR SERVICE",
     scopeOfWork: [
@@ -219,6 +227,7 @@ const defaultServicesData = [
     overviewHeading: 'COMPLETE FIRE ALARM & DETECTION SYSTEMS',
     description: 'UniSpark provides certified fire detection, smoke extraction, and life safety matrices engineered in strict compliance with UAE Civil Defence standards.',
     secImage: '/images/fire-sec.jpg',
+    bannerBgImage: '/images/fire-bg.jpg',
     scopeBadge: 'Scope of Work',
     scopeHeading: "WHAT'S INCLUDED IN OUR SERVICE",
     scopeOfWork: [
@@ -245,6 +254,7 @@ const defaultServicesData = [
     overviewHeading: 'COMPLETE BIOMETRIC SECURITY SYSTEMS',
     description: 'Leverage AI-driven biometric identification for uncompromised access authentication. Touchless face recognition, palm vein scanners, and iris readers.',
     secImage: '/images/biometric-sec.jpg',
+    bannerBgImage: '/images/biometric-bg.jpg',
     scopeBadge: 'Scope of Work',
     scopeHeading: "WHAT'S INCLUDED IN OUR SERVICE",
     scopeOfWork: [
@@ -271,6 +281,7 @@ const defaultServicesData = [
     overviewHeading: 'COMPLETE CONTROL ROOM & SYSTEM INTEGRATION',
     description: 'Unify disparate security subsystems into a cohesive, single-pane command center.',
     secImage: '/images/system-sec.jpg',
+    bannerBgImage: '/images/system-bg.jpg',
     scopeBadge: 'Scope of Work',
     scopeHeading: "WHAT'S INCLUDED IN OUR SERVICE",
     scopeOfWork: [
@@ -297,6 +308,7 @@ const defaultServicesData = [
     overviewHeading: 'COMPLETE MAINTENANCE CONTRACTS (AMC & PMC)',
     description: 'Ensure 100% uptime for your critical safety and security infrastructure.',
     secImage: '/images/maintain-sec.jpg',
+    bannerBgImage: '/images/maintain-bg.jpg',
     scopeBadge: 'Scope of Work',
     scopeHeading: "WHAT'S INCLUDED IN OUR SERVICE",
     scopeOfWork: [
