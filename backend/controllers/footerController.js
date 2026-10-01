@@ -46,13 +46,13 @@ const defaultFooter = {
   ],
   serviceAreasLabel: 'Service Areas:',
   serviceAreas: 'Dubai | Abu Dhabi | Sharjah | UAE Nationwide',
-  officeLocation: 'Dubai, United Arab Emirates',
+  officeLocation: 'Empire Heights A- 16F-A-04, Office 4-C-42, Business Bay, Dubai, United Arab Emirates',
   email: 'sales@unisparkinnovation.com',
   emailLabel: 'Sales',
   phone: '+971 50 288 5874',
   phoneLabel: 'Call',
   whatsappNumber: '971502885874',
-  copyrightText: 'UniSpark Innovation Security Systems & Equipment Trading L.L.C. All rights reserved.'
+  copyrightText: 'UniSpark Innovation Security Systems. All rights reserved.'
 };
 
 let inMemoryFooter = { ...defaultFooter };
