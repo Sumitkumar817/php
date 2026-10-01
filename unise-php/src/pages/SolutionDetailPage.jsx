@@ -125,28 +125,28 @@ export default function SolutionDetailPage({ onOpenEnquiry }) {
     overviewHeading: backendService?.overviewHeading || staticFallback.overviewHeading || `COMPLETE ${staticFallback.title}`,
     description: backendService?.description || backendService?.desc || staticFallback.description,
     secImage: (backendService?.secImage && backendService.secImage.trim() !== '') ? backendService.secImage : (staticFallback.secImage || '/images/cctv-sec.jpg'),
-    scopeBadge: staticFallback.scopeBadge || 'Scope of Work',
-    scopeHeading: staticFallback.scopeHeading || "WHAT'S INCLUDED IN OUR SERVICE",
+    scopeBadge: backendService?.scopeBadge || staticFallback.scopeBadge || 'Scope of Work',
+    scopeHeading: backendService?.scopeHeading || staticFallback.scopeHeading || "WHAT'S INCLUDED IN OUR SERVICE",
     scopeOfWork: cleanScope(
       pickArray(backendService?.scopeOfWork, staticFallback.scopeOfWork),
       pickArray(backendService?.whyChooseUs, staticFallback.whyChooseUs)
     ),
-    brandsHeading: staticFallback.brandsHeading || 'KEY BRANDS & <span class="bg-clip-text text-transparent" style="background-image:linear-gradient(to right, #0a6eab, #1d4ed8)"> TECHNOLOGY</span>',
+    brandsHeading: backendService?.brandsHeading || staticFallback.brandsHeading || 'KEY BRANDS & <span class="bg-clip-text text-transparent" style="background-image:linear-gradient(to right, #0a6eab, #1d4ed8)"> TECHNOLOGY</span>',
     brands: pickArray(backendService?.brands, staticFallback.brands),
-    sectorsBadge: staticFallback.sectorsBadge || 'Targeted Sectors',
-    sectorsHeading: staticFallback.sectorsHeading,
+    sectorsBadge: backendService?.sectorsBadge || staticFallback.sectorsBadge || 'Targeted Sectors',
+    sectorsHeading: backendService?.sectorsHeading || staticFallback.sectorsHeading,
     sectorsBg: staticFallback.sectorsBg || 'py-10 bg-[#F1F5F9]',
-    sectorsDesc: staticFallback.sectorsDesc,
+    sectorsDesc: backendService?.sectorsDesc || staticFallback.sectorsDesc,
     targetSectors: pickArray(backendService?.targetSectors, staticFallback.targetSectors),
-    whyBadge: staticFallback.whyBadge || 'Compliance & Expertise',
-    whyHeading: staticFallback.whyHeading || `WHY UNISPARK FOR <span class="bg-clip-text text-transparent uppercase" style="background-image:linear-gradient(to right, #0a6eab, #1d4ed8)">${staticFallback.shortTitle || staticFallback.title}</span>`,
+    whyBadge: backendService?.whyBadge || staticFallback.whyBadge || 'Compliance & Expertise',
+    whyHeading: backendService?.whyHeading || staticFallback.whyHeading || `WHY UNISPARK FOR <span class="bg-clip-text text-transparent uppercase" style="background-image:linear-gradient(to right, #0a6eab, #1d4ed8)">${staticFallback.shortTitle || staticFallback.title}</span>`,
     whyChooseUs: pickArray(backendService?.whyChooseUs, staticFallback.whyChooseUs),
-    ctaHeading: staticFallback.ctaHeading || 'Ready to Discuss Your <span class="bg-gradient-to-r from-cyan-400 via-sky-400 to-indigo-400 bg-clip-text text-transparent">Maintenance Contracts — AMC & PMC Requirements?</span>',
-    ctaDesc: staticFallback.ctaDesc || 'Our engineers are available for site surveys across Dubai, Abu Dhabi, Sharjah, and all UAE locations.',
-    ctaBtn1Text: staticFallback.ctaBtn1Text || 'Request an AMC/PMC Quotation',
-    ctaBtn1Link: staticFallback.ctaBtn1Link || '/contact-us',
-    ctaBtn2Text: staticFallback.ctaBtn2Text || 'Call Our Team',
-    ctaBtn2Link: staticFallback.ctaBtn2Link || 'tel:+971-4-1234567'
+    ctaHeading: backendService?.ctaHeading || staticFallback.ctaHeading || 'Ready to Discuss Your <span class="bg-gradient-to-r from-cyan-400 via-sky-400 to-indigo-400 bg-clip-text text-transparent">Maintenance Contracts — AMC & PMC Requirements?</span>',
+    ctaDesc: backendService?.ctaDesc || staticFallback.ctaDesc || 'Our engineers are available for site surveys across Dubai, Abu Dhabi, Sharjah, and all UAE locations.',
+    ctaBtn1Text: backendService?.ctaBtn1Text || staticFallback.ctaBtn1Text || 'Request an AMC/PMC Quotation',
+    ctaBtn1Link: backendService?.ctaBtn1Link || staticFallback.ctaBtn1Link || '/contact-us',
+    ctaBtn2Text: backendService?.ctaBtn2Text || staticFallback.ctaBtn2Text || 'Call Our Team',
+    ctaBtn2Link: backendService?.ctaBtn2Link || staticFallback.ctaBtn2Link || 'tel:+971-4-1234567'
   };
 
   // Helper to render scope of work icons matching the live site SVG/Lucide

@@ -96,17 +96,35 @@ export default function IndustryDetailPage({ onOpenEnquiry }) {
     heroCtaLink: backendIndustry?.heroCtaLink || staticFallback.heroCtaLink || '/contact-us',
     overviewBadge: backendIndustry?.overviewBadge || staticFallback.overviewBadge || 'SECTOR OVERVIEW',
     overviewHeading: backendIndustry?.overviewHeading || staticFallback.overviewHeading || `${staticFallback.title} STANDARDS`,
-    description: backendIndustry?.description || staticFallback.description,
-    challengesHeading: backendIndustry?.challengesHeading || staticFallback.challengesHeading || 'Sector Security Challenges:',
-    challengesText: backendIndustry?.challengesText || staticFallback.challengesText,
+    description:
+      backendIndustry?.overviewParagraph1
+        ? `${backendIndustry.overviewParagraph1}${backendIndustry.overviewParagraph2 ? `\n\n${backendIndustry.overviewParagraph2}` : ''}`
+        : (backendIndustry?.description || staticFallback.description),
+    challengesHeading:
+      backendIndustry?.challengesHeading ||
+      backendIndustry?.keyChallengesHeading ||
+      staticFallback.challengesHeading ||
+      'Sector Security Challenges:',
+    challengesText:
+      backendIndustry?.challengesText ||
+      (Array.isArray(backendIndustry?.keyChallenges) && backendIndustry.keyChallenges.length > 0
+        ? backendIndustry.keyChallenges.map((c) => c.desc || c.title).join(' ')
+        : staticFallback.challengesText),
     secImage:
       backendIndustry?.overviewImage && backendIndustry.overviewImage.trim() !== ''
         ? backendIndustry.overviewImage
+        : backendIndustry?.secImage && backendIndustry.secImage.trim() !== ''
+        ? backendIndustry.secImage
         : staticFallback.secImage || '/images/aviation-sec.jpg',
     secImageAlt: staticFallback.secImageAlt || staticFallback.title,
-    solutionsBadge: backendIndustry?.solutionsBadge || staticFallback.solutionsBadge || 'Ecosystem Deployment',
+    solutionsBadge:
+      backendIndustry?.solutionsBadge ||
+      backendIndustry?.solutionsProvidedBadge ||
+      staticFallback.solutionsBadge ||
+      'Ecosystem Deployment',
     solutionsHeading:
       backendIndustry?.solutionsHeading ||
+      backendIndustry?.solutionsProvidedHeading ||
       staticFallback.solutionsHeading ||
       'OUR SOLUTIONS FOR <span class="bg-clip-text text-transparent" style="background-image:linear-gradient(to right, #0a6eab, #1d4ed8)">THIS SECTOR</span>',
     solutionsProvided: pickArray(backendIndustry?.solutionsProvided, staticFallback.solutionsProvided),

@@ -25,6 +25,7 @@ const cardSchema = new mongoose.Schema({
   // INSIDE PAGE CMS FIELDS
   pageTitle: { type: String, default: '' },
   bannerTagline: { type: String, default: 'SIRA Compliant · 24/7 Monitoring · Rapid Deployment Across UAE' },
+  bannerBgImage: { type: String, default: '' },
   heroCtaText: { type: String, default: 'Request Sector Assessment' },
   heroCtaLink: { type: String, default: '/contact-us' },
 
@@ -33,6 +34,7 @@ const cardSchema = new mongoose.Schema({
   overviewParagraph1: { type: String, default: '' },
   overviewParagraph2: { type: String, default: '' },
   overviewImage: { type: String, default: '' },
+  secImage: { type: String, default: '' },
 
   keyChallengesBadge: { type: String, default: 'Key Sector Security Challenges' },
   keyChallengesHeading: { type: String, default: 'CRITICAL SECURITY THREATS & COMPLIANCE DEMANDS' },

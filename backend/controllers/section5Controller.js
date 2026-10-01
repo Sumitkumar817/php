@@ -344,9 +344,11 @@ export const updateSection5Config = async (req, res) => {
     let finalCards = [];
     if (Array.isArray(cards)) {
       finalCards = await Promise.all(cards.map(async (card) => {
-        // Main card image
+        // Main card and inside page banner/overview images
         let cardImage = await processImageUpload(card.image, 'industry_card');
-        let overviewImg = await processImageUpload(card.overviewImage, 'industry_overview');
+        let bannerBg = await processImageUpload(card.bannerBgImage, 'industry_banner');
+        let overviewImg = await processImageUpload(card.overviewImage || card.secImage, 'industry_overview');
+        let secImg = await processImageUpload(card.secImage || card.overviewImage, 'industry_overview');
 
         // Process nested array images if present
         let processedChallenges = [];
@@ -400,7 +402,9 @@ export const updateSection5Config = async (req, res) => {
         return {
           ...card,
           image: cardImage,
+          bannerBgImage: bannerBg || card.bannerBgImage || '',
           overviewImage: overviewImg,
+          secImage: secImg,
           keyChallenges: processedChallenges,
           solutionsProvided: processedSolutions,
           scopeOfWork: processedScope,
