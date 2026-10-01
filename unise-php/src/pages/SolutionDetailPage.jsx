@@ -100,6 +100,18 @@ export default function SolutionDetailPage({ onOpenEnquiry }) {
     return fallbackArr || [];
   };
 
+  // Helper: ensure scopeOfWork never accidentally contains whyChooseUs items
+  const cleanScope = (scopeList, whyList) => {
+    if (!Array.isArray(scopeList)) return [];
+    if (!Array.isArray(whyList) || whyList.length === 0) return scopeList;
+    const whyTitles = new Set(
+      whyList.map((w) => (w.title || '').replace(/&amp;/g, '&').trim().toLowerCase())
+    );
+    return scopeList.filter(
+      (item) => !whyTitles.has((item.title || '').replace(/&amp;/g, '&').trim().toLowerCase())
+    );
+  };
+
   // Combine backend CMS data with static fallback
   const solution = {
     ...staticFallback,
@@ -115,7 +127,10 @@ export default function SolutionDetailPage({ onOpenEnquiry }) {
     secImage: staticFallback.secImage || '/images/cctv-sec.jpg',
     scopeBadge: staticFallback.scopeBadge || 'Scope of Work',
     scopeHeading: staticFallback.scopeHeading || "WHAT'S INCLUDED IN OUR SERVICE",
-    scopeOfWork: pickArray(backendService?.scopeOfWork, staticFallback.scopeOfWork),
+    scopeOfWork: cleanScope(
+      pickArray(backendService?.scopeOfWork, staticFallback.scopeOfWork),
+      pickArray(backendService?.whyChooseUs, staticFallback.whyChooseUs)
+    ),
     brandsHeading: staticFallback.brandsHeading || 'KEY BRANDS & <span class="bg-clip-text text-transparent" style="background-image:linear-gradient(to right, #0a6eab, #1d4ed8)"> TECHNOLOGY</span>',
     brands: pickArray(backendService?.brands, staticFallback.brands),
     sectorsBadge: staticFallback.sectorsBadge || 'Targeted Sectors',

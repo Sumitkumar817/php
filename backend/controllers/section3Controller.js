@@ -147,7 +147,7 @@ const defaultServicesData = [
     icon: 'fa-screwdriver-wrench',
     desc: '24/7 SLA-governed annual maintenance, preventive health checks, and emergency repairs.',
     featured: true,
-    pageTitle: 'Zero Downtime. Guaranteed SLAs.',
+    pageTitle: 'Keep Your Security Systems Running at Peak Performance.',
     secImage: '/images/maintain-sec.jpg'
   }
 ];
