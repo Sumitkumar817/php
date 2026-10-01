@@ -35,7 +35,7 @@ const defaultServicesData = [
     featured: true,
     pageTitle: 'See Everything. Miss Nothing.',
     bannerTagline: 'Professional Installation · Commissioning · Long-Term Maintenance | UAE-Wide Coverage',
-    bannerBgImage: '',
+    bannerBgImage: '/images/cctv-bg.jpg',
     heroCtaText: 'Request a CCTV Site Survey',
     heroCtaLink: '/contact-us',
     overviewBadge: 'SERVICE OVERVIEW',
@@ -66,7 +66,7 @@ const defaultServicesData = [
     featured: true,
     pageTitle: 'Control Who Enters. Protect What Matters.',
     bannerTagline: 'Professional Installation · Commissioning · Long-Term Maintenance | UAE-Wide Coverage',
-    bannerBgImage: '',
+    bannerBgImage: '/images/aviation-bg.jpg',
     heroCtaText: 'Request an Access Control Survey',
     heroCtaLink: '/contact-us',
     overviewBadge: 'SERVICE OVERVIEW',
@@ -94,7 +94,8 @@ const defaultServicesData = [
     desc: 'Motion, vibration, and perimeter detection systems connected to central monitoring.',
     featured: true,
     pageTitle: 'Detect Breaches Instantly. Neutralize Threats.',
-    secImage: '/images/intruder-sec.jpg'
+    secImage: '/images/intruder-sec.jpg',
+    bannerBgImage: '/images/intruder-bg.jpg'
   },
   {
     id: 'video-intercom-and-door-entry-systems',
@@ -103,7 +104,8 @@ const defaultServicesData = [
     desc: 'IP video door phones, multi-tenant intercoms, and remote mobile unlock solutions.',
     featured: true,
     pageTitle: 'Clear Communication. Verified Entry.',
-    secImage: '/images/intercom-sec.jpg'
+    secImage: '/images/intercom-sec.jpg',
+    bannerBgImage: '/images/intercom-bg.jpg'
   },
   {
     id: 'perimeter-security-and-fencing-systems',
@@ -112,7 +114,8 @@ const defaultServicesData = [
     desc: 'Infrared beams, fence sensors, bollards, and active perimeter intrusion detection.',
     featured: true,
     pageTitle: 'Impenetrable Boundaries. Active Defence.',
-    secImage: '/images/perimeter-sec.jpg'
+    secImage: '/images/perimeter-sec.jpg',
+    bannerBgImage: '/images/perimeter-bg.jpg'
   },
   {
     id: 'fire-alarm-and-detection-systems',
@@ -121,7 +124,8 @@ const defaultServicesData = [
     desc: 'UAE Civil Defence-compliant fire detection and alarm systems for all building types.',
     featured: true,
     pageTitle: 'Early Detection. Lifesaving Safety.',
-    secImage: '/images/fire-sec.jpg'
+    secImage: '/images/fire-sec.jpg',
+    bannerBgImage: '/images/fire-bg.jpg'
   },
   {
     id: 'biometric-and-smart-security-systems',
@@ -130,7 +134,8 @@ const defaultServicesData = [
     desc: 'Fingerprint, face recognition, and iris scan systems integrated with HR and payroll.',
     featured: true,
     pageTitle: 'Identity Verified. Frictionless Access.',
-    secImage: '/images/biometric-sec.jpg'
+    secImage: '/images/biometric-sec.jpg',
+    bannerBgImage: '/images/biometric-bg.jpg'
   },
   {
     id: 'system-integration-and-control-room-setup',
@@ -139,7 +144,8 @@ const defaultServicesData = [
     desc: 'Unified security management platforms, SOC design, video walls, and PSIM software.',
     featured: true,
     pageTitle: 'Unified Command. Real-Time Operations.',
-    secImage: '/images/system-sec.jpg'
+    secImage: '/images/system-sec.jpg',
+    bannerBgImage: '/images/system-bg.jpg'
   },
   {
     id: 'maintenance-contracts',
@@ -148,7 +154,8 @@ const defaultServicesData = [
     desc: '24/7 SLA-governed annual maintenance, preventive health checks, and emergency repairs.',
     featured: true,
     pageTitle: 'Keep Your Security Systems Running at Peak Performance.',
-    secImage: '/images/maintain-sec.jpg'
+    secImage: '/images/maintain-sec.jpg',
+    bannerBgImage: '/images/maintain-bg.jpg'
   }
 ];
 

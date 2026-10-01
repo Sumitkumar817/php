@@ -50,7 +50,11 @@ export default function SolutionsPage({ onOpenEnquiry }) {
     <div className="bg-[#f1f5f9] text-slate-900 min-h-screen font-sans">
       
       {/* Banner Section */}
-      <section className="relative py-16 bg-[#004b78] text-white overflow-hidden">
+      <section
+        className="relative py-16 text-white overflow-hidden bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/images/solutions-bg.jpg')" }}
+      >
+        <div className="absolute inset-0 bg-[#004b78]/85 backdrop-blur-[1px]"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 space-y-4">
           <nav aria-label="breadcrumb">
             <ol className="flex items-center gap-2 text-xs font-semibold text-white/80">
