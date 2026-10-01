@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { ChevronRight } from 'lucide-react';
 import { COUNTRIES, DEFAULT_COUNTRY, detectCountryFromPhone } from '../data/countries';
 import CountrySelect from '../components/CountrySelect';
 import CaptchaBox from '../components/CaptchaBox';
+import contactBg from '../../images/contact-bg.jpg';
 
 export default function ContactPage() {
   const { t, i18n } = useTranslation();
@@ -80,12 +82,43 @@ export default function ContactPage() {
     return () => window.removeEventListener('focus', handleFocus);
   }, []);
 
+  const handleLocationChange = (e) => {
+    const loc = e.target.value;
+    const uaeEmirates = ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ajman', 'Ras Al Khaimah', 'Fujairah', 'Umm Al Quwain'];
+    
+    let matchedCountry;
+    if (uaeEmirates.includes(loc)) {
+      matchedCountry = COUNTRIES.find(c => c.code === 'AE');
+    } else {
+      matchedCountry = COUNTRIES.find(c => c.name.toLowerCase() === loc.toLowerCase() || c.code.toLowerCase() === loc.toLowerCase());
+    }
+
+    setFormData(prev => ({
+      ...prev,
+      location: loc,
+      country: matchedCountry ? matchedCountry.name : prev.country,
+      countryCode: matchedCountry ? matchedCountry.dialCode : prev.countryCode
+    }));
+  };
+
+  const handleCountrySelectChange = (selected) => {
+    setFormData(prev => ({
+      ...prev,
+      country: selected.name,
+      countryCode: selected.dialCode,
+      location: selected.name === 'United Arab Emirates' 
+        ? (prev.location && ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ajman', 'Ras Al Khaimah', 'Fujairah', 'Umm Al Quwain'].includes(prev.location) ? prev.location : 'Dubai')
+        : selected.name
+    }));
+  };
+
   const handleCountryChange = (countryName) => {
     const found = COUNTRIES.find(c => c.name === countryName);
     setFormData(prev => ({
       ...prev,
       country: countryName,
-      countryCode: found ? found.dialCode : prev.countryCode
+      countryCode: found ? found.dialCode : prev.countryCode,
+      location: countryName
     }));
   };
 
@@ -94,7 +127,8 @@ export default function ContactPage() {
     setFormData(prev => ({
       ...prev,
       countryCode: dialCode,
-      country: found ? found.name : prev.country
+      country: found ? found.name : prev.country,
+      location: found ? found.name : prev.location
     }));
   };
 
@@ -106,6 +140,7 @@ export default function ContactPage() {
         ...prev,
         country: detected.country.name,
         countryCode: detected.dialCode,
+        location: detected.country.name,
         phone: detected.localNumber
       }));
     } else {
@@ -167,193 +202,204 @@ export default function ContactPage() {
   return (
     <div className="bg-[#f1f5f9] text-slate-900 min-h-screen">
       
-      {/* Header Banner (con-banner style) */}
-      <section className="relative py-16 bg-[#004b78] text-white overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 space-y-4">
-          <nav aria-label="breadcrumb">
-            <ol className="flex items-center gap-2 text-xs font-semibold text-white/80">
-              <li><Link to="/" className="hover:underline">{t('nav.home')}</Link></li>
-              <li>/</li>
-              <li className="text-white font-bold">{t('nav.contact')}</li>
-            </ol>
-          </nav>
+      {/* 1. Page Header / Breadcrumb Hero (Exact match to reference) */}
+      <section
+        className="page-header con-banner relative w-full overflow-hidden bg-slate-900 bg-cover bg-center bg-no-repeat py-20 md:py-24 border-b border-slate-800"
+        style={{ backgroundImage: `url(${contactBg})` }}
+      >
+        <div className="absolute inset-0 bg-slate-950/55 pointer-events-none z-0"></div>
+        <div className="max-w-[1200px] mx-auto p-5 py-0 px-5">
+          <div className="relative z-10 max-w-5xl">
+            <nav aria-label="Breadcrumb" className="mb-4 bg-white rounded-full px-4 py-2 inline-flex items-center gap-2 shadow-sm">
+              <ol className="flex items-center gap-1.5 text-xs font-medium text-slate-400">
+                <li>
+                  <Link to="/" className="hover:text-[#1380c2] transition-colors duration-200">
+                    Home
+                  </Link>
+                </li>
+                <li className="text-slate-600 shrink-0">
+                  <ChevronRight className="w-3 h-3" />
+                </li>
+                <li className="text-slate-700 truncate" aria-current="page">
+                  Contact Us
+                </li>
+              </ol>
+            </nav>
 
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-white">
-            {i18n.language === 'hi' ? t('pages.contact.title') : config.bannerTitle}
-          </h1>
+            <h1 className="text-2xl sm:text-3xl md:text-5xl font-black font-semibold text-white tracking-tight leading-tight mb-3">
+              {i18n.language === 'hi' ? t('pages.contact.title') : (config.bannerTitle || "Get in Touch — We're Ready to Help")}
+            </h1>
 
-          <p className="text-sm sm:text-base text-slate-200 max-w-3xl leading-relaxed font-light">
-            {i18n.language === 'hi' ? t('pages.contact.subtitle') : config.bannerDesc}
-          </p>
+            <p className="text-xs sm:text-sm text-slate-100 font-normal leading-relaxed text-justify md:text-left max-w-6xl">
+              {i18n.language === 'hi' ? t('pages.contact.subtitle') : (config.bannerDesc || "Whether you need a site survey, a product quotation, or information about our annual maintenance contracts — our team is ready to respond quickly and professionally. Contact us by phone, email, or complete the enquiry form below.")}
+            </p>
+          </div>
         </div>
       </section>
 
       {/* Contact Form Section */}
-      <section className="py-12 max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="p-8 sm:p-10 rounded-3xl bg-white border border-slate-200 shadow-xl">
-          <div className="mb-6">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#0073b7] flex items-center gap-2 mb-1">
-              <i className="fa-solid fa-network-wired text-xs"></i> {config.formBadge || 'ENQUIRY FORM'}
-            </span>
-            <h2 className="text-2xl font-extrabold text-slate-900">{config.formTitle || 'Send us a message!'}</h2>
-            {config.formSubtitle && (
-              <p className="text-sm text-slate-500 mt-1 font-light">{config.formSubtitle}</p>
-            )}
-          </div>
-
-          {submitted ? (
-            <div className="py-12 text-center space-y-4 bg-blue-50/50 rounded-2xl border border-blue-100">
-              <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl">
-                <i className="fa-solid fa-circle-check"></i>
-              </div>
-              <h3 className="text-2xl font-bold text-slate-900">{config.formSuccessTitle || 'Enquiry Dispatched!'}</h3>
-              <p className="text-sm text-slate-600 max-w-md mx-auto">
-                {config.formSuccessDesc || 'Thank you for contacting UniSpark Innovation. Our technical engineering division will respond quickly within 2 business hours.'}
-              </p>
-              <button
-                onClick={() => setSubmitted(false)}
-                className="px-6 py-2.5 bg-[#0073b7] hover:bg-[#005a96] text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-md"
-              >
-                Send Another Message
-              </button>
+      <section className="relative w-full bg-slate-50 py-10 md:py-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="bg-white border border-slate-200/80 rounded-xl shadow-sm p-5 sm:p-6 md:p-8">
+            <div className="mb-6">
+              <span className="inline-flex items-center gap-1.5 text-[14px] font-bold text-sky-600 uppercase tracking-wider mb-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-network"><rect x="16" y="16" width="6" height="6" rx="1"></rect><rect x="2" y="16" width="6" height="6" rx="1"></rect><rect x="9" y="2" width="6" height="6" rx="1"></rect><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"></path><path d="M12 12V8"></path></svg>
+                {config.formBadge || 'ENQUIRY FORM'}
+              </span>
+              <h2 className="text-xl sm:text-3xl font-semibold font-black text-slate-900 tracking-tight">
+                {config.formTitle || 'Send us a message!'}
+              </h2>
+              {config.formSubtitle && (
+                <p className="text-sm text-slate-500 mt-1 font-light">{config.formSubtitle}</p>
+              )}
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              
-              {/* Row 1 (3 Columns) */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. John Doe"
-                    value={formData.fullName}
-                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-[#0073b7] focus:bg-white transition"
-                  />
-                </div>
 
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                    Company Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Your Company Name"
-                    value={formData.companyName}
-                    onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-[#0073b7] focus:bg-white transition"
-                  />
+            {submitted ? (
+              <div className="py-12 text-center space-y-4 bg-blue-50/50 rounded-2xl border border-blue-100">
+                <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl">
+                  <i className="fa-solid fa-circle-check"></i>
                 </div>
-
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    placeholder="name@domain.com"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-[#0073b7] focus:bg-white transition"
-                  />
-                </div>
+                <h3 className="text-2xl font-bold text-slate-900">{config.formSuccessTitle || 'Enquiry Dispatched!'}</h3>
+                <p className="text-sm text-slate-600 max-w-md mx-auto">
+                  {config.formSuccessDesc || 'Thank you for contacting UniSpark Innovation. Our technical engineering division will respond quickly within 2 business hours.'}
+                </p>
+                <button
+                  onClick={() => setSubmitted(false)}
+                  className="px-6 py-2.5 bg-[#0073b7] hover:bg-[#005a96] text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-md"
+                >
+                  Send Another Message
+                </button>
               </div>
-
-              {/* Row 2 (Country & Phone with Code & City/Location) */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Searchable Country Selector */}
-                <div>
-                  <CountrySelect
-                    value={formData.country}
-                    onChange={(selected) => {
-                      setFormData(prev => ({
-                        ...prev,
-                        country: selected.name,
-                        countryCode: selected.dialCode
-                      }));
-                    }}
-                    label="Country *"
-                  />
-                </div>
-
-                {/* Phone with Searchable Country Dial Code */}
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                    Phone Number *
-                  </label>
-                  <div className="flex gap-2">
-                    <CountrySelect
-                      variant="dialCodeOnly"
-                      value={formData.countryCode}
-                      onChange={(selected) => {
-                        setFormData(prev => ({
-                          ...prev,
-                          country: selected.name,
-                          countryCode: selected.dialCode
-                        }));
-                      }}
-                    />
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                
+                {/* Row 1 (3 Columns) */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-[14px] font-bold text-slate-900 uppercase tracking-wide mb-1.5">
+                      FULL NAME <span className="text-rose-500">*</span>
+                    </label>
                     <input
-                      type="tel"
+                      type="text"
                       required
-                      placeholder="e.g. 50 123 4567 or +91 9876543210"
-                      value={formData.phone}
-                      onChange={handlePhoneChange}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-[#0073b7] focus:bg-white transition"
+                      placeholder="e.g. John Doe"
+                      value={formData.fullName}
+                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                      className="w-full text-xs px-3 py-4 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-sky-500 focus:bg-white text-slate-900 placeholder-slate-400 transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[14px] font-bold text-slate-900 uppercase tracking-wide mb-1.5">
+                      COMPANY NAME <span className="text-rose-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Your Company Name"
+                      value={formData.companyName}
+                      onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
+                      className="w-full text-xs px-3 py-4 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-sky-500 focus:bg-white text-slate-900 placeholder-slate-400 transition-colors"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[14px] font-bold text-slate-900 uppercase tracking-wide mb-1.5">
+                      EMAIL ADDRESS <span className="text-rose-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="name@domain.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="w-full text-xs px-3 py-4 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-sky-500 focus:bg-white text-slate-900 placeholder-slate-400 transition-colors"
                     />
                   </div>
                 </div>
 
-                {/* City / State / Location */}
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                    City / Emirate / Location *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Dubai / Abu Dhabi / Riyadh"
-                    value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-[#0073b7] focus:bg-white transition"
-                  />
-                </div>
-              </div>
+                {/* Row 2 (3 Columns: Phone, Emirate/Location, Enquiry Type) */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-[14px] font-bold text-slate-900 uppercase tracking-wide mb-1.5">
+                      PHONE NUMBER <span className="text-rose-500">*</span>
+                    </label>
+                    <div className="flex gap-2 items-stretch">
+                      <CountrySelect
+                        variant="dialCodeOnly"
+                        value={formData.country || formData.countryCode}
+                        onChange={handleCountrySelectChange}
+                      />
+                      <input
+                        type="tel"
+                        required
+                        placeholder="50 123 4567"
+                        value={formData.phone}
+                        onChange={handlePhoneChange}
+                        className="w-full text-xs px-3 py-4 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-sky-500 focus:bg-white text-slate-900 placeholder-slate-400 transition-colors"
+                      />
+                    </div>
+                  </div>
 
-              {/* Row 3 (Enquiry Type & Service of Interest) */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                    Enquiry Type *
-                  </label>
-                  <select
-                    required
-                    value={formData.enquiryType}
-                    onChange={(e) => setFormData({ ...formData, enquiryType: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-[#0073b7] focus:bg-white transition"
-                  >
-                    <option value="" disabled>Select Enquiry Type...</option>
-                    <option value="Installation Project">Installation Project</option>
-                    <option value="Equipment Supply">Equipment Supply</option>
-                    <option value="AMC/PMC">AMC/PMC</option>
-                    <option value="General Enquiry">General Enquiry</option>
-                  </select>
+                  <div>
+                    <label className="block text-[14px] font-bold text-slate-900 uppercase tracking-wide mb-1.5">
+                      EMIRATE / LOCATION <span className="text-rose-500">*</span>
+                    </label>
+                    <select
+                      required
+                      value={formData.location}
+                      onChange={handleLocationChange}
+                      className="w-full text-xs px-3 py-4 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-sky-500 focus:bg-white text-slate-900 transition-colors"
+                    >
+                      <option value="" disabled>Select Location / Country...</option>
+                      <optgroup label="United Arab Emirates (Emirates)">
+                        <option value="Dubai">Dubai (UAE) (+971)</option>
+                        <option value="Abu Dhabi">Abu Dhabi (UAE) (+971)</option>
+                        <option value="Sharjah">Sharjah (UAE) (+971)</option>
+                        <option value="Ajman">Ajman (UAE) (+971)</option>
+                        <option value="Ras Al Khaimah">Ras Al Khaimah (UAE) (+971)</option>
+                        <option value="Fujairah">Fujairah (UAE) (+971)</option>
+                        <option value="Umm Al Quwain">Umm Al Quwain (UAE) (+971)</option>
+                      </optgroup>
+                      <optgroup label="All Countries Worldwide">
+                        {COUNTRIES.map((c) => (
+                          <option key={c.code} value={c.name}>
+                            {c.name} ({c.dialCode})
+                          </option>
+                        ))}
+                      </optgroup>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[14px] font-bold text-slate-900 uppercase tracking-wide mb-1.5">
+                      ENQUIRY TYPE <span className="text-rose-500">*</span>
+                    </label>
+                    <select
+                      required
+                      value={formData.enquiryType}
+                      onChange={(e) => setFormData({ ...formData, enquiryType: e.target.value })}
+                      className="w-full text-xs px-3 py-4 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-sky-500 focus:bg-white text-slate-900 transition-colors"
+                    >
+                      <option value="" disabled>Select Enquiry Type...</option>
+                      <option value="Installation Project">Installation Project</option>
+                      <option value="Equipment Supply">Equipment Supply</option>
+                      <option value="AMC/PMC">AMC/PMC</option>
+                      <option value="General Enquiry">General Enquiry</option>
+                      <option value="AI Powered Solution">AI Powered Solution</option>
+                    </select>
+                  </div>
                 </div>
 
+                {/* Row 3 (Full Width: Service of Interest) */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                    Service of Interest
+                  <label className="block text-[14px] font-bold text-slate-900 uppercase tracking-wide mb-1.5">
+                    SERVICE OF INTEREST
                   </label>
                   <select
                     value={formData.service}
                     onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-[#0073b7] focus:bg-white transition"
+                    className="w-full text-xs px-3 py-4 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-sky-500 focus:bg-white text-slate-900 transition-colors"
                   >
                     <option value="" disabled>Select Service...</option>
                     <option value="CCTV">CCTV</option>
@@ -366,60 +412,65 @@ export default function ContactPage() {
                     <option value="Other">Other</option>
                   </select>
                 </div>
-              </div>
 
-              {/* Full Width Message */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                  Message / Brief Scope *
-                </label>
-                <textarea
-                  rows={4}
-                  required
-                  placeholder="Describe your project scope or requirements..."
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-[#0073b7] focus:bg-white transition resize-none"
+                {/* Row 4 (Full Width: Message / Brief Scope) */}
+                <div>
+                  <label className="block text-[14px] font-bold text-slate-900 uppercase tracking-wide mb-1.5">
+                    MESSAGE / BRIEF SCOPE <span className="text-rose-500">*</span>
+                  </label>
+                  <textarea
+                    rows={5}
+                    required
+                    placeholder="Describe your project scope or requirements..."
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    className="w-full text-xs px-3 py-4 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-sky-500 focus:bg-white text-slate-900 placeholder-slate-400 transition-colors resize-none"
+                  />
+                </div>
+
+                {/* Honeypot Anti-Bot Field (Hidden from human users) */}
+                <input
+                  type="text"
+                  name="website_url_security_verify"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                  style={{ display: 'none' }}
+                  tabIndex={-1}
+                  autoComplete="off"
                 />
-              </div>
 
-              {/* Honeypot Anti-Bot Field (Hidden from human users) */}
-              <input
-                type="text"
-                name="website_url_security_verify"
-                value={honeypot}
-                onChange={(e) => setHoneypot(e.target.value)}
-                style={{ display: 'none' }}
-                tabIndex={-1}
-                autoComplete="off"
-              />
+                {/* Anti-Bot Visual Security CAPTCHA */}
+                <div className="pt-2">
+                  <CaptchaBox
+                    captchaInput={captchaInput}
+                    setCaptchaInput={(val) => {
+                      setCaptchaInput(val);
+                      if (captchaError) setCaptchaError('');
+                    }}
+                    captchaError={captchaError}
+                    theme="light"
+                    onCaptchaGenerated={(code) => setCaptchaExpected(code)}
+                  />
+                </div>
 
-              {/* Anti-Bot Visual Security CAPTCHA */}
-              <div className="pt-2 border-t border-slate-200">
-                <CaptchaBox
-                  captchaInput={captchaInput}
-                  setCaptchaInput={(val) => {
-                    setCaptchaInput(val);
-                    if (captchaError) setCaptchaError('');
-                  }}
-                  captchaError={captchaError}
-                  theme="light"
-                  onCaptchaGenerated={(code) => setCaptchaExpected(code)}
-                />
-              </div>
+                {/* Row 5: Submit Button */}
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-bold text-white bg-sky-600 hover:bg-sky-500 disabled:bg-sky-400 active:bg-sky-700 rounded-lg transition-colors duration-150 uppercase tracking-wider shadow-sm select-none"
+                  >
+                    {isSubmitting ? 'Submitting...' : 'Submit Enquiry'}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-send">
+                      <path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"></path>
+                      <path d="m21.854 2.147-10.94 10.939"></path>
+                    </svg>
+                  </button>
+                </div>
 
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="px-8 py-3.5 bg-[#0073b7] hover:bg-[#005a96] text-white font-bold text-sm rounded-xl shadow-md transition duration-300 disabled:opacity-50"
-                >
-                  {isSubmitting ? 'Submitting...' : 'Submit Enquiry'}
-                </button>
-              </div>
-
-            </form>
-          )}
+              </form>
+            )}
+          </div>
         </div>
       </section>
 

@@ -216,7 +216,7 @@ export default function AboutPage({ onOpenEnquiry }) {
         className="page-header con-banner relative w-full overflow-hidden bg-slate-900 bg-cover bg-center bg-no-repeat py-20 md:py-24 border-b border-slate-800"
         style={{ backgroundImage: `url(${aboutData.bannerBgImage || '/images/contact-bg.jpg'})` }}
       >
-        <div className="absolute inset-0 bg-slate-950/55 md:bg-gradient-to-r md:from-white-950 md:via-white-950/90 md:to-transparent pointer-events-none z-0"></div>
+        <div className="absolute inset-0 bg-slate-950/55 pointer-events-none z-0"></div>
         <div className="max-w-[1200px] mx-auto p-5 py-0 px-5">
           <div className="relative z-10 max-w-5xl">
             <nav aria-label="Breadcrumb" className="mb-4 bg-white rounded-full px-4 py-2 inline-flex items-center gap-2">

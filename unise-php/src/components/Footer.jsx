@@ -24,10 +24,15 @@ import {
 
 export default function Footer() {
   const [footerConfig, setFooterConfig] = useState({
-    email: 'info@unisparkinnovation.com',
+    email: 'sales@unisparkinnovation.com',
+    emailLabel: 'Sales',
     phone: '+971 50 288 5874',
-    officeLocation: 'Dubai, United Arab Emirates',
-    whatsappNumber: '971502885874'
+    phoneLabel: 'Call',
+    officeLocation: 'Empire Heights A- 16F-A-04, Office 4-C-42, Business Bay, Dubai, United Arab Emirates',
+    serviceAreasLabel: 'Service Areas:',
+    serviceAreas: 'Dubai | Abu Dhabi | Sharjah | UAE Nationwide',
+    whatsappNumber: '971502885874',
+    copyrightText: 'UniSpark Innovation Security Systems. All rights reserved.'
   });
 
   useEffect(() => {
@@ -40,9 +45,14 @@ export default function Footer() {
           setFooterConfig(prev => ({
             ...prev,
             email: data.data.email || prev.email,
+            emailLabel: data.data.emailLabel || prev.emailLabel,
             phone: data.data.phone || prev.phone,
-            officeLocation: data.data.officeLocation || prev.officeLocation,
-            whatsappNumber: data.data.whatsappNumber || prev.whatsappNumber
+            phoneLabel: data.data.phoneLabel || prev.phoneLabel,
+            officeLocation: (data.data.officeLocation && data.data.officeLocation.includes('Business Bay')) ? data.data.officeLocation : (prev.officeLocation || data.data.officeLocation),
+            serviceAreasLabel: data.data.serviceAreasLabel || prev.serviceAreasLabel,
+            serviceAreas: data.data.serviceAreas || prev.serviceAreas,
+            whatsappNumber: data.data.whatsappNumber || prev.whatsappNumber,
+            copyrightText: data.data.copyrightText || prev.copyrightText
           }));
         }
       } catch (e) {
@@ -136,7 +146,7 @@ export default function Footer() {
                     href="https://www.facebook.com/UnisparkInnovation/"
                     target="_blank"
                     rel="noreferrer"
-                    className="w-8 h-8 rounded bg-slate-900/15 hover:bg-[#0a6eab] text-slate-300 hover:text-white flex items-center justify-center transition-all"
+                    className="w-8 h-8 rounded-lg bg-slate-900/30 hover:bg-[#0a6eab] text-white flex items-center justify-center transition-all"
                     aria-label="Facebook"
                   >
                     <i className="fa-brands fa-facebook-f text-sm"></i>
@@ -145,7 +155,7 @@ export default function Footer() {
                     href="https://www.instagram.com/unispark_innovation/"
                     target="_blank"
                     rel="noreferrer"
-                    className="w-8 h-8 rounded bg-slate-900/15 hover:bg-[#0a6eab] text-slate-300 hover:text-white flex items-center justify-center transition-all"
+                    className="w-8 h-8 rounded-lg bg-slate-900/30 hover:bg-[#0a6eab] text-white flex items-center justify-center transition-all"
                     aria-label="Instagram"
                   >
                     <i className="fa-brands fa-instagram text-sm"></i>
@@ -154,7 +164,7 @@ export default function Footer() {
                     href="https://x.com/unispark_inn"
                     target="_blank"
                     rel="noreferrer"
-                    className="w-8 h-8 rounded bg-slate-900/15 hover:bg-[#0a6eab] text-slate-300 hover:text-white flex items-center justify-center transition-all"
+                    className="w-8 h-8 rounded-lg bg-slate-900/30 hover:bg-[#0a6eab] text-white flex items-center justify-center transition-all"
                     aria-label="X-Twitter"
                   >
                     <i className="fa-brands fa-x-twitter text-sm"></i>
@@ -163,7 +173,7 @@ export default function Footer() {
                     href="https://www.linkedin.com/company/unispark-innovation/posts/?feedView=all"
                     target="_blank"
                     rel="noreferrer"
-                    className="w-8 h-8 rounded bg-slate-900/15 hover:bg-[#0a6eab] text-slate-300 hover:text-white flex items-center justify-center transition-all"
+                    className="w-8 h-8 rounded-lg bg-slate-900/30 hover:bg-[#0a6eab] text-white flex items-center justify-center transition-all"
                     aria-label="LinkedIn"
                   >
                     <i className="fa-brands fa-linkedin-in text-sm"></i>
@@ -250,31 +260,78 @@ export default function Footer() {
               </nav>
             </div>
 
-            {/* Col 4: Quick Links / Contact */}
+            {/* Col 4: Quick Links */}
             <div className="col-span-12 md:col-span-3 lg:col-span-2">
               <h6 className="text-white font-bold text-sm uppercase tracking-wider mb-4 border-b border-white/20 pb-2">
                 Quick Links
               </h6>
               <nav className="flex flex-col space-y-2 text-[13px]">
-                <Link className="text-slate-300 hover:text-white transition" to="/">Home</Link>
-                <Link className="text-slate-300 hover:text-white transition" to="/about-us">About Us</Link>
-                <Link className="text-slate-300 hover:text-white transition" to="/solutions">Solutions</Link>
-                <Link className="text-slate-300 hover:text-white transition" to="/industries">Industries</Link>
-                <Link className="text-slate-300 hover:text-white transition" to="/contact-us">Contact Us</Link>
+                <Link className="text-slate-300 hover:text-white transition flex items-center gap-1.5" to="/">
+                  <span className="text-slate-400 font-normal">›</span> Home
+                </Link>
+                <Link className="text-slate-300 hover:text-white transition flex items-center gap-1.5" to="/about-us">
+                  <span className="text-slate-400 font-normal">›</span> About Us
+                </Link>
+                <Link className="text-slate-300 hover:text-white transition flex items-center gap-1.5" to="/solutions">
+                  <span className="text-slate-400 font-normal">›</span> Solutions
+                </Link>
+                <Link className="text-slate-300 hover:text-white transition flex items-center gap-1.5" to="/industries">
+                  <span className="text-slate-400 font-normal">›</span> Industries
+                </Link>
+                <Link className="text-slate-300 hover:text-white transition flex items-center gap-1.5" to="/contact-us">
+                  <span className="text-slate-400 font-normal">›</span> Contact Us
+                </Link>
               </nav>
+            </div>
 
-              <div className="mt-6 pt-4 border-t border-white/10 space-y-2 text-xs text-slate-300">
-                <a href={`tel:${footerConfig.phone}`} className="flex items-center gap-2 hover:text-white transition">
-                  <Phone className="w-3.5 h-3.5 text-cyan-300" />
-                  <span>{footerConfig.phone}</span>
-                </a>
-                <a href={`mailto:${footerConfig.email}`} className="flex items-center gap-2 hover:text-white transition">
-                  <Mail className="w-3.5 h-3.5 text-cyan-300" />
-                  <span>{footerConfig.email}</span>
-                </a>
-                <div className="flex items-center gap-2 text-slate-300">
-                  <MapPin className="w-3.5 h-3.5 text-cyan-300 shrink-0" />
-                  <span>{footerConfig.officeLocation}</span>
+          </div>
+
+          {/* Contact Strip (Service Areas, Dubai Skyline & Address, Sales & Call) */}
+          <div className="my-8 rounded-2xl bg-[#00385e]/80 border border-white/10 px-6 sm:px-8 py-6 flex flex-col lg:flex-row items-center justify-between gap-6 text-xs text-white shadow-sm">
+            
+            {/* Left: Service Areas */}
+            <div className="flex-shrink-0 text-center lg:text-left">
+              <span className="bg-white text-slate-900 text-xs px-3 py-1 rounded-full font-bold inline-block mb-2 shadow-sm">
+                {footerConfig.serviceAreasLabel || 'Service Areas:'}
+              </span>
+              <div className="text-xs font-semibold text-white/90 leading-relaxed max-w-[240px]">
+                {footerConfig.serviceAreas || 'Dubai | Abu Dhabi | Sharjah | UAE Nationwide'}
+              </div>
+            </div>
+
+            {/* Center: Dubai Skyline & Office Location */}
+            <div className="flex flex-col items-center text-center max-w-lg">
+              <img
+                src="/images/dubai.svg"
+                alt="Dubai Skyline"
+                className="h-10 w-auto mb-2 object-contain"
+                onError={(e) => { e.target.style.display = 'none'; }}
+              />
+              <div className="flex items-center justify-center gap-1.5 text-xs text-white/90 font-medium">
+                <i className="fa-solid fa-location-dot text-cyan-300 text-sm shrink-0"></i>
+                <span>{footerConfig.officeLocation || 'Empire Heights A- 16F-A-04, Office 4-C-42, Business Bay, Dubai, United Arab Emirates'}</span>
+              </div>
+            </div>
+
+            {/* Right: Sales & Call Direct Line */}
+            <div className="flex flex-col sm:flex-row items-center gap-6 text-xs text-white">
+              <div className="flex items-center gap-2.5">
+                <i className="fa-regular fa-envelope text-lg text-cyan-300"></i>
+                <div className="text-left">
+                  <span className="text-[11px] text-slate-300 block">{footerConfig.emailLabel || 'Sales'}:</span>
+                  <a href={`mailto:${footerConfig.email}`} className="font-semibold text-white hover:underline block leading-tight">
+                    {footerConfig.email}
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2.5">
+                <i className="fa-solid fa-phone text-lg text-cyan-300"></i>
+                <div className="text-left">
+                  <span className="text-[11px] text-slate-300 block">{footerConfig.phoneLabel || 'Call'}:</span>
+                  <a href={`tel:${footerConfig.phone?.replace(/\s+/g, '')}`} className="font-semibold text-white hover:underline block leading-tight">
+                    {footerConfig.phone}
+                  </a>
                 </div>
               </div>
             </div>
@@ -282,12 +339,13 @@ export default function Footer() {
           </div>
 
           {/* Copyright bar */}
-          <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-300 opacity-80">
+          <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-300 opacity-80 border-t border-white/10">
             <div>
-              &copy; {new Date().getFullYear()} UniSpark Innovation Security Systems &amp; Equipment Trading L.L.C. All rights reserved.
+              &copy; {new Date().getFullYear()} {footerConfig.copyrightText || 'UniSpark Innovation Security Systems. All rights reserved.'}
             </div>
-            <div className="flex items-center gap-4">
-              <span className="text-slate-300">Dubai &middot; Abu Dhabi &middot; Sharjah &middot; UAE Nationwide</span>
+            <div className="flex items-center gap-6">
+              <Link to="/privacy-policy" className="hover:text-white transition">Privacy Policy</Link>
+              <Link to="/terms-and-conditions" className="hover:text-white transition">Terms &amp; Conditions</Link>
             </div>
           </div>
 

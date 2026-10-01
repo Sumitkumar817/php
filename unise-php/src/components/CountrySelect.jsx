@@ -64,7 +64,7 @@ export default function CountrySelect({
   const isCompact = variant === 'dialCodeOnly';
 
   return (
-    <div className={`relative ${isCompact ? 'flex-shrink-0' : 'w-full'}`} ref={dropdownRef}>
+    <div className={`relative ${isCompact ? 'flex-shrink-0 h-full' : 'w-full'}`} ref={dropdownRef}>
       {!isCompact && label && (
         <label className={`block text-xs font-bold uppercase tracking-wider mb-2 ${isDark ? 'text-slate-400 font-semibold' : 'text-slate-700'}`}>
           {label}
